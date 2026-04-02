@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How This Works — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="How CommUnity OS works. Static HTML, free APIs, zero backend, zero data collected. 38 pages, 18 tools, $7/year. Architecture explained.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.hw-section{background:var(--warm);border-radius:14px;padding:18px;margin:14px 0;border:1px solid var(--sand)}
+.hw-section h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.hw-section p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
+.hw-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:450px){.hw-compare{grid-template-columns:1fr}}
+.hw-them,.hw-us{padding:14px;border-radius:10px;font-size:.75rem;line-height:1.6}
+.hw-them{background:rgba(212,112,74,.04);border:1px solid rgba(212,112,74,.12);color:var(--body)}
+.hw-them strong{color:var(--coral)}
+.hw-us{background:rgba(91,140,122,.04);border:1px solid rgba(91,140,122,.15);color:var(--body)}
+.hw-us strong{color:var(--forest)}
+.hw-source{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.78rem}
+.hw-source:last-child{border:none}
+.hw-source .hw-s-name{font-weight:700;color:var(--deep);min-width:100px}
+.hw-source .hw-s-desc{color:var(--body);line-height:1.5}
+.hw-num{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--forest)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">ABOUT</div>
+    <h1>How This Works</h1>
+    <p class="subtitle">No server. No database. No accounts. No tracking. Here's why.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>The Architecture</h3>
+    <p>CommUnity OS is a collection of static HTML files hosted on a free content delivery network. There is no server processing your requests. There is no database storing your information. When you use a tool — the benefit screener, the dispute letter generator, the health calculators — everything runs in your browser, on your device. The calculations happen on your phone. The letters are generated on your phone. Nothing leaves your phone.</p>
+    <p>When a tool needs external data — consumer complaints, Census demographics, EPA facility records — it calls a free federal API directly from your browser to the government server. We are not in the middle. We don't see the request. We don't see the response.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>What It Costs</h3>
+    <div class="hw-compare">
+      <div class="hw-them"><strong>Typical civic platform</strong><br>$200,000–$2M to build<br>$50,000–$500,000/year to run<br>Team of 5–20 engineers<br>Cloud hosting, databases, security audits</div>
+      <div class="hw-us"><strong>CommUnity OS</strong><br>$0 to build<br>$7/year to run (domain name)<br>Static files on free hosting<br>No server, no database, nothing to breach</div>
+    </div>
+    <p>Healthcare.gov cost $2.14 billion. A typical municipal website costs $20,000–$50,000. This platform costs $7 per year because it uses an architecture that doesn't need servers, databases, or engineering teams to maintain.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>Why Zero Data Matters</h3>
+    <p>In January 2026, CMS signed an agreement sharing Medicaid data — addresses, birth dates, immigration status, phone numbers for 79 million Americans — with ICE. Families who enrolled in health coverage for their children now face the possibility that enrollment data could be used for enforcement.</p>
+    <p>CommUnity OS makes surveillance impossible through architecture, not policy. There is no account to create. No login to track. No cookie to follow. No database to subpoena. No analytics to mine. This isn't a privacy promise — it's a physics constraint. You can't hand over data that doesn't exist.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>Data Sources</h3>
+    <p>Every number on this platform comes from a named, verifiable source:</p>
+    <div class="hw-source"><span class="hw-s-name">Census Bureau</span><span class="hw-s-desc">American Community Survey — population, income, insurance, language, housing (neighborhood.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">CFPB</span><span class="hw-s-desc">Consumer Financial Protection Bureau — complaint database by company and zip code (complaints.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">EPA ECHO</span><span class="hw-s-desc">Enforcement and Compliance History — regulated facilities, violations, Clean Air/Water Act (environment.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">HMDA</span><span class="hw-s-desc">Home Mortgage Disclosure Act — lending decisions by race, ethnicity, county (lending.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">Chicago SODA</span><span class="hw-s-desc">City of Chicago Open Data — food inspections, building violations, 311 requests (food-safety, building-safety, 311.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">Cost Plus Drugs</span><span class="hw-s-desc">Transparent drug pricing — manufacturer cost + 15% markup (drug-prices.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">AHA / CDC / NIH</span><span class="hw-s-desc">Published clinical formulas — Pooled Cohort Equations, Prediabetes Risk Test, BMI (health-calc.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">HHS / IRS / DOL</span><span class="hw-s-desc">Federal Poverty Guidelines, EITC thresholds, state minimum wages (benefits-screener, worker-rights.html)</span></div>
+  </div>
+
+  <div class="hw-section">
+    <h3>How to Deploy This in Your Community</h3>
+    <p>CommUnity OS is open source. You can deploy it for any community in America in under 5 minutes:</p>
+    <p>1. Download the zip file (389KB).<br>2. Go to netlify.com and create a free account.<br>3. Drag the folder onto the deploy zone.<br>4. Point your $7 domain at it.<br>5. Done.</p>
+    <p>Every tool works for every zip code. The benefit screener covers all 50 states. The wage calculator has all 50 state minimums plus 20 city overrides. The Census, CFPB, EPA, and HMDA data covers the entire country. The only tools that are Chicago-specific are food inspections, building violations, and the 311 tracker — and those can be swapped to any city with a Socrata open data portal.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>License</h3>
+    <p>Code: MIT License — use it, modify it, deploy it, no restrictions.<br>Content (guides): CC BY-SA 4.0 — share and adapt with attribution.<br>Data: All from public federal sources. No proprietary data.</p>
+  </div>
+
+</div>
+<script src="/js/shared.js"></script>
+<script>EQ.init({});</script>
+</body>
+</html>
+<!-- #99-100 Integration section -->
+<div class="hw-section">
+<h3>For Libraries, Clinics, and Community Organizations</h3>
+<p><strong>Libraries:</strong> Bookmark comm-unity-os.org/neighborhood.html?zip=[YOUR ZIP] on public computers. Patrons see their community profile immediately. Print the champion one-pager (comm-unity-os.org/champion.html) and place it at the reference desk.</p>
+<p><strong>Health centers:</strong> Embed the benefit screener on waiting room tablets: <code>&lt;iframe src="comm-unity-os.org/benefits-screener.html?embed=1"&gt;</code>. Patients screen for benefits while waiting for appointments. Zero data leaves the tablet.</p>
+<p><strong>Schools:</strong> Share the school-rights page with PTA groups. The IEP and 504 sections help parents prepare for meetings. Everything is available in Spanish.</p>
+<p><strong>Legal aid:</strong> Embed the dispute letter generator on your intake page. Clients arrive with a letter already drafted. Your attorneys review and customize rather than starting from scratch.</p>
+</div>

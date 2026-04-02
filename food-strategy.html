@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Food Strategy Dashboard — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Food access analysis for food banks, retailers, and urban agriculture programs. Census + USDA + CDC data by zip code.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+<div class="page">
+  <div class="ds-hero">
+    <h1>Food Strategy Dashboard</h1>
+    <p>For food banks, retailers, urban agriculture programs. Enter a zip — get a deployment brief.</p>
+    <div class="ds-search">
+      <input type="text" class="ds-zip" id="dsZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')runDashboard()">
+      <button class="ds-go" onclick="runDashboard()">Generate Brief</button>
+    </div>
+  </div>
+  <div id="dsLoading" class="ds-loading" style="display:none">Querying federal data sources...</div>
+  <div id="dsResults" style="display:none"></div>
+</div>
+<script src="/js/shared.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script>
+var DE = DashEngine;
+
+var plantDB = null;
+fetch('/data/plant_database.json').then(function(r){return r.json()}).then(function(d){plantDB=d}).catch(function(){});
+
+var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B11001_001E','B03003_003E','B25064_001E','B22001_002E','B22001_001E','B08201_002E','B08201_001E','B18101_004E','B18101_001E','B01001_020E','B01001_021E','B01001_022E','B01001_023E','B01001_024E','B01001_025E','B01001_044E','B01001_045E','B01001_046E','B01001_047E','B01001_048E','B01001_049E'];
+var PLACES_MEASURES = ['OBESITY','DIABETES'];
+
+function runDashboard() {
+  var zip = document.getElementById('dsZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+  document.getElementById('dsLoading').style.display = '';
+  document.getElementById('dsResults').style.display = 'none';
+
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryPLACES(zip, PLACES_MEASURES),
+    DE.queryGeo(zip),
+    DE.queryECHO(zip)
+  ]).then(function(r) {
+    var census = r[0].value || {};
+    var places = r[1].value || {};
+    var geo = r[2].value || {};
+    var echo = r[3].value || {};
+    document.getElementById('dsLoading').style.display = 'none';
+    render(zip, census, places, geo, echo);
+  });
+}
+
+function render(zip, c, places, geo, echo) {
+  var h = DE.renderProfile(zip, c, geo);
+  var signals = [];
+  var pop = c.B01003_001E||0, povPop = c.B17001_002E||0, povTot = c.B17001_001E||0;
+  var povRate = DE.pct(povPop, povTot);
+  var snapHH = c.B22001_002E||0, totalHH = c.B22001_001E||0;
+  var noVeh = c.B08201_002E||0, vehTot = c.B08201_001E||0;
+  var noVehPct = DE.pct(noVeh, vehTot);
+  var disab = c.B18101_004E||0, disabTot = c.B18101_001E||0;
+  var senior = (c.B01001_020E||0)+(c.B01001_021E||0)+(c.B01001_022E||0)+(c.B01001_023E||0)+(c.B01001_024E||0)+(c.B01001_025E||0)+(c.B01001_044E||0)+(c.B01001_045E||0)+(c.B01001_046E||0)+(c.B01001_047E||0)+(c.B01001_048E||0)+(c.B01001_049E||0);
+  var seniorPct = DE.pct(senior, pop);
+  var obesity = places.OBESITY ? places.OBESITY.value : 0;
+  var diabetes = places.DIABETES ? places.DIABETES.value : 0;
+
+  h += DE.sectionOpen('🍎','Food Need Signals');
+  h += '<div class="ds-grid">';
+  h += DE.statCard(DE.pct(snapHH,totalHH)+'%','SNAP Households',DE.pct(snapHH,totalHH)>20?'highlight':'');
+  h += DE.statCard(noVehPct+'%','No Vehicle',noVehPct>20?'highlight':'');
+  h += DE.statCard(seniorPct+'%','Age 65+',seniorPct>20?'highlight':'');
+  h += DE.statCard(DE.pct(disab,disabTot)+'%','Disability');
+  h += DE.statCard(obesity?obesity.toFixed(1)+'%':'N/A','Obesity Rate',obesity>35?'highlight':'');
+  h += DE.statCard(diabetes?diabetes.toFixed(1)+'%':'N/A','Diabetes Rate',diabetes>12?'highlight':'');
+  h += '</div>';
+
+  if (povRate>20) signals.push({w:3,icon:'🔴',text:'High poverty ('+povRate+'%) — '+DE.fmt(Math.round(povPop))+' people below poverty line'});
+  else if (povRate>10) signals.push({w:1,icon:'🟡',text:'Moderate poverty ('+povRate+'%)'});
+  if (noVehPct>20) signals.push({w:3,icon:'🔴',text:noVehPct+'% of households have no vehicle — food must be walkable or delivered'});
+  if (seniorPct>18) signals.push({w:2,icon:'🟡',text:seniorPct+'% seniors — smaller portions, delivery needs, medication interactions'});
+  if (obesity>35) signals.push({w:2,icon:'🔴',text:'Obesity rate '+obesity.toFixed(1)+'% — nutrition education critical alongside food access'});
+  if (diabetes>12) signals.push({w:2,icon:'🔴',text:'Diabetes '+diabetes.toFixed(1)+'% — low-glycemic food programs needed'});
+  if (echo.violators>0) signals.push({w:1,icon:'⚠️',text:echo.violators+' EPA facilities with violations — soil testing needed, container gardening preferred'});
+
+  signals.forEach(function(s){h+=DE.signalRow(s.icon,s.text)});
+  h += DE.sectionClose();
+
+  // Growing
+  if (geo.lat) {
+    var zone = DE.estimateZone(geo.lat);
+    h += DE.sectionOpen('🌱','Growing Potential');
+    h += '<div style="font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--forest);background:rgba(91,140,122,.08);display:inline-block;padding:6px 14px;border-radius:8px;margin:4px 0">Zone ~'+zone+'</div>';
+    if (plantDB && plantDB.plants) {
+      var zn = parseFloat(zone);
+      var ok = plantDB.plants.filter(function(p){return zn>=(p.min_zone||3)&&zn<=(p.max_zone||10)});
+      if (ok.length) {
+        h += '<p style="font-size:.78rem;color:var(--body);margin:8px 0">'+ok.length+' crops viable:</p><div style="display:flex;flex-wrap:wrap;gap:4px">';
+        ok.forEach(function(p){h+='<span style="font-size:.65rem;padding:3px 8px;background:rgba(91,140,122,.06);border-radius:6px;border:1px solid var(--sage);color:var(--forest)">'+p.emoji+' '+p.name+'</span>'});
+        h += '</div>';
+      }
+    }
+    h += DE.sectionClose();
+  }
+
+  // Brief
+  var need = DE.calcNeedScore(signals.map(function(s){return{weight:s.w}}));
+  h += DE.briefOpen('Deployment Recommendations');
+  h += '<p><strong>Need level: '+need.level+'.</strong></p>';
+  var hispPct = DE.pct(c.B03003_003E||0, pop);
+  if (hispPct>30) h += '<p>🌎 <strong>Bilingual requirement:</strong> '+hispPct+'% Hispanic/Latino — all materials must be EN/ES.</p>';
+  if (noVehPct>20) h += '<p>🚐 <strong>Mobile distribution:</strong> '+noVehPct+'% without vehicles. Fixed-site pantries underserve this community.</p>';
+  if (seniorPct>18) h += '<p>👴 <strong>Senior-focused:</strong> '+seniorPct+'% age 65+. Home delivery, smaller portions, medication-aware meal planning.</p>';
+  h += '<p>📱 <strong>Digital access:</strong> Deploy CommUnity OS benefit screener on tablets at distribution sites — screens SNAP, WIC, LIHEAP, Medicaid in 2 minutes.</p>';
+  h += DE.briefClose();
+
+  h += DE.actionLinks([
+    {href:'/neighborhood.html?zip='+zip,label:'Full neighborhood profile →',primary:true},
+    {href:'/benefits-screener.html',label:'Benefit screener →'},
+    {href:'/grow.html',label:'Growing guide →'}
+  ]);
+  h += (typeof CivicIntel!=='undefined' ? CivicIntel.deidentNotice() : '') + DE.sourceNote('Sources: Census ACS 2022, CDC PLACES 2023, EPA ECHO, CommUnity OS plant database (40 crops). Zero data collected.');
+
+  document.getElementById('dsResults').innerHTML = h;
+  document.getElementById('dsResults').style.display = '';
+  document.getElementById('dsResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+DE.autoLoad('dsZip', runDashboard);
+EQ.init({});
+</script>
+</body>
+</html>

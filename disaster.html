@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Disaster Ready — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Disaster Ready — CommUnity OS">
+<meta property="og:description" content="Emergency contacts, go-bag checklist, family plan, FEMA guide. Works offline.">
+<meta name="description" content="Disaster preparedness guide. Emergency contacts, go-bag checklist, family communication plan, FEMA assistance guide, post-disaster rights. Works offline. Bilingual.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.dr-offline{background:rgba(91,140,122,.06);border:1.5px solid var(--sage);border-radius:12px;padding:14px 16px;margin:0 0 20px;font-size:.78rem;color:var(--body);line-height:1.6}
+.dr-offline strong{color:var(--forest)}
+.dr-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.dr-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.dr-tab:hover{border-color:var(--sage)}
+.dr-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.dr-panel{display:none}.dr-panel.active{display:block}
+.dr-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.dr-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.dr-card p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
+.dr-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.78rem;color:var(--body);line-height:1.5}
+.dr-item:last-child{border:none}
+.dr-item span{color:var(--sage);flex-shrink:0;font-size:.7rem;margin-top:2px}
+.dr-emergency{background:rgba(212,112,74,.06);border:1.5px solid rgba(212,112,74,.2);border-radius:12px;padding:16px;margin:12px 0}
+.dr-emergency h3{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--coral);margin-bottom:8px}
+.dr-emergency .dr-phone{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--deep);display:block;margin:4px 0}
+.dr-emergency .dr-phone-label{font-size:.68rem;color:var(--dim)}
+.dr-nbf{margin-top:14px;padding-top:12px;border-top:1px solid var(--sand)}
+.dr-nbf h5{font-size:.7rem;font-weight:700;margin-bottom:3px}
+.dr-nbf p{font-size:.75rem;line-height:1.6;margin-bottom:6px}
+.dr-nbf .n-t{color:var(--forest)}.dr-nbf .b-t{color:var(--coral)}.dr-nbf .f-t{color:var(--sage)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">SURVIVE</div>
+    <h1 data-t="dr_title">Disaster Ready</h1>
+    <p class="subtitle" data-t="dr_sub">Emergency contacts, go-bag checklist, family plan, and your rights after a disaster.</p>
+  </div>
+
+  <div class="dr-offline">
+    <strong>This page works offline.</strong> Once you've loaded it, it's cached on your phone. If the power goes out and cell towers go down, this page and its contacts are still here.
+  </div>
+
+  <div class="dr-emergency">
+    <h3>Emergency Numbers</h3>
+    <span class="dr-phone-label">Police / Fire / Medical</span><a href="tel:911" class="dr-phone">911</a>
+    <span class="dr-phone-label">FEMA Disaster Assistance</span><a href="tel:18006213362" class="dr-phone">1-800-621-3362</a>
+    <span class="dr-phone-label">Poison Control</span><a href="tel:18002221222" class="dr-phone">1-800-222-1222</a>
+    <span class="dr-phone-label">Red Cross</span><a href="tel:18007332767" class="dr-phone">1-800-733-2767</a>
+    <span class="dr-phone-label">National Suicide Prevention</span><a href="tel:988" class="dr-phone">988</a>
+    <span class="dr-phone-label">Domestic Violence Hotline</span><a href="tel:18007997233" class="dr-phone">1-800-799-7233</a>
+    <span class="dr-phone-label">SAMHSA Disaster Helpline</span><a href="tel:18009854990" class="dr-phone">1-800-985-4990</a>
+  </div>
+
+  <div class="dr-tabs">
+    <div class="dr-tab active" onclick="showDR('gobag')">🎒 Go Bag</div>
+    <div class="dr-tab" onclick="showDR('plan')">📋 Family Plan</div>
+    <div class="dr-tab" onclick="showDR('during')">⚡ During</div>
+    <div class="dr-tab" onclick="showDR('after')">📝 After</div>
+  </div>
+
+  <!-- GO BAG -->
+  <div class="dr-panel active" id="dr-gobag">
+    <div class="dr-card">
+      <h3>72-Hour Go Bag</h3>
+      <p>Pack this before you need it. One bag per person. Store it where you can grab it in 60 seconds.</p>
+      <div class="dr-item"><span>□</span> Water — 1 gallon per person per day (3 days)</div>
+      <div class="dr-item"><span>□</span> Food — 3 days nonperishable (granola bars, canned food, peanut butter)</div>
+      <div class="dr-item"><span>□</span> Manual can opener</div>
+      <div class="dr-item"><span>□</span> Flashlight + extra batteries</div>
+      <div class="dr-item"><span>□</span> Battery-powered or hand-crank radio (AM/FM)</div>
+      <div class="dr-item"><span>□</span> Phone charger — portable battery bank (charged)</div>
+      <div class="dr-item"><span>□</span> First aid kit</div>
+      <div class="dr-item"><span>□</span> Medications — 7-day supply of all prescriptions</div>
+      <div class="dr-item"><span>□</span> Copies of important documents in waterproof bag (ID, insurance, lease, prescriptions)</div>
+      <div class="dr-item"><span>□</span> Cash — small bills ($200 minimum, ATMs may be down)</div>
+      <div class="dr-item"><span>□</span> Change of clothes + sturdy shoes</div>
+      <div class="dr-item"><span>□</span> Blanket or sleeping bag</div>
+      <div class="dr-item"><span>□</span> Whistle (to signal for help)</div>
+      <div class="dr-item"><span>□</span> Dust masks (N95 if available)</div>
+      <div class="dr-item"><span>□</span> Plastic sheeting + duct tape</div>
+      <div class="dr-item"><span>□</span> Wrench or pliers (to turn off utilities)</div>
+      <div class="dr-item"><span>□</span> Baby supplies if needed (formula, diapers, bottles)</div>
+      <div class="dr-item"><span>□</span> Pet supplies if needed (food, leash, carrier, medications)</div>
+      <div class="dr-item"><span>□</span> Written list of emergency contacts (phones may be dead)</div>
+    </div>
+  </div>
+
+  <!-- FAMILY PLAN -->
+  <div class="dr-panel" id="dr-plan">
+    <div class="dr-card">
+      <h3>Family Communication Plan</h3>
+      <p>When phones go down, you need a plan everyone already knows. Fill this out now and give a copy to every family member.</p>
+      <div class="dr-item"><span>1</span> <strong>Meeting point #1:</strong> A place near home (e.g., the big tree on the corner, the church parking lot)</div>
+      <div class="dr-item"><span>2</span> <strong>Meeting point #2:</strong> A place outside your neighborhood (in case you can't get home)</div>
+      <div class="dr-item"><span>3</span> <strong>Out-of-state contact:</strong> One person everyone calls. Long-distance calls often work when local ones don't.</div>
+      <div class="dr-item"><span>4</span> <strong>Text first:</strong> Texts use less bandwidth than calls. In a disaster, text before calling.</div>
+      <div class="dr-item"><span>5</span> <strong>School pickup plan:</strong> Know your school's disaster release policy. Designate who picks up the kids if you can't.</div>
+      <div class="dr-item"><span>6</span> <strong>Utilities:</strong> Everyone over 12 should know how to turn off gas, water, and electricity.</div>
+      <div class="dr-item"><span>7</span> <strong>Write it down:</strong> Print this plan. Put one copy in the go bag, one on the fridge, one in each car.</div>
+    </div>
+  </div>
+
+  <!-- DURING -->
+  <div class="dr-panel" id="dr-during">
+    <div class="dr-card">
+      <h3>During an Emergency</h3>
+      <div class="dr-item"><span>⚡</span> <strong>Power outage:</strong> Unplug appliances to prevent surge damage when power returns. Keep fridge and freezer doors closed (food stays safe 4 hours in closed fridge, 48 hours in full freezer).</div>
+      <div class="dr-item"><span>🌊</span> <strong>Flooding:</strong> Never walk or drive through flood water. 6 inches knocks you down. 12 inches moves a car. Turn off gas if you smell it. Get to higher ground.</div>
+      <div class="dr-item"><span>🌪️</span> <strong>Tornado:</strong> Go to basement or lowest interior room. Stay away from windows. Get under heavy furniture. If driving, get out of the car and lie flat in a ditch.</div>
+      <div class="dr-item"><span>🔥</span> <strong>Fire/wildfire:</strong> Get out. Close doors behind you. If clothes catch fire: stop, drop, roll. If smoke: crawl low. Never go back inside. Meet at your designated meeting point.</div>
+      <div class="dr-item"><span>❄️</span> <strong>Extreme cold:</strong> Signs of hypothermia: shivering, confusion, slurred speech. Warm the person slowly. Call 911. Never use a gas stove or oven for heating.</div>
+      <div class="dr-item"><span>🌡️</span> <strong>Extreme heat:</strong> Signs of heat stroke: hot dry skin, confusion, loss of consciousness. Call 911. Cool the person with water. Check on elderly neighbors.</div>
+
+      <div class="dr-nbf">
+        <h5 class="n-t">Normal:</h5><p>Emergency services respond. Hospitals treat the injured. Power companies restore electricity. Government coordinates relief.</p>
+        <h5 class="b-t">Broken:</h5><p>In Maui 2023, 80 sirens were never activated. In Hurricane Helene 2024, 74% of NC cell towers went down and survivors waited 4 months for FEMA callbacks. Communication infrastructure fails first. Government response is always slower than the crisis.</p>
+        <h5 class="f-t">Fix:</h5><p>Your preparation IS the fix. The go bag, the family plan, the radio, the cash, the written contacts — these work when everything else doesn't. Check on your neighbors. Communities that organize before disasters survive them better.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="dr-panel" id="dr-after">
+    <div class="dr-card">
+      <h3>After a Disaster — Your Rights</h3>
+      <div class="dr-item"><span>✓</span> <strong>FEMA assistance:</strong> Apply at DisasterAssistance.gov or call 1-800-621-3362. You have 60 days from the disaster declaration. FEMA provides temporary housing, home repair, and other needs assistance. You do NOT need to be a citizen to receive emergency assistance.</div>
+      <div class="dr-item"><span>✓</span> <strong>Insurance:</strong> File your claim immediately. Document everything with photos before cleaning up. Your insurer must respond within a reasonable time. If denied, you can appeal. Keep every receipt.</div>
+      <div class="dr-item"><span>✓</span> <strong>Contractor fraud:</strong> After disasters, unlicensed contractors go door-to-door. Never pay upfront in full. Get written estimates. Verify licenses. Don't sign anything under pressure.</div>
+      <div class="dr-item"><span>✓</span> <strong>Landlord obligations:</strong> If your rental is uninhabitable, most states allow lease termination. Your landlord cannot charge rent for an uninhabitable unit. Document the damage.</div>
+      <div class="dr-item"><span>✓</span> <strong>SBA disaster loans:</strong> Low-interest loans for homes and businesses. Apply through DisasterAssistance.gov. You don't have to accept the loan — applying gives you access to other programs.</div>
+      <div class="dr-item"><span>✓</span> <strong>Mental health:</strong> SAMHSA Disaster Helpline: 1-800-985-4990. Free, 24/7, confidential. Supports English and Spanish. Trauma reactions are normal. Ask for help.</div>
+    </div>
+  </div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function showDR(id) {
+  document.querySelectorAll('.dr-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.dr-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('dr-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+EQ.init({
+  dr_title: 'Disaster Ready',
+  dr_title_es: 'Preparación para Desastres',
+  dr_sub: 'Emergency contacts, go-bag checklist, family plan, and your rights after a disaster.',
+  dr_sub_es: 'Contactos de emergencia, lista de mochila de emergencia, plan familiar, y tus derechos después de un desastre.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

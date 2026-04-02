@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Grow Your Own — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Free personalized container garden guide for your zip code. 40 plants, growing zones, companion planting, frost dates. No yard required.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.gr-hero{text-align:center;padding:28px 16px 16px}
+.gr-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.gr-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:440px;margin:0 auto 16px}
+.gr-search{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.gr-zip{font-family:var(--display);font-size:1.1rem;font-weight:700;text-align:center;width:110px;padding:12px;border:2px solid var(--sand);border-radius:10px;background:#fff;color:var(--deep);letter-spacing:.08em}
+.gr-zip:focus{outline:none;border-color:var(--forest)}
+.gr-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer}
+.gr-zone{text-align:center;margin:16px 0}
+.gr-zone .gz-badge{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--forest);background:rgba(91,140,122,.08);display:inline-block;padding:8px 20px;border-radius:10px}
+.gr-zone .gz-frost{font-size:.72rem;color:var(--dim);margin-top:4px}
+.gr-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.gr-filter{font-family:var(--display);font-size:.62rem;font-weight:600;padding:6px 10px;border-radius:6px;border:1px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer}
+.gr-filter:hover{border-color:var(--sage)}
+.gr-filter.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.gr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin:12px 0}
+.gr-card{background:var(--warm);border-radius:10px;padding:12px;border:1px solid var(--sand)}
+.gr-card .gc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.gr-card .gc-emoji{font-size:1.4rem}
+.gr-card .gc-name{font-family:var(--display);font-size:.8rem;font-weight:700;color:var(--deep)}
+.gr-card .gc-type{font-size:.55rem;font-weight:600;text-transform:uppercase;color:var(--sage);letter-spacing:.04em}
+.gr-card dl{display:grid;grid-template-columns:auto 1fr;gap:2px 6px;font-size:.68rem;margin:4px 0}
+.gr-card dt{color:var(--dim);font-weight:600}
+.gr-card dd{color:var(--body)}
+.gr-card .gc-companions{font-size:.6rem;color:var(--sage);margin-top:4px}
+.gr-card .gc-note{font-size:.65rem;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--sand);line-height:1.4}
+.gr-canning{background:linear-gradient(135deg,rgba(90,138,120,.06),rgba(184,150,62,.06));border:1px solid var(--sand);border-radius:12px;padding:16px;margin:16px 0;text-align:center}
+.gr-canning h3{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:4px}
+.gr-canning p{font-size:.78rem;color:var(--dim);line-height:1.5;margin-bottom:8px}
+.gr-canning a{font-size:.75rem;color:var(--forest);font-weight:600;text-decoration:none;border-bottom:1px solid var(--sage)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="gr-hero">
+    <h1 data-t="g_title">Grow Your Own Food</h1>
+    <p data-t="g_sub">Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and how to grow it. No yard required.</p>
+    <div class="gr-search">
+      <input type="text" class="gr-zip" id="grZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')loadGarden()">
+      <button class="gr-go" onclick="loadGarden()">Find My Plants</button>
+    </div>
+  </div>
+  <div id="grResults" style="display:none"></div>
+
+  <div class="gr-canning">
+    <h3>🫙 The Science of Safe Canning</h3>
+    <p data-t="g_canning">When food is cheap and in season, preserve it for when it's not. A complete food preservation workshop — three levels so you can start wherever you are.</p>
+    <a href="https://secretsofcanning.netlify.app" target="_blank" rel="noopener">secretsofcanning.netlify.app →</a>
+  </div>
+</div>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var DB=null,currentFilter='all';
+fetch('/data/plant_database.json').then(function(r){return r.json()}).then(function(d){DB=d}).catch(function(){});
+
+function loadGarden(){
+  var zip=document.getElementById('grZip').value.trim();
+  if(!zip||zip.length!==5){alert('Enter a 5-digit zip code.');return}
+  fetch('https://api.zippopotam.us/us/'+zip).then(function(r){return r.json()}).then(function(d){
+    var p=d.places&&d.places[0]?d.places[0]:{};
+    var lat=parseFloat(p.latitude)||41.8;
+    var zone=estimateZone(lat);
+    var city=p['place name']||'';
+    var state=p['state abbreviation']||'';
+    renderGarden(zone,city,state);
+  }).catch(function(){renderGarden('5b-6a','','')});
+}
+
+function estimateZone(lat){
+  if(lat>=47)return '3b';if(lat>=44)return '4b';if(lat>=41)return '5b';
+  if(lat>=38)return '6b';if(lat>=35)return '7b';if(lat>=32)return '8b';
+  if(lat>=28)return '9b';return '10b';
+}
+
+function renderGarden(zone,city,state){
+  if(!DB||!DB.plants){document.getElementById('grResults').innerHTML='<div style="text-align:center;padding:20px;color:var(--dim)">Plant database not loaded. Try refreshing.</div>';document.getElementById('grResults').style.display='';return}
+  var zoneNum=parseFloat(zone);
+  var frost=DB.frost_by_zone&&DB.frost_by_zone[zone]?DB.frost_by_zone[zone]:{};
+  var plants=DB.plants.filter(function(p){return zoneNum>=(p.min_zone||3)&&zoneNum<=(p.max_zone||10)});
+
+  var h='<div class="gr-zone"><div class="gz-badge">'+(city?city+', '+state+' — ':'')+'Zone '+zone+'</div>';
+  if(frost.last_frost)h+='<div class="gz-frost">Last frost: '+frost.last_frost+' · First frost: '+(frost.first_frost||'')+(frost.season_days?' · '+frost.season_days+' growing days':'')+'</div>';
+  h+='</div>';
+
+  // Type filters
+  var types={};plants.forEach(function(p){types[p.type]=true});
+  h+='<div class="gr-filters"><div class="gr-filter active" onclick="filterPlants(\'all\',this)">All ('+plants.length+')</div>';
+  Object.keys(types).forEach(function(t){
+    var count=plants.filter(function(p){return p.type===t}).length;
+    h+='<div class="gr-filter" onclick="filterPlants(\''+t+'\',this)">'+t.charAt(0).toUpperCase()+t.slice(1)+' ('+count+')</div>';
+  });
+  h+='</div>';
+
+  h+='<div class="gr-grid" id="plantGrid">';
+  plants.forEach(function(p){h+=plantCard(p,frost)});
+  h+='</div>';
+
+  window._allPlants=plants;window._frost=frost;
+  document.getElementById('grResults').innerHTML=h;
+  document.getElementById('grResults').style.display='';
+  document.getElementById('grResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function plantCard(p,frost){
+  var es=EQ&&EQ.lang==='es';
+  var h='<div class="gr-card" data-type="'+p.type+'"><div class="gc-top">';
+  h+='<span class="gc-emoji">'+p.emoji+'</span><div><div class="gc-name">'+(es&&p.name_es?p.name_es:p.name)+'</div>';
+  h+='<div class="gc-type">'+p.type+'</div></div></div>';
+  h+='<dl>';
+  h+='<dt>☀️ Sun</dt><dd>'+p.sun+'</dd>';
+  h+='<dt>💧 Water</dt><dd>'+p.water+'</dd>';
+  h+='<dt>📏 Pot</dt><dd>'+p.container_depth_in+'"D × '+p.container_width_in+'"W</dd>';
+  h+='<dt>📅 Days</dt><dd>'+p.days_to_maturity+' to harvest</dd>';
+  if(p.frost_tolerance)h+='<dt>❄️ Frost</dt><dd>'+p.frost_tolerance+'</dd>';
+  h+='</dl>';
+  if(p.companions)h+='<div class="gc-companions">🤝 Good with: '+p.companions.join(', ')+'</div>';
+  if(p.notes)h+='<div class="gc-note">'+(es&&p.notes_es?p.notes_es:p.notes)+'</div>';
+  h+='</div>';
+  return h;
+}
+
+window.filterPlants=function(type,btn){
+  currentFilter=type;
+  document.querySelectorAll('.gr-filter').forEach(function(f){f.classList.remove('active')});
+  if(btn)btn.classList.add('active');
+  var cards=document.querySelectorAll('.gr-card');
+  cards.forEach(function(c){c.style.display=(type==='all'||c.dataset.type===type)?'':'none'});
+};
+
+(function(){var p=new URLSearchParams(location.search);var z=p.get('zip');if(z){document.getElementById('grZip').value=z;setTimeout(loadGarden,200)}})();
+
+EQ.init({g_title:'Grow Your Own Food',g_title_es:'Cultiva Tu Propia Comida',g_sub:'Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and how to grow it. No yard required.',g_sub_es:'Ingresa tu código postal. Obtén una guía personalizada de jardín en contenedores — qué plantar, cuándo plantar y cómo cultivar. Sin patio necesario.',g_canning:'When food is cheap and in season, preserve it for when it\'s not. A complete food preservation workshop.',g_canning_es:'Cuando la comida es barata y de temporada, consérvala para cuando no lo sea. Un taller completo de conservación de alimentos.'});
+</script>
+</body>
+</html>

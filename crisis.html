@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>I Need Help Now — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Immediate help routing. Eviction, lost insurance, can't feed family, in danger, ICE at door. Direct to the right tool and phone number.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.cr-hero{text-align:center;padding:30px 16px 10px}
+.cr-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep)}
+.cr-hero p{font-size:.82rem;color:var(--body);margin-top:4px}
+.cr-grid{display:grid;grid-template-columns:1fr;gap:10px;padding:16px;max-width:500px;margin:0 auto}
+.cr-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--warm);border-radius:14px;border:1.5px solid var(--sand);text-decoration:none;transition:.2s}
+.cr-card:hover{border-color:var(--sage);transform:translateY(-1px)}
+.cr-card .cr-icon{font-size:1.5rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;flex-shrink:0}
+.cr-card .cr-text{flex:1}
+.cr-card .cr-title{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--deep)}
+.cr-card .cr-action{font-size:.68rem;color:var(--forest);font-weight:600;margin-top:2px}
+.cr-card .cr-phone{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--coral)}
+.cr-danger .cr-icon{background:rgba(212,112,74,.1)}
+.cr-urgent .cr-icon{background:rgba(201,168,76,.1)}
+.cr-help .cr-icon{background:rgba(91,140,122,.1)}
+.cr-divider{text-align:center;font-size:.65rem;color:var(--dim);margin:6px 0;text-transform:uppercase;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="cr-hero">
+    <h1 data-t="cr_title">What's happening right now?</h1>
+    <p data-t="cr_sub">Tap what fits. We'll take you to the right place.</p>
+  </div>
+
+  <div class="cr-grid">
+    <div class="cr-divider">Immediate danger</div>
+
+    <a class="cr-card cr-danger" href="tel:911">
+      <div class="cr-icon">🚨</div>
+      <div class="cr-text"><div class="cr-title">I'm in physical danger</div><div class="cr-phone">Call 911</div></div>
+    </a>
+    <a class="cr-card cr-danger" href="tel:18007997233">
+      <div class="cr-icon">🛡️</div>
+      <div class="cr-text"><div class="cr-title">I'm being hurt at home</div><div class="cr-phone">1-800-799-7233</div><div class="cr-action">National Domestic Violence Hotline — 24/7</div></div>
+    </a>
+    <a class="cr-card cr-danger" href="tel:988">
+      <div class="cr-icon">💙</div>
+      <div class="cr-text"><div class="cr-title">I'm thinking about hurting myself</div><div class="cr-phone">Call or text 988</div><div class="cr-action">Suicide & Crisis Lifeline — 24/7, confidential</div></div>
+    </a>
+
+    <div class="cr-divider">Urgent situations</div>
+
+    <a class="cr-card cr-urgent" href="/benefits-screener.html">
+      <div class="cr-icon">🍎</div>
+      <div class="cr-text"><div class="cr-title">I can't feed my family</div><div class="cr-action">Screen for SNAP, WIC, school meals, food pantries →</div></div>
+    </a>
+    <a class="cr-card cr-urgent" href="/court-nav.html">
+      <div class="cr-icon">🏠</div>
+      <div class="cr-text"><div class="cr-title">I'm being evicted</div><div class="cr-action">Court navigator + what to bring + your rights →</div></div>
+    </a>
+    <a class="cr-card cr-urgent" href="/defend.html?type=insurance">
+      <div class="cr-icon">❌</div>
+      <div class="cr-text"><div class="cr-title">I just lost my health insurance</div><div class="cr-action">Appeal the denial + check Medicaid eligibility →</div></div>
+    </a>
+    <a class="cr-card cr-urgent" href="/benefits-check.html">
+      <div class="cr-icon">🚔</div>
+      <div class="cr-text"><div class="cr-title">I'm afraid of ICE</div><div class="cr-action">Know your rights + which benefits are safe →</div></div>
+    </a>
+    <a class="cr-card cr-urgent" href="/disaster.html">
+      <div class="cr-icon">⚡</div>
+      <div class="cr-text"><div class="cr-title">There's an emergency or disaster</div><div class="cr-action">Emergency contacts + FEMA + your rights →</div></div>
+    </a>
+
+    <div class="cr-divider">I need help with</div>
+
+    <a class="cr-card cr-help" href="/worker-rights.html">
+      <div class="cr-icon">💰</div>
+      <div class="cr-text"><div class="cr-title">I'm not being paid what I'm owed</div><div class="cr-action">Check your wages + file a complaint →</div></div>
+    </a>
+    <a class="cr-card cr-help" href="/defend.html?type=medical">
+      <div class="cr-icon">💸</div>
+      <div class="cr-text"><div class="cr-title">I got a bill I can't pay</div><div class="cr-action">Dispute the bill + find errors →</div></div>
+    </a>
+    <a class="cr-card cr-help" href="/school-rights.html">
+      <div class="cr-icon">🎒</div>
+      <div class="cr-text"><div class="cr-title">My child isn't getting help at school</div><div class="cr-action">IEP, 504, discipline rights →</div></div>
+    </a>
+    <a class="cr-card cr-help" href="/defend.html?type=credit">
+      <div class="cr-icon">📋</div>
+      <div class="cr-text"><div class="cr-title">Something is wrong on my record</div><div class="cr-action">Credit, background check, tenant screening →</div></div>
+    </a>
+    <a class="cr-card cr-help" href="/health-calc.html">
+      <div class="cr-icon">❤️</div>
+      <div class="cr-text"><div class="cr-title">I'm worried about my health</div><div class="cr-action">Heart risk, diabetes screening, find a clinic →</div></div>
+    </a>
+  </div>
+
+</div>
+<script src="/js/shared.js"></script>
+<script>
+EQ.init({
+  cr_title: 'What\'s happening right now?',
+  cr_title_es: '¿Qué está pasando ahora mismo?',
+  cr_sub: 'Tap what fits. We\'ll take you to the right place.',
+  cr_sub_es: 'Toca lo que aplique. Te llevamos al lugar correcto.'
+});
+</script>
+</body>
+</html>

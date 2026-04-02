@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Discussions — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.cm-hero{text-align:center;padding:28px 16px 16px}
+.cm-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.cm-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:440px;margin:0 auto 16px}
+.cm-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.cm-tag{font-family:var(--display);font-size:.65rem;font-weight:600;padding:6px 12px;border-radius:8px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.cm-tag:hover{border-color:var(--sage)}
+.cm-tag.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.cm-post{background:var(--warm);border-radius:12px;padding:16px;margin:10px 0;border:1px solid var(--sand)}
+.cm-post .cp-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.cm-post .cp-name{font-family:var(--display);font-size:.78rem;font-weight:700;color:var(--deep)}
+.cm-post .cp-time{font-size:.6rem;color:var(--dim)}
+.cm-post .cp-tag{font-size:.55rem;font-weight:600;padding:2px 6px;border-radius:4px;background:rgba(91,140,122,.08);color:var(--sage)}
+.cm-post .cp-title{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep);margin:4px 0}
+.cm-post .cp-body{font-size:.78rem;color:var(--body);line-height:1.6}
+.cm-post .cp-actions{display:flex;gap:10px;margin-top:8px;font-size:.68rem}
+.cm-post .cp-actions button{font-family:var(--display);font-size:.65rem;font-weight:600;padding:4px 10px;border-radius:6px;border:1px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer}
+.cm-post .cp-actions button:hover{border-color:var(--sage);color:var(--forest)}
+.cm-reply{margin-left:20px;padding:8px 12px;background:rgba(91,140,122,.03);border-radius:8px;margin-top:6px;font-size:.72rem;color:var(--body);border-left:2px solid var(--sage)}
+.cm-reply .cr-name{font-weight:700;color:var(--deep)}
+.cm-compose{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.cm-compose h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.cm-compose input,.cm-compose textarea,.cm-compose select{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.cm-compose textarea{min-height:80px;resize:vertical}
+.cm-compose button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+.cm-compose button:hover{background:var(--deep)}
+.cm-empty{text-align:center;padding:30px;color:var(--dim);font-size:.82rem;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="cm-hero">
+    <h1 data-t="d_title">Community Discussions</h1>
+    <p data-t="d_sub">The neighborhood town square. Ask questions. Share what you know. Find people who understand.</p>
+  </div>
+
+  <div class="cm-tags">
+    <div class="cm-tag active" onclick="filterTag('all',this)">All</div>
+    <div class="cm-tag" onclick="filterTag('survive',this)">🍎 Survive</div>
+    <div class="cm-tag" onclick="filterTag('rights',this)">⚖️ Rights</div>
+    <div class="cm-tag" onclick="filterTag('housing',this)">🏠 Housing</div>
+    <div class="cm-tag" onclick="filterTag('schools',this)">🎒 Schools</div>
+    <div class="cm-tag" onclick="filterTag('safety',this)">🔒 Safety</div>
+  </div>
+
+  <div class="cm-compose">
+    <h3 data-t="d_compose">Start a Discussion</h3>
+    <input type="text" id="dName" placeholder="Your name (or Anonymous)">
+    <select id="dTag"><option value="general">General</option><option value="survive">🍎 Survive</option><option value="rights">⚖️ Rights</option><option value="housing">🏠 Housing</option><option value="schools">🎒 Schools</option><option value="safety">🔒 Safety</option></select>
+    <input type="text" id="dTitle" placeholder="Subject">
+    <textarea id="dBody" placeholder="What's on your mind?"></textarea>
+    <button onclick="submitPost()">Post</button>
+  </div>
+
+  <div style="text-align:center;margin:8px 0"><a href="/cases.html" style="font-family:var(--display);font-size:.72rem;font-weight:600;color:var(--forest);text-decoration:none;padding:6px 14px;border:1px solid var(--sage);border-radius:8px">📚 Explore Case Studies — complex problems that need multiple perspectives</a></div>
+  <div id="postList"></div>
+</div>
+
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var currentTag='all';
+var posts=[];
+
+function filterTag(tag,btn){
+  currentTag=tag;
+  document.querySelectorAll('.cm-tag').forEach(function(t){t.classList.remove('active')});
+  if(btn)btn.classList.add('active');
+  renderPosts();
+}
+
+function renderPosts(){
+  var filtered=currentTag==='all'?posts:posts.filter(function(p){return p.category===currentTag||p.tag===currentTag});
+  if(filtered.length===0){
+    document.getElementById('postList').innerHTML='<div class="cm-empty">No discussions yet. Start one above.</div>';
+    return;
+  }
+  var h='';
+  filtered.forEach(function(p){
+    h+='<div class="cm-post"><div class="cp-head"><div><span class="cp-name">'+(p.author||p.name||'Anonymous')+'</span>';
+    if(p.category||p.tag)h+=' <span class="cp-tag">'+(p.category||p.tag)+'</span>';
+    h+='</div><span class="cp-time">'+timeAgo(p.created_at||p.timestamp)+'</span></div>';
+    if(p.title)h+='<div class="cp-title">'+(p.title||p.subject||'')+'</div>';
+    h+='<div class="cp-body">'+(p.body||p.message||p.content||'')+'</div>';
+    h+='<div class="cp-actions"><button onclick="replyTo(\''+p.id+'\')">💬 Reply</button>';
+    h+='<button onclick="upvote(\''+p.id+'\')">👍 '+(p.votes||p.upvotes||0)+'</button></div>';
+    if(p.replies&&p.replies.length>0){
+      p.replies.forEach(function(r){
+        h+='<div class="cm-reply"><span class="cr-name">'+(r.author||r.name||'Anonymous')+':</span> '+(r.body||r.text||'')+'</div>';
+      });
+    }
+    h+='</div>';
+    // Cross-domain pairing suggestions
+    if(typeof CivicIntel!=='undefined'&&posts.length>1){var pairings=CivicIntel.findPairings(p,posts);h+=CivicIntel.renderPairingSuggestions(pairings);}
+  });
+  document.getElementById('postList').innerHTML=h;
+}
+
+function timeAgo(ts){
+  if(!ts)return '';
+  var diff=Date.now()-new Date(ts).getTime();
+  var min=Math.floor(diff/60000);
+  if(min<60)return min+'m ago';
+  var hr=Math.floor(min/60);
+  if(hr<24)return hr+'h ago';
+  return Math.floor(hr/24)+'d ago';
+}
+
+function loadPosts(){
+  if(typeof CommunityAPI==='undefined'||!CommunityAPI.isConfigured()){
+    // Show demo data
+    posts=[
+      {id:'d1',author:'Maria',category:'survive',title:'Food pantry hours changed',body:'The pantry on 18th Street closes at 2pm now instead of 5pm. Anyone know if this is permanent?',created_at:new Date(Date.now()-3600000).toISOString(),votes:3,replies:[{author:'Carlos',body:'I called — they said it\'s temporary through April. Staff shortage.'}]},
+      {id:'d2',author:'Anonymous',category:'housing',title:'Rent increase with no notice',body:'My landlord raised rent $200 with only 2 weeks notice. Isn\'t that illegal in Chicago?',created_at:new Date(Date.now()-86400000).toISOString(),votes:8,replies:[{author:'Rosa',body:'In Chicago, landlords must give 30 days written notice for increases under 30 days left on lease. File a complaint with the city.'},{author:'David',body:'Use the dispute letter tool on this site — it generates a tenant rights letter.'}]},
+      {id:'d3',author:'James',category:'schools',title:'IEP meeting tips?',body:'My son has his first IEP meeting next week. What should I bring? What questions should I ask?',created_at:new Date(Date.now()-172800000).toISOString(),votes:5,replies:[{author:'Lisa',body:'Bring all evaluations, report cards from last 2 years, and a written list of your concerns. You have the right to request an independent evaluation if you disagree.'}]}
+    ];
+    renderPosts();
+    return;
+  }
+  CommunityAPI.smartFetch(CommunityAPI.endpoint()+'?action=get_discussions&zip='+getCommunityZip())
+    .then(function(r){return r.json()})
+    .then(function(data){posts=Array.isArray(data)?data:(data.posts||[]);renderPosts()})
+    .catch(function(){posts=[];renderPosts()});
+}
+
+function submitPost(){
+  var name=document.getElementById('dName').value.trim()||'Anonymous';
+  var tag=document.getElementById('dTag').value;
+  var title=document.getElementById('dTitle').value.trim();
+  var body=document.getElementById('dBody').value.trim();
+  if(!body){alert('Write something to post.');return}
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'post_discussion',name:name,tag:tag,title:title,body:body,zip:getCommunityZip()})}).then(function(){document.getElementById('dTitle').value='';document.getElementById('dBody').value='';loadPosts()}).catch(function(){alert('Could not post. Backend may be unavailable.')});
+  } else {
+    posts.unshift({id:'local-'+Date.now(),author:name,category:tag,title:title,body:body,created_at:new Date().toISOString(),votes:0,replies:[]});
+    document.getElementById('dTitle').value='';document.getElementById('dBody').value='';
+    renderPosts();
+  }
+}
+
+function replyTo(id){
+  var text=prompt('Your reply:');
+  if(!text)return;
+  var name=document.getElementById('dName').value.trim()||'Anonymous';
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'reply_discussion',id:id,name:name,reply:text})}).then(function(){loadPosts()}).catch(function(){});
+  } else {
+    var post=posts.find(function(p){return p.id===id});
+    if(post){if(!post.replies)post.replies=[];post.replies.push({author:name,body:text});renderPosts()}
+  }
+}
+
+function upvote(id){
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'upvote_discussion',id:id})}).then(function(){loadPosts()}).catch(function(){});
+  } else {
+    var post=posts.find(function(p){return p.id===id});
+    if(post){post.votes=(post.votes||0)+1;renderPosts()}
+  }
+}
+
+function getCommunityZip(){return(typeof CommunityAPI!=='undefined'&&CommunityAPI.getCommunity())||'60608'}
+
+loadPosts();
+EQ.init({d_title:'Community Discussions',d_title_es:'Discusiones Comunitarias',d_sub:'The neighborhood town square. Ask questions. Share what you know. Find people who understand.',d_sub_es:'La plaza del vecindario. Haz preguntas. Comparte lo que sabes. Encuentra personas que entienden.',d_compose:'Start a Discussion',d_compose_es:'Inicia una Discusión'});
+</script>
+</body>
+</html>

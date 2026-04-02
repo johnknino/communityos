@@ -1,0 +1,714 @@
+{
+  "alderperson": {
+    "name": "Alderperson / Council Member",
+    "nameEs": "Concejal / Miembro del Consejo",
+    "desc": "6 domains, 24 accountability items",
+    "descEs": "6 dominios, 24 ítems de rendición de cuentas",
+    "domains": [
+      {
+        "id": "promises",
+        "name": "Promises Kept",
+        "nameEs": "Promesas Cumplidas",
+        "items": [
+          {
+            "id": "PK-01",
+            "name": "Campaign commitments delivered",
+            "nameEs": "Compromisos de campaña cumplidos",
+            "source": "Campaign website / mailer",
+            "sourceEs": "Sitio web de campaña / folleto",
+            "desc": "Specific, verifiable promises from the campaign have been acted on.",
+            "descEs": "Las promesas específicas y verificables de la campaña se han cumplido."
+          },
+          {
+            "id": "PK-02",
+            "name": "Budget priorities funded",
+            "nameEs": "Prioridades presupuestarias financiadas",
+            "source": "Annual ward budget / menu spending",
+            "sourceEs": "Presupuesto anual del distrito",
+            "desc": "Stated budget priorities received actual funding allocation.",
+            "descEs": "Las prioridades presupuestarias declaradas recibieron asignación real."
+          },
+          {
+            "id": "PK-03",
+            "name": "Infrastructure requests addressed",
+            "nameEs": "Solicitudes de infraestructura atendidas",
+            "source": "311 reports / ward office records",
+            "sourceEs": "Reportes 311 / registros de oficina",
+            "desc": "Streetlights, potholes, sidewalks, and other infrastructure requests resolved.",
+            "descEs": "Luces, baches, aceras y otras solicitudes de infraestructura resueltas."
+          },
+          {
+            "id": "PK-04",
+            "name": "Timeline commitments met",
+            "nameEs": "Plazos comprometidos cumplidos",
+            "source": "Public statements with dates",
+            "sourceEs": "Declaraciones públicas con fechas",
+            "desc": "When a specific timeline was given, it was honored.",
+            "descEs": "Cuando se dio un plazo específico, se cumplió."
+          }
+        ]
+      },
+      {
+        "id": "transparency",
+        "name": "Transparency",
+        "nameEs": "Transparencia",
+        "items": [
+          {
+            "id": "TR-01",
+            "name": "Public meetings held as scheduled",
+            "nameEs": "Reuniones públicas realizadas según programadas",
+            "source": "Posted meeting schedule",
+            "sourceEs": "Calendario de reuniones publicado",
+            "desc": "Regular ward/town hall meetings held on published dates.",
+            "descEs": "Reuniones regulares del distrito realizadas en las fechas publicadas."
+          },
+          {
+            "id": "TR-02",
+            "name": "Meeting agendas posted in advance",
+            "nameEs": "Agendas publicadas con anticipación",
+            "source": "Ward website / bulletin board",
+            "sourceEs": "Sitio web del distrito / tablero",
+            "desc": "Agendas available at least 48 hours before meetings.",
+            "descEs": "Agendas disponibles al menos 48 horas antes de las reuniones."
+          },
+          {
+            "id": "TR-03",
+            "name": "Spending records accessible",
+            "nameEs": "Registros de gastos accesibles",
+            "source": "FOIA / public portal",
+            "sourceEs": "FOIA / portal público",
+            "desc": "Ward discretionary spending records available without FOIA.",
+            "descEs": "Registros de gastos discrecionales disponibles sin FOIA."
+          },
+          {
+            "id": "TR-04",
+            "name": "Decisions explained publicly",
+            "nameEs": "Decisiones explicadas públicamente",
+            "source": "Meeting minutes / newsletters",
+            "sourceEs": "Actas de reuniones / boletines",
+            "desc": "Major votes and decisions explained with reasoning, not just announced.",
+            "descEs": "Votos y decisiones importantes explicados con razonamiento."
+          }
+        ]
+      },
+      {
+        "id": "responsiveness",
+        "name": "Responsiveness",
+        "nameEs": "Capacidad de Respuesta",
+        "items": [
+          {
+            "id": "RS-01",
+            "name": "Constituent inquiries answered",
+            "nameEs": "Consultas de electores respondidas",
+            "source": "Office response time tracking",
+            "sourceEs": "Seguimiento de tiempo de respuesta",
+            "desc": "Phone calls, emails, and walk-ins receive substantive response within 5 business days.",
+            "descEs": "Llamadas, correos y visitas reciben respuesta sustancial en 5 días hábiles."
+          },
+          {
+            "id": "RS-02",
+            "name": "311 follow-through",
+            "nameEs": "Seguimiento de reportes 311",
+            "source": "311 case resolution data",
+            "sourceEs": "Datos de resolución de casos 311",
+            "desc": "311 requests in the ward closed at a rate comparable to citywide average.",
+            "descEs": "Solicitudes 311 en el distrito cerradas a una tasa comparable al promedio de la ciudad."
+          },
+          {
+            "id": "RS-03",
+            "name": "Emergency/crisis response",
+            "nameEs": "Respuesta a emergencias/crisis",
+            "source": "Community feedback / news reports",
+            "sourceEs": "Retroalimentación comunitaria / noticias",
+            "desc": "Office visibly engaged during ward emergencies (floods, fires, violence, closures).",
+            "descEs": "Oficina visiblemente comprometida durante emergencias del distrito."
+          },
+          {
+            "id": "RS-04",
+            "name": "Community input incorporated",
+            "nameEs": "Aportes comunitarios incorporados",
+            "source": "Meeting records / policy changes",
+            "sourceEs": "Registros de reuniones / cambios de política",
+            "desc": "Evidence that community feedback changed a decision or action.",
+            "descEs": "Evidencia de que la retroalimentación comunitaria cambió una decisión."
+          }
+        ]
+      },
+      {
+        "id": "equity",
+        "name": "Equity & Access",
+        "nameEs": "Equidad y Acceso",
+        "items": [
+          {
+            "id": "EQ-01",
+            "name": "Services reach underserved areas",
+            "nameEs": "Servicios llegan a áreas desatendidas",
+            "source": "Service delivery data by block/area",
+            "sourceEs": "Datos de prestación de servicios por área",
+            "desc": "Ward services distributed proportionally, not concentrated in one area.",
+            "descEs": "Servicios del distrito distribuidos proporcionalmente."
+          },
+          {
+            "id": "EQ-02",
+            "name": "Multilingual communication",
+            "nameEs": "Comunicación multilingüe",
+            "source": "Office materials / website / outreach",
+            "sourceEs": "Materiales de oficina / sitio web",
+            "desc": "Ward communications available in languages spoken by constituents.",
+            "descEs": "Comunicaciones del distrito disponibles en idiomas de los electores."
+          },
+          {
+            "id": "EQ-03",
+            "name": "Accessible meeting locations",
+            "nameEs": "Ubicaciones de reuniones accesibles",
+            "source": "ADA compliance / transit access",
+            "sourceEs": "Cumplimiento ADA / acceso de transporte",
+            "desc": "Public meetings held at ADA-compliant, transit-accessible locations.",
+            "descEs": "Reuniones públicas en ubicaciones accesibles por transporte y ADA."
+          },
+          {
+            "id": "EQ-04",
+            "name": "Development benefits shared",
+            "nameEs": "Beneficios del desarrollo compartidos",
+            "source": "Zoning decisions / community benefits",
+            "sourceEs": "Decisiones de zonificación / beneficios comunitarios",
+            "desc": "New development includes community benefit agreements or affordable components.",
+            "descEs": "Nuevo desarrollo incluye acuerdos de beneficio comunitario."
+          }
+        ]
+      },
+      {
+        "id": "fiscal",
+        "name": "Fiscal Responsibility",
+        "nameEs": "Responsabilidad Fiscal",
+        "items": [
+          {
+            "id": "FI-01",
+            "name": "Menu money spent transparently",
+            "nameEs": "Fondos discrecionales gastados transparentemente",
+            "source": "Aldermanic menu program records",
+            "sourceEs": "Registros del programa discrecional",
+            "desc": "Discretionary infrastructure funds allocated with public input and reporting.",
+            "descEs": "Fondos de infraestructura discrecional asignados con participación pública."
+          },
+          {
+            "id": "FI-02",
+            "name": "TIF funds benefit community",
+            "nameEs": "Fondos TIF benefician a la comunidad",
+            "source": "TIF district reports / city data",
+            "sourceEs": "Informes del distrito TIF",
+            "desc": "Tax increment financing in the ward benefits local residents, not just developers.",
+            "descEs": "Financiamiento de incremento fiscal beneficia a residentes locales."
+          },
+          {
+            "id": "FI-03",
+            "name": "No pay-to-play patterns",
+            "nameEs": "Sin patrones de pago por favores",
+            "source": "Campaign finance records / zoning votes",
+            "sourceEs": "Registros financieros de campaña",
+            "desc": "No pattern of zoning/permit decisions favoring campaign contributors.",
+            "descEs": "Sin patrón de decisiones favoreciendo contribuyentes de campaña."
+          },
+          {
+            "id": "FI-04",
+            "name": "Office budget reasonable",
+            "nameEs": "Presupuesto de oficina razonable",
+            "source": "City budget data",
+            "sourceEs": "Datos del presupuesto de la ciudad",
+            "desc": "Ward office spending in line with comparable wards.",
+            "descEs": "Gastos de oficina del distrito en línea con distritos comparables."
+          }
+        ]
+      },
+      {
+        "id": "results",
+        "name": "Measurable Results",
+        "nameEs": "Resultados Medibles",
+        "items": [
+          {
+            "id": "MR-01",
+            "name": "Crime trends improving",
+            "nameEs": "Tendencias de crimen mejorando",
+            "source": "CPD CLEAR data / ward reports",
+            "sourceEs": "Datos CPD CLEAR / reportes del distrito",
+            "desc": "Violent and property crime trending down or holding steady.",
+            "descEs": "Crimen violento y de propiedad con tendencia a la baja o estable."
+          },
+          {
+            "id": "MR-02",
+            "name": "Vacancy rates declining",
+            "nameEs": "Tasas de vacancia disminuyendo",
+            "source": "City data / visual survey",
+            "sourceEs": "Datos de la ciudad / encuesta visual",
+            "desc": "Fewer vacant lots and buildings compared to prior year.",
+            "descEs": "Menos lotes y edificios vacantes comparado con el año anterior."
+          },
+          {
+            "id": "MR-03",
+            "name": "Business corridor vitality",
+            "nameEs": "Vitalidad del corredor comercial",
+            "source": "Business license data / SSA reports",
+            "sourceEs": "Datos de licencias comerciales / informes SSA",
+            "desc": "Net new businesses opening. Storefront vacancy decreasing.",
+            "descEs": "Nuevos negocios abriendo. Vacancia de locales disminuyendo."
+          },
+          {
+            "id": "MR-04",
+            "name": "Quality of life improvements",
+            "nameEs": "Mejoras en la calidad de vida",
+            "source": "Resident surveys / community feedback",
+            "sourceEs": "Encuestas de residentes / retroalimentación",
+            "desc": "Residents report the ward is getting better, not worse.",
+            "descEs": "Residentes reportan que el distrito está mejorando."
+          }
+        ]
+      }
+    ]
+  },
+  "program": {
+    "name": "Community Program",
+    "nameEs": "Programa Comunitario",
+    "desc": "5 domains, 20 accountability items",
+    "descEs": "5 dominios, 20 ítems de rendición de cuentas",
+    "domains": [
+      {
+        "id": "delivery",
+        "name": "Service Delivery",
+        "nameEs": "Prestación de Servicios",
+        "items": [
+          {
+            "id": "SD-01",
+            "name": "Hours of operation kept",
+            "nameEs": "Horarios de operación mantenidos",
+            "source": "Posted schedule vs. actual",
+            "sourceEs": "Horario publicado vs. real",
+            "desc": "Program operates during posted hours consistently.",
+            "descEs": "El programa opera consistentemente en los horarios publicados."
+          },
+          {
+            "id": "SD-02",
+            "name": "Staff present and trained",
+            "nameEs": "Personal presente y capacitado",
+            "source": "Staffing records / credentials",
+            "sourceEs": "Registros de personal / credenciales",
+            "desc": "Qualified staff present during operating hours.",
+            "descEs": "Personal calificado presente durante horarios de operación."
+          },
+          {
+            "id": "SD-03",
+            "name": "Capacity meets demand",
+            "nameEs": "Capacidad satisface demanda",
+            "source": "Waitlist data / utilization rates",
+            "sourceEs": "Datos de lista de espera / tasas de utilización",
+            "desc": "No persistent waitlist. Services available when needed.",
+            "descEs": "Sin lista de espera persistente. Servicios disponibles cuando se necesitan."
+          },
+          {
+            "id": "SD-04",
+            "name": "Physical space adequate",
+            "nameEs": "Espacio físico adecuado",
+            "source": "Inspection / community observation",
+            "sourceEs": "Inspección / observación comunitaria",
+            "desc": "Clean, safe, accessible, and appropriate for the service.",
+            "descEs": "Limpio, seguro, accesible y apropiado para el servicio."
+          }
+        ]
+      },
+      {
+        "id": "outcomes",
+        "name": "Outcomes",
+        "nameEs": "Resultados",
+        "items": [
+          {
+            "id": "OC-01",
+            "name": "Stated goals being met",
+            "nameEs": "Metas declaradas siendo cumplidas",
+            "source": "Program reports / grant applications",
+            "sourceEs": "Informes del programa / solicitudes de subvención",
+            "desc": "The program is achieving what it said it would achieve.",
+            "descEs": "El programa está logrando lo que dijo que lograría."
+          },
+          {
+            "id": "OC-02",
+            "name": "Data collected and shared",
+            "nameEs": "Datos recopilados y compartidos",
+            "source": "Annual report / community presentation",
+            "sourceEs": "Informe anual / presentación comunitaria",
+            "desc": "Outcome data collected and shared with the community it serves.",
+            "descEs": "Datos de resultados recopilados y compartidos con la comunidad."
+          },
+          {
+            "id": "OC-03",
+            "name": "Participant satisfaction",
+            "nameEs": "Satisfacción de participantes",
+            "source": "Surveys / feedback mechanisms",
+            "sourceEs": "Encuestas / mecanismos de retroalimentación",
+            "desc": "People who use the program report positive experience.",
+            "descEs": "Las personas que usan el programa reportan experiencia positiva."
+          },
+          {
+            "id": "OC-04",
+            "name": "Long-term impact visible",
+            "nameEs": "Impacto a largo plazo visible",
+            "source": "Longitudinal data / follow-up",
+            "sourceEs": "Datos longitudinales / seguimiento",
+            "desc": "Evidence of lasting benefit beyond immediate service.",
+            "descEs": "Evidencia de beneficio duradero más allá del servicio inmediato."
+          }
+        ]
+      },
+      {
+        "id": "access",
+        "name": "Access & Equity",
+        "nameEs": "Acceso y Equidad",
+        "items": [
+          {
+            "id": "AE-01",
+            "name": "No barriers to entry",
+            "nameEs": "Sin barreras de entrada",
+            "source": "Enrollment process / eligibility criteria",
+            "sourceEs": "Proceso de inscripción / criterios de elegibilidad",
+            "desc": "Enrollment process is simple, documented, and doesn't exclude people unnecessarily.",
+            "descEs": "El proceso de inscripción es simple y no excluye personas innecesariamente."
+          },
+          {
+            "id": "AE-02",
+            "name": "Serves diverse community",
+            "nameEs": "Sirve a comunidad diversa",
+            "source": "Demographic data vs. community demographics",
+            "sourceEs": "Datos demográficos vs. demografía comunitaria",
+            "desc": "Participant demographics reflect the community being served.",
+            "descEs": "La demografía de participantes refleja la comunidad atendida."
+          },
+          {
+            "id": "AE-03",
+            "name": "Language access provided",
+            "nameEs": "Acceso lingüístico proporcionado",
+            "source": "Materials / interpreter availability",
+            "sourceEs": "Materiales / disponibilidad de intérpretes",
+            "desc": "Services available in languages spoken in the community.",
+            "descEs": "Servicios disponibles en idiomas hablados en la comunidad."
+          },
+          {
+            "id": "AE-04",
+            "name": "ADA/accessibility compliance",
+            "nameEs": "Cumplimiento ADA/accesibilidad",
+            "source": "Physical inspection / policy review",
+            "sourceEs": "Inspección física / revisión de política",
+            "desc": "Facility and program accessible to people with disabilities.",
+            "descEs": "Instalación y programa accesibles para personas con discapacidad."
+          }
+        ]
+      },
+      {
+        "id": "governance",
+        "name": "Program Governance",
+        "nameEs": "Gobernanza del Programa",
+        "items": [
+          {
+            "id": "PG-01",
+            "name": "Community voice in decisions",
+            "nameEs": "Voz comunitaria en decisiones",
+            "source": "Advisory board / feedback process",
+            "sourceEs": "Junta asesora / proceso de retroalimentación",
+            "desc": "Community members have formal input into program direction.",
+            "descEs": "Los miembros de la comunidad tienen aporte formal en la dirección del programa."
+          },
+          {
+            "id": "PG-02",
+            "name": "Complaints process exists",
+            "nameEs": "Proceso de quejas existe",
+            "source": "Posted policy / resolution records",
+            "sourceEs": "Política publicada / registros de resolución",
+            "desc": "Clear process for raising and resolving complaints.",
+            "descEs": "Proceso claro para presentar y resolver quejas."
+          },
+          {
+            "id": "PG-03",
+            "name": "Leadership accountable",
+            "nameEs": "Liderazgo responsable",
+            "source": "Board meetings / public reporting",
+            "sourceEs": "Reuniones de junta / informes públicos",
+            "desc": "Program leadership reports to community, not just funders.",
+            "descEs": "El liderazgo del programa rinde cuentas a la comunidad, no solo a los financiadores."
+          },
+          {
+            "id": "PG-04",
+            "name": "Conflict of interest managed",
+            "nameEs": "Conflictos de interés manejados",
+            "source": "Disclosure policy / board records",
+            "sourceEs": "Política de divulgación / registros de junta",
+            "desc": "No undisclosed conflicts between leadership and contractors/vendors.",
+            "descEs": "Sin conflictos no divulgados entre liderazgo y contratistas."
+          }
+        ]
+      },
+      {
+        "id": "sustainability",
+        "name": "Sustainability",
+        "nameEs": "Sostenibilidad",
+        "items": [
+          {
+            "id": "SU-01",
+            "name": "Funding secured for next cycle",
+            "nameEs": "Financiamiento asegurado para el próximo ciclo",
+            "source": "Grant status / budget documents",
+            "sourceEs": "Estado de subvención / documentos presupuestarios",
+            "desc": "Funding in place or actively pursued for continued operation.",
+            "descEs": "Financiamiento en lugar o buscándose activamente para operación continua."
+          },
+          {
+            "id": "SU-02",
+            "name": "Staff retention stable",
+            "nameEs": "Retención de personal estable",
+            "source": "Turnover data / staff interviews",
+            "sourceEs": "Datos de rotación / entrevistas de personal",
+            "desc": "Low staff turnover. Institutional knowledge preserved.",
+            "descEs": "Baja rotación de personal. Conocimiento institucional preservado."
+          },
+          {
+            "id": "SU-03",
+            "name": "Community ownership growing",
+            "nameEs": "Propiedad comunitaria creciendo",
+            "source": "Volunteer data / community leadership roles",
+            "sourceEs": "Datos de voluntarios / roles de liderazgo comunitario",
+            "desc": "Community members increasingly involved in running the program.",
+            "descEs": "Miembros de la comunidad cada vez más involucrados en dirigir el programa."
+          },
+          {
+            "id": "SU-04",
+            "name": "Adaptation to changing needs",
+            "nameEs": "Adaptación a necesidades cambiantes",
+            "source": "Needs assessment / program modifications",
+            "sourceEs": "Evaluación de necesidades / modificaciones al programa",
+            "desc": "Program adjusts based on community feedback and changing conditions.",
+            "descEs": "El programa se ajusta según retroalimentación comunitaria y condiciones cambiantes."
+          }
+        ]
+      }
+    ]
+  },
+  "school": {
+    "name": "School / Principal",
+    "nameEs": "Escuela / Director",
+    "desc": "5 domains, 20 accountability items",
+    "descEs": "5 dominios, 20 ítems de rendición de cuentas",
+    "domains": [
+      {
+        "id": "academics",
+        "name": "Academic Quality",
+        "nameEs": "Calidad Académica",
+        "items": [
+          {
+            "id": "AQ-01",
+            "name": "Student achievement trending up",
+            "nameEs": "Logro estudiantil en tendencia ascendente",
+            "source": "IL Report Card / IAR data",
+            "sourceEs": "Boleta de calificaciones IL / datos IAR",
+            "desc": "Standardized test scores improving year over year.",
+            "descEs": "Puntajes de pruebas estandarizadas mejorando año tras año."
+          },
+          {
+            "id": "AQ-02",
+            "name": "Curriculum alignment current",
+            "nameEs": "Alineación curricular actualizada",
+            "source": "Curriculum documents / teacher interviews",
+            "sourceEs": "Documentos curriculares / entrevistas con maestros",
+            "desc": "Curriculum aligned to current state standards.",
+            "descEs": "Currículo alineado con estándares estatales actuales."
+          },
+          {
+            "id": "AQ-03",
+            "name": "Support for struggling students",
+            "nameEs": "Apoyo para estudiantes con dificultades",
+            "source": "RTI/MTSS data / intervention records",
+            "sourceEs": "Datos RTI/MTSS / registros de intervención",
+            "desc": "Systematic support for students below grade level.",
+            "descEs": "Apoyo sistemático para estudiantes por debajo del nivel."
+          },
+          {
+            "id": "AQ-04",
+            "name": "Advanced opportunities available",
+            "nameEs": "Oportunidades avanzadas disponibles",
+            "source": "Course catalog / enrollment data",
+            "sourceEs": "Catálogo de cursos / datos de inscripción",
+            "desc": "Honors, AP, or enrichment available and accessible.",
+            "descEs": "Opciones de honores, AP o enriquecimiento disponibles y accesibles."
+          }
+        ]
+      },
+      {
+        "id": "safety",
+        "name": "Safety & Climate",
+        "nameEs": "Seguridad y Clima",
+        "items": [
+          {
+            "id": "SC-01",
+            "name": "Building safe and maintained",
+            "nameEs": "Edificio seguro y mantenido",
+            "source": "CPS facility reports / inspection",
+            "sourceEs": "Informes de instalaciones CPS / inspección",
+            "desc": "No safety hazards. Building clean, heated, cooled.",
+            "descEs": "Sin peligros de seguridad. Edificio limpio, con calefacción y refrigeración."
+          },
+          {
+            "id": "SC-02",
+            "name": "Bullying/discipline handled fairly",
+            "nameEs": "Acoso/disciplina manejados justamente",
+            "source": "Discipline data / parent feedback",
+            "sourceEs": "Datos disciplinarios / retroalimentación de padres",
+            "desc": "Discipline proportional and not racially disproportionate.",
+            "descEs": "Disciplina proporcional y no racialmente desproporcionada."
+          },
+          {
+            "id": "SC-03",
+            "name": "Social-emotional support",
+            "nameEs": "Apoyo socioemocional",
+            "source": "Counselor ratios / SEL programming",
+            "sourceEs": "Ratios de consejeros / programación SEL",
+            "desc": "Counselors available. SEL curriculum implemented.",
+            "descEs": "Consejeros disponibles. Currículo SEL implementado."
+          },
+          {
+            "id": "SC-04",
+            "name": "Emergency preparedness",
+            "nameEs": "Preparación para emergencias",
+            "source": "Drill records / emergency plan",
+            "sourceEs": "Registros de simulacros / plan de emergencia",
+            "desc": "Regular drills. Updated emergency plan. Staff trained.",
+            "descEs": "Simulacros regulares. Plan de emergencia actualizado."
+          }
+        ]
+      },
+      {
+        "id": "engagement",
+        "name": "Family Engagement",
+        "nameEs": "Participación Familiar",
+        "items": [
+          {
+            "id": "FE-01",
+            "name": "Communication timely and clear",
+            "nameEs": "Comunicación oportuna y clara",
+            "source": "School communications / parent surveys",
+            "sourceEs": "Comunicaciones escolares / encuestas de padres",
+            "desc": "Regular updates in home languages. Not just crisis communication.",
+            "descEs": "Actualizaciones regulares en idiomas del hogar."
+          },
+          {
+            "id": "FE-02",
+            "name": "Parent voice in governance",
+            "nameEs": "Voz de padres en gobernanza",
+            "source": "LSC meetings / PAC records",
+            "sourceEs": "Reuniones LSC / registros PAC",
+            "desc": "Active Local School Council. Parents meaningfully involved.",
+            "descEs": "Consejo Escolar Local activo. Padres significativamente involucrados."
+          },
+          {
+            "id": "FE-03",
+            "name": "Conferences and events accessible",
+            "nameEs": "Conferencias y eventos accesibles",
+            "source": "Attendance data / scheduling",
+            "sourceEs": "Datos de asistencia / programación",
+            "desc": "Events at varied times. Childcare and translation provided.",
+            "descEs": "Eventos en horarios variados. Cuidado infantil y traducción proporcionados."
+          },
+          {
+            "id": "FE-04",
+            "name": "Volunteer opportunities meaningful",
+            "nameEs": "Oportunidades de voluntariado significativas",
+            "source": "Volunteer program / parent feedback",
+            "sourceEs": "Programa de voluntarios / retroalimentación de padres",
+            "desc": "Parents can contribute in ways that matter, not just fundraising.",
+            "descEs": "Los padres pueden contribuir de maneras que importan."
+          }
+        ]
+      },
+      {
+        "id": "resources",
+        "name": "Resource Management",
+        "nameEs": "Gestión de Recursos",
+        "items": [
+          {
+            "id": "RM-01",
+            "name": "Budget transparent",
+            "nameEs": "Presupuesto transparente",
+            "source": "School budget / CPS portal",
+            "sourceEs": "Presupuesto escolar / portal CPS",
+            "desc": "Budget available and explained to community.",
+            "descEs": "Presupuesto disponible y explicado a la comunidad."
+          },
+          {
+            "id": "RM-02",
+            "name": "Class sizes manageable",
+            "nameEs": "Tamaños de clase manejables",
+            "source": "Enrollment data / teacher reports",
+            "sourceEs": "Datos de inscripción / informes de maestros",
+            "desc": "Class sizes within contract limits and effective for learning.",
+            "descEs": "Tamaños de clase dentro de los límites del contrato."
+          },
+          {
+            "id": "RM-03",
+            "name": "Materials and technology adequate",
+            "nameEs": "Materiales y tecnología adecuados",
+            "source": "Classroom inventory / student access",
+            "sourceEs": "Inventario del aula / acceso estudiantil",
+            "desc": "Students have textbooks, devices, and materials they need.",
+            "descEs": "Estudiantes tienen libros de texto, dispositivos y materiales que necesitan."
+          },
+          {
+            "id": "RM-04",
+            "name": "Special education compliance",
+            "nameEs": "Cumplimiento de educación especial",
+            "source": "IEP compliance data / parent reports",
+            "sourceEs": "Datos de cumplimiento IEP / informes de padres",
+            "desc": "IEPs implemented. Services delivered as documented.",
+            "descEs": "IEPs implementados. Servicios entregados según documentado."
+          }
+        ]
+      },
+      {
+        "id": "leadership",
+        "name": "Principal Leadership",
+        "nameEs": "Liderazgo del Director",
+        "items": [
+          {
+            "id": "PL-01",
+            "name": "Visible and accessible",
+            "nameEs": "Visible y accesible",
+            "source": "Community observation / parent feedback",
+            "sourceEs": "Observación comunitaria / retroalimentación de padres",
+            "desc": "Principal regularly visible. Approachable by parents and staff.",
+            "descEs": "Director regularmente visible. Accesible para padres y personal."
+          },
+          {
+            "id": "PL-02",
+            "name": "Staff supported and retained",
+            "nameEs": "Personal apoyado y retenido",
+            "source": "Turnover data / staff surveys",
+            "sourceEs": "Datos de rotación / encuestas de personal",
+            "desc": "Low teacher turnover. Staff report feeling supported.",
+            "descEs": "Baja rotación de maestros. Personal reporta sentirse apoyado."
+          },
+          {
+            "id": "PL-03",
+            "name": "Data-driven decisions",
+            "nameEs": "Decisiones basadas en datos",
+            "source": "School improvement plan / assessment data use",
+            "sourceEs": "Plan de mejora escolar / uso de datos de evaluación",
+            "desc": "Decisions grounded in student data, not just intuition.",
+            "descEs": "Decisiones basadas en datos estudiantiles, no solo intuición."
+          },
+          {
+            "id": "PL-04",
+            "name": "School improvement plan current",
+            "nameEs": "Plan de mejora escolar actualizado",
+            "source": "CIWP / school plan documents",
+            "sourceEs": "CIWP / documentos del plan escolar",
+            "desc": "Written improvement plan with measurable goals, updated annually.",
+            "descEs": "Plan de mejora escrito con metas medibles, actualizado anualmente."
+          }
+        ]
+      }
+    ]
+  }
+}

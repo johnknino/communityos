@@ -1,0 +1,22 @@
+{
+  "_comment": "Spanish locale — import this instead of inline translations to add new languages",
+  "_version": "2026-03-31",
+  "common": {
+    "back_to_top": "Volver arriba",
+    "share_text": "Envía esto por texto",
+    "share_copy": "Copiar enlace",
+    "related_tools": "Herramientas Relacionadas",
+    "data_version": "Versión de datos",
+    "offline": "FUERA DE LÍNEA",
+    "live_api": "API EN VIVO",
+    "print": "Imprimir",
+    "copy": "Copiar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "no_results": "Sin resultados",
+    "error_zip": "Ingresa un código postal de 5 dígitos.",
+    "error_required": "Por favor completa todos los campos.",
+    "not_legal_advice": "Esto es información general, no asesoramiento legal. Cada caso es diferente."
+  }
+}
