@@ -51,6 +51,17 @@
 .prob-icon{font-size:1.2rem;margin-bottom:4px}
 .prob-title{font-family:var(--display);font-size:.72rem;font-weight:700;color:var(--deep);line-height:1.3}
 .prob-desc{font-size:.58rem;color:var(--dim);margin-top:2px;line-height:1.4}
+/* Dark mode — override inline color:var(--deep) which is invisible on dark bg */
+@media(prefers-color-scheme:dark){
+  .problems h2,.prob-title{color:var(--ink)!important}
+  .prob-card{background:var(--warm)!important;border-color:var(--sand)!important}
+  .prob-card[style*="coral"]{background:rgba(212,112,74,.08)!important}
+  .crisis-bar{background:rgba(212,112,74,.1)}
+  [style*="color:var(--deep)"]{color:var(--ink)!important}
+  [style*="color:var(--forest)"]{color:var(--sage)!important}
+  [style*="background:#fff"]{background:var(--warm)!important;border-color:var(--sand)!important}
+  [style*="background:var(--warm)"]{background:#1a2420!important;border-color:var(--sand)!important}
+}
 </style>
 </head>
 <body>
