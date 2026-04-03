@@ -853,8 +853,15 @@ h3,h4{letter-spacing:var(--tracking-normal)}
   .page{color:var(--body)}
   /* Hardcode dark backgrounds that previously used var(--deep) */
   .page-header--dark{background:#12201E}
+  .hero{background:#12201E}
   .gov-hero,.dx-hero,.cm-hero,.nd-hero,.pr-hero,.ev-hero,.cn-hero,.cs-hero,.ds-hero,.cr-hero,.db-hero,.gr-hero,.is-hero,.ob-hero{background:#12201E}
   .site-nav{background:rgba(18,32,30,.98)}
+  .nav-panel{background:#1a2420}
+  .nav-link{color:var(--body)}
+  .nav-link:hover,.nav-link.current{background:var(--warm);color:var(--ink)}
+  .nav-close{color:var(--body)}
+  .nav-arc-label{color:var(--dim)}
+  .nav-divider{background:var(--sand)}
   .site-footer{background:#0a1412}
   .hotline{background:#12201E}
   .cliffhanger{background:#12201E}
