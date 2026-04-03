@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="/css/shared.css">
 <style>
 .ct-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
-.ct-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.ct-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
 .ct-tab:hover{border-color:var(--sage);color:var(--deep)}
 .ct-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
 .ct-panel{display:none}.ct-panel.active{display:block}
-.ct-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.ct-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
 .ct-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:6px}
 .ct-card p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
 .ct-step{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand)}
@@ -28,7 +28,7 @@
 .ct-step .ct-text{flex:1}
 .ct-step .ct-text strong{font-size:.78rem;color:var(--deep);display:block;margin-bottom:2px}
 .ct-step .ct-text p{font-size:.75rem;color:var(--body);line-height:1.6;margin:0}
-.ct-bring{background:#fff;border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid var(--sand)}
+.ct-bring{background:#fff;border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid var(--sand);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
 .ct-bring h4{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
 .ct-bring-item{font-size:.75rem;color:var(--body);padding:3px 0;display:flex;gap:6px;align-items:flex-start}
 .ct-bring-item span{color:var(--sage);flex-shrink:0}

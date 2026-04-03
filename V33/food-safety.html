@@ -15,12 +15,13 @@
 <link rel="stylesheet" href="/css/shared.css">
 <style>
 .fi-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
-.fi-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px}
-.fi-search input:focus{outline:none;border-color:var(--sage)}
-.fi-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
-.fi-go:hover{background:var(--deep)}
+.fi-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;box-shadow:var(--shadow-1);flex:1;min-width:180px}
+.fi-search input:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(91,140,122,.15)}
+.fi-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
+.fi-go:hover{background:var(--deep);transform:translateY(-1px)}
 .fi-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
-.fi-card{background:var(--warm);border-radius:14px;padding:16px;margin:10px 0;border:1px solid var(--sand);border-left:4px solid var(--sage)}
+.fi-card{background:var(--warm);border-radius:14px;padding:16px;margin:10px 0;border:1px solid var(--sand);border-left:4px solid var(--sage);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
+.fi-card:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
 .fi-card.fail{border-left-color:var(--coral)}
 .fi-card.conditional{border-left-color:var(--gold)}
 .fi-card .fi-name{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep)}

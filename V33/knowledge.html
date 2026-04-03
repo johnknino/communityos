@@ -99,6 +99,11 @@
     <p style="font-size:.85rem;color:var(--body);line-height:1.7" data-t="scaffold_explain">Every guide follows the same three questions: <strong style="color:var(--forest)">How does this work?</strong> — when everything goes right. <strong style="color:var(--coral)">Where does it break?</strong> — where people get stuck. <strong style="color:var(--sage)">What can you do?</strong> — specific steps, phone numbers, exact words to say. This is how people already solve problems. We just wrote it down.</p>
   </div>
 
+  <!-- SEARCH -->
+  <div class="fade-in fade-in-1" style="margin-bottom:12px">
+    <input type="text" id="guideSearch" placeholder="Search 54 guides..." data-t-placeholder="search_guides" style="width:100%;font-family:var(--sans);font-size:.88rem;padding:12px 16px;border:1.5px solid var(--sand);border-radius:10px;background:var(--warm);color:var(--deep);box-shadow:var(--shadow-1);transition:border-color .2s" onfocus="this.style.borderColor='var(--sage)'" onblur="this.style.borderColor='var(--sand)'" oninput="searchGuides(this.value)">
+  </div>
+
   <!-- DOMAIN FILTER -->
   <div class="domain-tabs fade-in fade-in-1" id="domainTabs">
     <button class="dtab active" onclick="filterDomain('all',this)" data-t="tab_all">All</button>
@@ -247,12 +252,31 @@ async function loadModules() {
   }
 }
 
+var currentSearch = '';
+
+function searchGuides(term) {
+  currentSearch = term.toLowerCase().trim();
+  renderGrid();
+}
+
 function renderGrid() {
   var isEs = EQ && EQ.lang === 'es';
   var filtered = currentFilter === 'all' ? modules : modules.filter(function(m) { return m.domain === currentFilter; });
 
+  if (currentSearch) {
+    filtered = filtered.filter(function(m) {
+      var title = ((isEs && m.title_es) ? m.title_es : m.title).toLowerCase();
+      var noun = ((isEs && m.noun_es) ? m.noun_es : m.noun).toLowerCase();
+      var domain = m.domain.toLowerCase();
+      return title.indexOf(currentSearch) !== -1 || noun.indexOf(currentSearch) !== -1 || domain.indexOf(currentSearch) !== -1;
+    });
+  }
+
   if (filtered.length === 0) {
-    document.getElementById('moduleGrid').innerHTML = '<div class="empty">' + (isEs ? 'No hay guías en esta categoría todavía. ¡Sé el primero!' : 'No guides in this category yet. Be the first!') + '</div>';
+    var msg = currentSearch
+      ? (isEs ? 'No se encontraron guías para "' + esc(currentSearch) + '"' : 'No guides found for "' + esc(currentSearch) + '"')
+      : (isEs ? 'No hay guías en esta categoría todavía. ¡Sé el primero!' : 'No guides in this category yet. Be the first!');
+    document.getElementById('moduleGrid').innerHTML = '<div class="empty">' + msg + '</div>';
     return;
   }
 

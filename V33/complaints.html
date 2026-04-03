@@ -16,16 +16,16 @@
 <style>
 .cl-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
 .cl-search input{font-family:var(--sans);font-size:.95rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;width:140px}
-.cl-search input:focus{outline:none;border-color:var(--sage)}
+.cl-search input:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(91,140,122,.15)}
 .cl-search select{font-family:var(--sans);font-size:.82rem;padding:11px 12px;border:1.5px solid var(--sand);border-radius:10px;background:#fff}
-.cl-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
-.cl-go:hover{background:var(--deep)}
+.cl-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
+.cl-go:hover{background:var(--deep);transform:translateY(-1px)}
 .cl-loading{text-align:center;padding:30px;font-size:.82rem;color:var(--dim)}
 .cl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
-.cl-stat{background:var(--warm);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--sand)}
+.cl-stat{background:var(--warm);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--sand);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
 .cl-stat .cl-num{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--deep)}
 .cl-stat .cl-label{font-size:.62rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-.cl-company{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center}
+.cl-company{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out);display:flex;justify-content:space-between;align-items:center}
 .cl-company .cl-co-name{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep)}
 .cl-company .cl-co-count{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--coral)}
 .cl-company .cl-co-product{font-size:.62rem;color:var(--dim);margin-top:2px}

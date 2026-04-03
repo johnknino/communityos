@@ -15,7 +15,8 @@
 .cr-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep)}
 .cr-hero p{font-size:.82rem;color:var(--body);margin-top:4px}
 .cr-grid{display:grid;grid-template-columns:1fr;gap:10px;padding:16px;max-width:500px;margin:0 auto}
-.cr-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--warm);border-radius:14px;border:1.5px solid var(--sand);text-decoration:none;transition:.2s}
+.cr-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--warm);border-radius:14px;border:1.5px solid var(--sand);text-decoration:none;box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out),border-color var(--dur-fast)}
+.cr-card:hover{border-color:var(--sage);transform:translateY(-2px);box-shadow:var(--shadow-2)}
 .cr-card:hover{border-color:var(--sage);transform:translateY(-1px)}
 .cr-card .cr-icon{font-size:1.5rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;flex-shrink:0}
 .cr-card .cr-text{flex:1}

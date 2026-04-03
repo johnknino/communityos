@@ -14,16 +14,17 @@
 <link rel="stylesheet" href="/css/shared.css">
 <style>
 .tt-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
-.tt-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px}
-.tt-search input:focus{outline:none;border-color:var(--sage)}
-.tt-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
-.tt-go:hover{background:var(--deep)}
+.tt-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px;box-shadow:var(--shadow-1);transition:border-color var(--dur-norm),box-shadow var(--dur-norm)}
+.tt-search input:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(91,140,122,.15)}
+.tt-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
+.tt-go:hover{background:var(--deep);transform:translateY(-1px)}
 .tt-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
 .tt-stats{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
-.tt-stat{background:var(--warm);border-radius:10px;padding:10px 14px;text-align:center;border:1px solid var(--sand);flex:1;min-width:80px}
+.tt-stat{background:var(--warm);border-radius:10px;padding:10px 14px;text-align:center;border:1px solid var(--sand);flex:1;min-width:80px;box-shadow:var(--shadow-1)}
 .tt-stat .tt-num{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep)}
 .tt-stat .tt-lbl{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
-.tt-card{background:var(--warm);border-radius:12px;padding:12px 14px;margin:6px 0;border:1px solid var(--sand);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tt-card{background:var(--warm);border-radius:12px;padding:12px 14px;margin:6px 0;border:1px solid var(--sand);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
+.tt-card:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
 .tt-card .tt-type{font-family:var(--display);font-size:.78rem;font-weight:700;color:var(--deep)}
 .tt-card .tt-addr{font-size:.65rem;color:var(--dim);margin:2px 0}
 .tt-card .tt-date{font-size:.62rem;color:var(--dim)}

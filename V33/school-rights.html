@@ -15,11 +15,11 @@
 <link rel="stylesheet" href="/css/shared.css">
 <style>
 .sr-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
-.sr-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.sr-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
 .sr-tab:hover{border-color:var(--sage);color:var(--deep)}
 .sr-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
 .sr-panel{display:none}.sr-panel.active{display:block}
-.sr-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.sr-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand);box-shadow:var(--shadow-1);transition:transform var(--dur-norm) var(--ease-spring),box-shadow var(--dur-norm) var(--ease-out)}
 .sr-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:6px}
 .sr-card p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
 .sr-nbf{margin-top:14px;padding-top:12px;border-top:1px solid var(--sand)}
