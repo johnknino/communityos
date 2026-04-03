@@ -692,48 +692,55 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px soli
 
 /* #63 Dark mode */
 @media(prefers-color-scheme:dark){
-  :root{--warm:#1a2420;--sand:#2a3a34;--dim:#8a9a92;--body:#c8d4cc;--ink:#e0e8e2}
+  /* --deep flips to light so ALL color:var(--deep) text across every page becomes readable.
+     Elements that need dark BACKGROUNDS get hardcoded #12201E below. */
+  :root{--warm:#1a2420;--sand:#2a3a34;--dim:#8a9a92;--body:#c8d4cc;--ink:#e0e8e2;--deep:#e0e8e2;--forest:#7BBFA8;--cream:#FAFAF7}
   body{background:#121e1a;color:var(--body)}
+  body::before{opacity:.015}
   .page{color:var(--body)}
-  /* All headings and titles that use var(--deep) — must be light on dark bg */
-  h1,h2,h3,h4{color:var(--ink)}
-  .page-header h1,.section-head h2{color:var(--ink)}
-  .resource-card h3,.data-section h3{color:var(--ink)}
-  .prob-card .prob-title,.arc-card h3,.cost-card h3{color:var(--ink)}
-  .official-name,.tt-type,.bs-type,.fi-type,.cl-company-name{color:var(--ink)}
-  .hr-card h3,.bs-form h3,.wr-field label,.sr-card h3{color:var(--ink)}
-  .mod-card h3,.mc-noun{color:var(--body)}
-  .narrative p{color:var(--body)}
-  .prob-card .prob-desc{color:var(--body)}
-  .officials-header h3,.civic-pressure h3{color:var(--ink)}
-  .tt-num,.bs-num,.ds-num{color:var(--sage-glow)}
+  /* Hardcode dark backgrounds that previously used var(--deep) */
+  .page-header--dark{background:#12201E}
+  .gov-hero,.dx-hero,.cm-hero,.nd-hero,.pr-hero,.ev-hero,.cn-hero,.cs-hero,.ds-hero,.cr-hero,.db-hero,.gr-hero,.is-hero,.ob-hero{background:#12201E}
+  .site-nav{background:rgba(18,32,30,.98)}
+  .site-footer{background:#0a1412}
+  .hotline{background:#12201E}
+  .cliffhanger{background:#12201E}
+  .crisis-bar{background:#12201E}
+  .constellation-section{background:#12201E}
+  .skip-nav{background:#12201E}
+  .back-top{background:#12201E}
+  /* Hero text stays light — cream is preserved as #FAFAF7 */
+  .page-header--dark h1{color:var(--cream)}
+  .page-header--dark .subtitle{color:rgba(250,246,240,.6)}
+  .page-header--dark .arc-label{color:var(--sage-glow)}
+  .gov-hero h1,.dx-hero h1,.cm-hero h1,.nd-hero h1,.pr-hero h1,.ev-hero h1,.cn-hero h1,.cs-hero h1,.ds-hero h1,.cr-hero h1,.db-hero h1,.gr-hero h1,.is-hero h1,.ob-hero h1{color:var(--cream)}
+  .gov-hero p,.dx-hero p,.cm-hero p,.nd-hero p,.pr-hero p,.ev-hero p,.cn-hero p,.cs-hero p,.ds-hero p,.cr-hero p,.db-hero p,.gr-hero p,.is-hero p,.ob-hero p{color:rgba(250,246,240,.65)}
   /* Card and section backgrounds */
   input,select,textarea{background:#1a2a24;color:var(--ink);border-color:var(--sand)}
-  .hero-zip{background:#1a2a24;color:var(--ink);border-color:var(--sand)}
+  .hero-zip{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(91,140,122,.4)}
   .prob-card,.tool-item,.hr-card,.bs-form,.wr-calc,.sr-card,.ct-card,.lj-card,.dr-card,.mn-section,.hw-section{background:var(--warm);border-color:var(--sand)}
   .resource-card,.gov-card,.official-card,.data-section,.narrative,.civic-pressure{background:var(--warm);border-color:var(--sand)}
   .arc-card,.cost-card,.alert-box,.alert-info,.alert-update,.coming-soon{background:var(--warm);border-color:var(--sand)}
   .is-issue,.cp-card,.is-compose,.tt-card,.tt-stat,.bs-card,.fi-card{background:var(--warm);border-color:var(--sand)}
-  .bs-prog,.mod-card,.cr-card,.hr-tab{background:var(--warm);border-color:var(--sand)}
+  .bs-prog,.mod-card,.cr-card,.hr-tab,.cm-post,.cm-compose,.cm-reply{background:var(--warm);border-color:var(--sand)}
+  .nd-card,.pr-card,.ev-card,.cn-card{background:var(--warm);border-color:var(--sand)}
   .mn-stat,.cl-stat,.bs-stat,.tt-stat{background:#1a2a24;border-color:var(--sand)}
-  .defend-preview{background:#1a2a24;color:var(--ink)}
-  .defend-form{background:var(--warm);border-color:var(--sand)}
-  /* Links */
+  .defend-preview,.defend-form{background:#1a2a24;color:var(--ink)}
+  .stat-glass{background:rgba(255,255,255,.12)}
+  /* Links — sage stays readable on dark */
   a{color:var(--sage)}
   .cta-btn{color:var(--sage-glow);border-color:var(--sage)}
-  /* Footer */
-  .site-footer{background:#0a1412}
+  /* Stat numbers in tools */
+  .tt-num,.bs-num,.ds-num,.pressure-card .p-score{color:var(--sage-glow)}
+  /* Trust footer */
   .trust-footer{background:var(--warm);border-color:var(--sand)}
   /* Knowledge page */
   #guideSearch{background:#1a2a24;color:var(--ink);border-color:var(--sand)}
   .dtab{background:var(--warm);color:var(--body);border-color:var(--sand)}
-  .dtab.active{background:var(--forest);color:#fff}
-  /* Global: override ALL inline color:var(--deep) and color:var(--forest) across all pages */
+  .dtab.active{background:#12201E;color:#fff}
+  /* Global: override ALL inline color:var(--deep) and color:var(--forest) — invisible on dark bg */
   [style*="color:var(--deep)"]{color:var(--ink)!important}
   [style*="color:var(--forest)"]{color:var(--sage)!important}
-  [style*="background:#fff"]{background:var(--warm)!important}
-  [style*="background:var(--warm)"]{background:#1a2420!important}
-  /* Heroes use var(--deep) for bg and var(--cream) for text — both preserved */
 }
 
 /* #23 Swipeable tabs on mobile */
