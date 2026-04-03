@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>311 Tracker — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="311 Tracker — CommUnity OS">
+<meta property="og:description" content="See every 311 request on your block. Potholes, streetlights, rats, trees. Real city data.">
+<meta name="description" content="Track 311 service requests in your Chicago neighborhood. Potholes, streetlights, graffiti, rat complaints, tree trims. See resolution status and days open. Real city data.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.tt-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.tt-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px}
+.tt-search input:focus{outline:none;border-color:var(--sage)}
+.tt-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.tt-go:hover{background:var(--deep)}
+.tt-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
+.tt-stats{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.tt-stat{background:var(--warm);border-radius:10px;padding:10px 14px;text-align:center;border:1px solid var(--sand);flex:1;min-width:80px}
+.tt-stat .tt-num{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep)}
+.tt-stat .tt-lbl{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.tt-card{background:var(--warm);border-radius:12px;padding:12px 14px;margin:6px 0;border:1px solid var(--sand);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tt-card .tt-type{font-family:var(--display);font-size:.78rem;font-weight:700;color:var(--deep)}
+.tt-card .tt-addr{font-size:.65rem;color:var(--dim);margin:2px 0}
+.tt-card .tt-date{font-size:.62rem;color:var(--dim)}
+.tt-card .tt-status{font-size:.58rem;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.tt-open{background:rgba(212,112,74,.1);color:var(--coral)}
+.tt-closed{background:rgba(91,140,122,.1);color:var(--forest)}
+.tt-days{font-size:.65rem;color:var(--coral);margin-top:2px}
+.tt-section{margin:14px 0}
+.tt-section h3{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.tt-bar{display:flex;align-items:center;gap:8px;margin:4px 0}
+.tt-bar-label{font-size:.65rem;color:var(--body);width:120px;flex-shrink:0;text-align:right}
+.tt-bar-fill{height:16px;border-radius:3px;background:var(--sage);min-width:4px;transition:width .6s}
+.tt-bar-count{font-size:.6rem;font-weight:600;color:var(--dim);width:30px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">AUDIT</div>
+    <h1 data-t="tt_title">311 Tracker</h1>
+    <p class="subtitle" data-t="tt_sub">See every service request on your block. Real data from the city.</p>
+  </div>
+
+  <div class="bc-privacy" style="border-left-color:var(--gold)"><strong>Note:</strong> This tool uses Chicago open data. If you're outside Chicago, similar data may be available through your city's open data portal. <a href="/neighborhood.html" style="color:var(--forest);font-weight:600">Check your neighborhood →</a></div>
+
+  <div class="tt-search">
+    <input type="text" id="ttQuery" placeholder="Enter your Chicago address or zip code" onkeydown="if(event.key==='Enter')search311()">
+    <button class="tt-go" onclick="search311()">Search</button>
+  </div>
+
+  <div id="ttLoading" class="tt-loading" style="display:none">Searching 311 records...</div>
+  <div id="ttResults" style="display:none"></div>
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool collects, stores, and transmits zero data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila, almacena ni transmite ningún dato.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var SODA = 'https://data.cityofchicago.org/resource/v6vf-nfxy.json';
+
+function search311() {
+  var q = document.getElementById('ttQuery').value.trim();
+  if (!q || q.length < 3) { alert('Enter a Chicago address or zip code.'); return; }
+
+  document.getElementById('ttLoading').style.display = '';
+  document.getElementById('ttResults').style.display = 'none';
+
+  var isZip = /^\d{5}$/.test(q);
+  var sixMonths = new Date(); sixMonths.setMonth(sixMonths.getMonth() - 6);
+  var dateMin = sixMonths.toISOString().split('T')[0];
+
+  var where;
+  if (isZip) {
+    where = "zip_code='" + q + "' AND created_date>'" + dateMin + "'";
+  } else {
+    var addr = q.toUpperCase().replace(/'/g, "''");
+    where = "upper(street_address) like '%" + addr + "%' AND created_date>'" + dateMin + "'";
+  }
+
+  var url = SODA + '?$where=' + encodeURIComponent(where) + '&$order=created_date DESC&$limit=50';
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('ttLoading').style.display = 'none';
+      render311(data, q);
+    })
+    .catch(function() {
+      document.getElementById('ttLoading').style.display = 'none';
+      document.getElementById('ttResults').innerHTML = '<p style="text-align:center;color:var(--dim);padding:20px">Could not reach Chicago 311 data. Try again.</p>';
+      document.getElementById('ttResults').style.display = '';
+    });
+}
+
+function render311(data, query) {
+  if (!data || data.length === 0) {
+    document.getElementById('ttResults').innerHTML = '<p style="text-align:center;color:var(--dim);padding:30px">No 311 requests found for "' + query + '" in the last 6 months. Try a broader search or just the zip code.</p>';
+    document.getElementById('ttResults').style.display = '';
+    return;
+  }
+
+  var now = new Date();
+  var open = 0, closed = 0;
+  var types = {};
+
+  data.forEach(function(r) {
+    var status = (r.status || '').toLowerCase();
+    if (status === 'open') open++; else closed++;
+    var type = r.sr_type || r.service_request_type || 'Other';
+    types[type] = (types[type] || 0) + 1;
+  });
+
+  var sortedTypes = Object.entries(types).sort(function(a, b) { return b[1] - a[1]; });
+  var maxType = sortedTypes.length > 0 ? sortedTypes[0][1] : 1;
+
+  var html = '<div class="tt-stats">' +
+    '<div class="tt-stat"><div class="tt-num">' + data.length + '</div><div class="tt-lbl">Requests (6 mo)</div></div>' +
+    '<div class="tt-stat"><div class="tt-num" style="color:var(--coral)">' + open + '</div><div class="tt-lbl">Open</div></div>' +
+    '<div class="tt-stat"><div class="tt-num" style="color:var(--forest)">' + closed + '</div><div class="tt-lbl">Completed</div></div>' +
+    '</div>';
+
+  // Type breakdown
+  html += '<div class="tt-section"><h3>By Type</h3>';
+  sortedTypes.slice(0, 8).forEach(function(t) {
+    var pct = Math.round((t[1] / maxType) * 100);
+    html += '<div class="tt-bar"><span class="tt-bar-label">' + t[0].substring(0, 22) + '</span><div class="tt-bar-fill" style="width:' + pct + '%"></div><span class="tt-bar-count">' + t[1] + '</span></div>';
+  });
+  html += '</div>';
+
+  // Individual requests
+  html += '<div class="tt-section"><h3>Recent Requests</h3>';
+  data.slice(0, 20).forEach(function(r) {
+    var status = (r.status || 'Unknown').toLowerCase();
+    var isOpen = status === 'open';
+    var badge = isOpen ? '<span class="tt-status tt-open">OPEN</span>' : '<span class="tt-status tt-closed">DONE</span>';
+    var created = r.created_date ? new Date(r.created_date) : null;
+    var dateStr = created ? created.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    var days = created ? Math.round((now - created) / 86400000) : 0;
+
+    html += '<div class="tt-card"><div><div class="tt-type">' + (r.sr_type || r.service_request_type || 'Request') + '</div>' +
+      '<div class="tt-addr">' + (r.street_address || '') + '</div>' +
+      '<div class="tt-date">' + dateStr + (isOpen && days > 7 ? ' <span class="tt-days">' + days + ' days open</span>' : '') + '</div>' +
+      '</div>' + badge + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div style="text-align:center;margin:16px 0"><a href="https://311.chicago.gov/" target="_blank" rel="noopener" style="font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block">Submit a 311 Request →</a></div>';
+
+  document.getElementById('ttResults').innerHTML = html;
+  document.getElementById('ttResults').style.display = '';
+}
+
+EQ.init({
+  tt_title: '311 Tracker',
+  tt_title_es: 'Rastreador 311',
+  tt_sub: 'See every service request on your block. Real data from the city.',
+  tt_sub_es: 'Mira cada solicitud de servicio en tu cuadra. Datos reales de la ciudad.'
+}, { closingKey: 'footer_closing_audit' });
+</script>
+</body>
+</html>

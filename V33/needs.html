@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Needs & Offers — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.nd-hero{text-align:center;padding:28px 16px 16px}
+.nd-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.nd-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:440px;margin:0 auto 16px}
+.nd-tabs{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.nd-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.nd-tab:hover{border-color:var(--sage)}
+.nd-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.nd-card{background:var(--warm);border-radius:12px;padding:14px;margin:8px 0;border:1px solid var(--sand)}
+.nd-card .nc-type{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.nc-type.need{background:rgba(212,112,74,.1);color:var(--coral)}
+.nc-type.offer{background:rgba(91,140,122,.1);color:var(--forest)}
+.nd-card .nc-title{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--deep);margin:2px 0}
+.nd-card .nc-body{font-size:.78rem;color:var(--body);line-height:1.6}
+.nd-card .nc-meta{font-size:.62rem;color:var(--dim);margin-top:6px;display:flex;justify-content:space-between;align-items:center}
+.nd-card .nc-help{font-family:var(--display);font-size:.65rem;font-weight:600;padding:4px 12px;border-radius:6px;border:1px solid var(--sage);color:var(--forest);cursor:pointer;background:transparent}
+.nd-card .nc-help:hover{background:rgba(45,90,78,.04)}
+.nd-compose{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.nd-compose h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.nd-compose input,.nd-compose textarea,.nd-compose select{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.nd-compose textarea{min-height:60px;resize:vertical}
+.nd-compose button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="nd-hero">
+    <h1 data-t="n_title">Needs & Offers</h1>
+    <p data-t="n_sub">Your neighbor needs a ride to the clinic. Another has extra garden tomatoes. Mutual aid starts with knowing who needs what.</p>
+  </div>
+
+  <div class="nd-tabs">
+    <div class="nd-tab active" onclick="filterType('all',this)">All</div>
+    <div class="nd-tab" onclick="filterType('need',this)">🔴 Needs</div>
+    <div class="nd-tab" onclick="filterType('offer',this)">🟢 Offers</div>
+  </div>
+
+  <div class="nd-compose">
+    <h3 data-t="n_post">Post a Need or Offer</h3>
+    <input type="text" id="nName" placeholder="Your name (or Anonymous)">
+    <select id="nType"><option value="need">🔴 I need help with...</option><option value="offer">🟢 I can offer...</option></select>
+    <select id="nCat"><option value="food">Food</option><option value="transport">Transportation</option><option value="childcare">Childcare</option><option value="housing">Housing</option><option value="medical">Medical</option><option value="legal">Legal</option><option value="translation">Translation</option><option value="other">Other</option></select>
+    <input type="text" id="nTitle" placeholder="Brief description">
+    <textarea id="nBody" placeholder="Details — what exactly do you need or offer?"></textarea>
+    <button onclick="submitNeed()">Post</button>
+  </div>
+
+  <div id="needList"></div>
+</div>
+
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var items=[],filterVal='all';
+function filterType(t,btn){filterVal=t;document.querySelectorAll('.nd-tab').forEach(function(b){b.classList.remove('active')});if(btn)btn.classList.add('active');render()}
+function render(){
+  var f=filterVal==='all'?items:items.filter(function(i){return i.type===filterVal});
+  if(!f.length){document.getElementById('needList').innerHTML='<div style="text-align:center;padding:30px;color:var(--dim);font-size:.82rem">No listings yet. Post the first one.</div>';return}
+  var h='';
+  f.forEach(function(i){
+    var tp=i.type==='offer'?'offer':'need';
+    h+='<div class="nd-card"><span class="nc-type '+tp+'">'+(tp==='offer'?'OFFER':'NEED')+'</span>';
+    h+='<div class="nc-title">'+(i.title||i.description||'')+'</div>';
+    h+='<div class="nc-body">'+(i.body||i.description||'')+'</div>';
+    h+='<div class="nc-meta"><span>'+(i.author||i.name||'Anonymous')+' · '+(i.category||'')+'</span>';
+    h+='<button class="nc-help" onclick="respond(\''+i.id+'\')">🤝 '+(tp==='offer'?'Accept':'I can help')+'</button></div></div>';
+  });
+  document.getElementById('needList').innerHTML=h;
+}
+function load(){
+  if(typeof CommunityAPI==='undefined'||!CommunityAPI.isConfigured()){
+    items=[
+      {id:'n1',type:'need',author:'Ana',category:'transport',title:'Ride to DHS appointment Tuesday 9am',body:'I need a ride to the DHS office at 4949 S Archer for my SNAP recertification. Can get there by bus but appointment is 9am and the earliest bus gets me there at 9:45.',created_at:new Date(Date.now()-7200000).toISOString()},
+      {id:'n2',type:'offer',author:'Marcus',category:'food',title:'Extra garden kale and tomatoes',body:'My garden overproduced. I have about 5 lbs of kale and a dozen tomatoes. Free to anyone who wants them — pickup at 18th and Loomis.',created_at:new Date(Date.now()-14400000).toISOString()},
+      {id:'n3',type:'need',author:'Anonymous',category:'translation',title:'Need Spanish translation for lease',body:'My new lease has some clauses I don\'t understand. Can anyone help translate and explain the legal terms?',created_at:new Date(Date.now()-43200000).toISOString()},
+      {id:'n4',type:'offer',author:'David',category:'legal',title:'Free notary service Saturdays',body:'I\'m a licensed notary. Available Saturday mornings at the library on Blue Island Ave. No charge.',created_at:new Date(Date.now()-86400000).toISOString()}
+    ];render();return;
+  }
+  CommunityAPI.smartFetch(CommunityAPI.endpoint()+'?action=get_listings&type=all&zip='+(CommunityAPI.getCommunity()||'60608'))
+    .then(function(r){return r.json()}).then(function(d){items=Array.isArray(d)?d:(d.posts||[]);render()}).catch(function(){items=[];render()});
+}
+function submitNeed(){
+  var name=document.getElementById('nName').value.trim()||'Anonymous';
+  var type=document.getElementById('nType').value;
+  var cat=document.getElementById('nCat').value;
+  var title=document.getElementById('nTitle').value.trim();
+  var body=document.getElementById('nBody').value.trim();
+  if(!title&&!body){alert('Describe what you need or offer.');return}
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'submit_listing',name:name,type:type,category:cat,title:title,description:body,zip:CommunityAPI.getCommunity()||'60608'})}).then(function(){document.getElementById('nTitle').value='';document.getElementById('nBody').value='';load()}).catch(function(){alert('Backend unavailable.')});
+  } else {items.unshift({id:'l-'+Date.now(),author:name,type:type,category:cat,title:title,body:body,created_at:new Date().toISOString()});document.getElementById('nTitle').value='';document.getElementById('nBody').value='';render()}
+}
+function respond(id){alert('In a live community, this connects you with the poster. Community backend required — see /how-it-works.html')}
+load();
+EQ.init({n_title:'Needs & Offers',n_title_es:'Necesidades y Ofertas',n_sub:'Your neighbor needs a ride to the clinic. Another has extra garden tomatoes. Mutual aid starts with knowing who needs what.',n_sub_es:'Tu vecino necesita transporte a la clínica. Otro tiene tomates extra del jardín. La ayuda mutua empieza sabiendo quién necesita qué.',n_post:'Post a Need or Offer',n_post_es:'Publica una Necesidad u Oferta'});
+</script>
+</body>
+</html>

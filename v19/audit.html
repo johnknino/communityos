@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Are They Keeping Their Promises? — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Track whether your leaders and programs are meeting their commitments. Domain-by-domain accountability with evidence.">
+<meta property="og:title" content="Community Accountability Audit — CommUnity OS">
+<meta property="og:description" content="Track whether your leaders and programs are meeting their commitments. Domain-by-domain accountability with evidence.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/audit.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.audit-score{background:var(--deep);color:var(--cream);border-radius:14px;padding:24px;margin:20px 0;text-align:center}
+.audit-score .big{font-size:3rem;font-weight:700;line-height:1}
+.audit-score .big span{color:var(--mint)}
+.audit-score .label{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-top:4px}
+.audit-score .grade{display:inline-block;margin-top:8px;padding:4px 16px;border-radius:8px;font-weight:700;font-size:.85rem}
+.grade-a{background:#2d7a4e;color:#fff}.grade-b{background:#5a8a78;color:#fff}
+.grade-c{background:#b8963e;color:#fff}.grade-d{background:#c4654a;color:#fff}.grade-f{background:#8b3a3a;color:#fff}
+
+.domain-bars{display:grid;gap:10px;margin:20px 0}
+.domain-bar{background:var(--warm);border-radius:12px;padding:14px 18px;border:1px solid var(--sand)}
+.domain-bar .db-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.domain-bar .db-name{font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--deep)}
+.domain-bar .db-score{font-size:.78rem;font-weight:700;color:var(--forest)}
+.domain-bar .db-track{height:8px;background:rgba(0,0,0,.06);border-radius:4px;overflow:hidden}
+.domain-bar .db-fill{height:100%;border-radius:4px;transition:width .5s}
+.fill-green{background:var(--forest)}.fill-yellow{background:var(--gold)}.fill-red{background:var(--coral)}
+
+.heatmap{width:100%;border-collapse:collapse;font-size:.7rem;margin:20px 0}
+.heatmap th{font-size:.6rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);padding:8px 6px;border-bottom:2px solid var(--sand)}
+.heatmap td{padding:8px 6px;border-bottom:1px solid var(--sand);text-align:center}
+.heatmap td:first-child{text-align:left;font-weight:500;color:var(--deep)}
+.dot{display:inline-block;width:18px;height:18px;border-radius:50%;line-height:18px;text-align:center;font-size:.55rem;font-weight:700;color:#fff}
+.dot-green{background:var(--forest)}.dot-yellow{background:var(--gold)}.dot-red{background:var(--coral)}.dot-gray{background:#ccc}
+
+.setup-card{background:var(--warm);border-radius:14px;padding:24px;margin-bottom:20px;border:1px solid var(--sand)}
+.setup-card h3{font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--deep);margin-bottom:12px}
+.setup-card label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+.setup-card label:first-of-type{margin-top:0}
+.setup-card input,.setup-card select,.setup-card textarea{font-family:var(--sans);font-size:.88rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);resize:vertical}
+.setup-card input:focus,.setup-card select:focus,.setup-card textarea:focus{outline:none;border-color:var(--sage)}
+
+.template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:16px 0}
+.template-btn{background:var(--cream);border:1.5px solid var(--sand);border-radius:12px;padding:14px;cursor:pointer;transition:.25s;text-align:left}
+.template-btn:hover{border-color:var(--sage);transform:translateY(-1px)}
+.template-btn.selected{border-color:var(--forest);background:rgba(45,90,78,.04)}
+.template-btn h4{font-size:.82rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.template-btn p{font-size:.68rem;color:var(--dim);line-height:1.4}
+.template-btn .count{font-size:.6rem;color:var(--sage);font-weight:600;margin-top:4px}
+
+.item-card{background:var(--warm);border-radius:10px;padding:14px 16px;margin-bottom:8px;border:1px solid var(--sand);border-left:4px solid #ccc}
+.item-card.met{border-left-color:var(--forest)}.item-card.partial{border-left-color:var(--gold)}.item-card.not-met{border-left-color:var(--coral)}.item-card.na{border-left-color:#ccc}
+.item-card .ic-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.item-card .ic-name{font-size:.82rem;font-weight:600;color:var(--deep);flex:1}
+.item-card .ic-domain{font-size:.6rem;color:var(--dim);background:var(--cream);padding:2px 8px;border-radius:4px}
+.item-card .ic-desc{font-size:.75rem;color:var(--dim);margin:6px 0;line-height:1.5}
+.item-card .ic-source{font-size:.65rem;color:var(--sage);font-style:italic;margin-bottom:8px}
+.status-btns{display:flex;gap:4px;flex-wrap:wrap}
+.status-btn{padding:6px 12px;border-radius:8px;border:1.5px solid transparent;font-size:.68rem;font-weight:600;cursor:pointer;transition:.2s;background:var(--cream)}
+.status-btn:hover{transform:translateY(-1px)}
+.sb-met{color:var(--forest);border-color:rgba(45,90,78,.2)}.sb-met.on{background:rgba(45,90,78,.12);border-color:var(--forest)}
+.sb-partial{color:var(--gold);border-color:rgba(184,150,62,.2)}.sb-partial.on{background:rgba(184,150,62,.12);border-color:var(--gold)}
+.sb-not{color:var(--coral);border-color:rgba(196,101,74,.2)}.sb-not.on{background:rgba(196,101,74,.12);border-color:var(--coral)}
+.sb-na{color:var(--dim);border-color:rgba(0,0,0,.1)}.sb-na.on{background:rgba(0,0,0,.06);border-color:var(--dim)}
+.evidence-inline{margin-top:8px}
+.evidence-inline textarea{font-family:var(--sans);font-size:.78rem;width:100%;padding:8px 10px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);min-height:40px;resize:vertical;color:var(--ink)}
+.evidence-inline textarea:focus{outline:none;border-color:var(--sage)}
+.evidence-inline label{font-size:.6rem;color:var(--dim)}
+
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}
+.action-row button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border-radius:10px;border:1.5px solid var(--sand);background:var(--warm);color:var(--body);cursor:pointer;transition:.2s}
+.action-row button:hover{border-color:var(--sage);color:var(--forest)}
+.action-row button.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.action-row button.primary:hover{background:var(--deep)}
+
+.nbf-box{background:var(--warm);border-radius:12px;padding:20px;margin:20px 0;border-left:4px solid var(--sage)}
+.nbf-box h3{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin-bottom:8px}
+.nbf-box p{font-size:.85rem;color:var(--body);line-height:1.7;margin-bottom:8px}
+.nbf-box p:last-child{margin-bottom:0}
+
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.filter-btn{padding:6px 14px;border-radius:8px;border:1.5px solid var(--sand);background:var(--cream);color:var(--dim);font-family:var(--sans);font-size:.72rem;font-weight:500;cursor:pointer;transition:.2s}
+.filter-btn:hover{border-color:var(--sage)}.filter-btn.active{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+
+.hidden{display:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+
+@media print{.site-nav,.action-row,.filter-bar,.status-btns,.evidence-inline,.setup-card button,.template-grid{display:none}.audit-score{break-inside:avoid}}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/audit.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Are They Keeping Their Promises? — CommUnity OS", "url": "https://comm-unity-os.org/audit.html", "description": "Community promise tracker: templates for alderpersons (24 items), programs (20), schools (20). Cited evidence sources. A-F grading. Longitudinal comparison.", "inLanguage": ["en", "es"], "applicationCategory": "Civic Technology", "isAccessibleForFree": true}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Govern</div>
+    <h1 data-t="title">Community Accountability Audit</h1>
+    <div class="subtitle" data-t="subtitle">Track whether your leaders and programs are meeting their commitments — domain by domain, item by item, with evidence. The same framework institutions use to hold themselves accountable, now in the hands of the community.</div>
+  </div>
+
+  <div class="nbf-box fade-in fade-in-1">
+    <h3 data-t="how_title">How this works</h3>
+    <p data-t="how_p1"><strong style="color:var(--forest)">Normal</strong> — What was promised? What's the standard? Every item is grounded in a specific commitment, policy, or expectation.</p>
+    <p data-t="how_p2"><strong style="color:var(--coral)">Broken</strong> — Where is the gap? Each item gets a status: Met, Partially Met, Not Met. Evidence required — no status without reasoning.</p>
+    <p data-t="how_p3"><strong style="color:var(--sage)">Fix</strong> — What should change? The audit report shows which domains need action. Take it to the next meeting. Repeat in three months. Compare.</p>
+  </div>
+
+  <!-- SETUP -->
+  <div id="setupPanel" class="fade-in fade-in-1">
+    <div class="setup-card">
+      <h3 data-t="what_label">What are you auditing?</h3>
+      <label data-t="entity_label">Name of the entity, leader, or program</label>
+      <input type="text" id="entityName" placeholder="e.g., Ward 14 Alderperson, After-School Program, Park District">
+      <label data-t="assessor_label">Your name or organization (optional)</label>
+      <input type="text" id="auditorName" placeholder="e.g., 60608 Block Club, PTA">
+      <label data-t="zip_label">Zip code</label>
+      <input type="text" id="auditZip" maxlength="5" inputmode="numeric" placeholder="60608" style="max-width:120px">
+    </div>
+
+    <div class="setup-card">
+      <h3 data-t="template_title">Choose a template or build your own</h3>
+      <div class="template-grid" id="templateGrid"></div>
+      <button style="font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer;margin-top:12px;transition:.2s" onclick="startAudit()" data-t="start_btn">Start Audit</button>
+    </div>
+  </div>
+
+  <!-- AUDIT PANEL -->
+  <div id="auditPanel" class="hidden">
+
+    <div class="audit-score" id="scorePanel">
+      <div class="big"><span id="auditPct">0</span>%</div>
+      <div class="label" data-t="score_label">Accountability Score</div>
+      <div class="grade" id="auditGrade">—</div>
+    </div>
+
+    <div class="domain-bars" id="domainBars"></div>
+
+    <div style="margin:20px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h2 style="font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--deep)" data-t="items_title">Audit Items</h2>
+        <div class="filter-bar" id="filterBar"></div>
+      </div>
+      <div id="itemsContainer"></div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div style="margin:30px 0">
+      <h2 style="font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--deep);margin-bottom:12px" data-t="heatmap_title">Accountability Heatmap</h2>
+      <div style="overflow-x:auto">
+        <table class="heatmap" id="heatmapTable"></table>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button onclick="window.print()" data-t="print_btn">🖨 Print Report</button>
+      <button onclick="resetAudit()" data-t="reset_btn">Reset</button>
+      <button class="primary" onclick="submitAudit()" data-t="submit_btn">Submit Audit</button>
+    </div>
+
+    <!-- LONGITUDINAL -->
+    <div id="historyPanel" class="hidden" style="margin-top:24px">
+      <h2 style="font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--deep);margin-bottom:8px" data-t="history_title">Previous Audits — Is Anything Changing?</h2>
+      <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px" data-t="history_desc">Compare this audit to previous ones. Green areas that turned red need attention. Red areas that turned green show progress.</p>
+      <div id="historyGrid"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+// ═══════════════════════════════════════════════════
+// TEMPLATES — modeled on NinoCare's compliance framework
+// Each domain = regulatory domain, each item = cited requirement
+// ═══════════════════════════════════════════════════
+var TEMPLATES = {
+  alderperson: {
+    name: 'Alderperson / Council Member',
+    nameEs: 'Concejal / Miembro del Consejo',
+    desc: '6 domains, 24 accountability items',
+    descEs: '6 dominios, 24 ítems de rendición de cuentas',
+    domains: [
+      { id:'promises', name:'Promises Kept', nameEs:'Promesas Cumplidas', items:[
+        {id:'PK-01',name:'Campaign commitments delivered',nameEs:'Compromisos de campaña cumplidos',source:'Campaign website / mailer',sourceEs:'Sitio web de campaña / folleto',desc:'Specific, verifiable promises from the campaign have been acted on.',descEs:'Las promesas específicas y verificables de la campaña se han cumplido.'},
+        {id:'PK-02',name:'Budget priorities funded',nameEs:'Prioridades presupuestarias financiadas',source:'Annual ward budget / menu spending',sourceEs:'Presupuesto anual del distrito',desc:'Stated budget priorities received actual funding allocation.',descEs:'Las prioridades presupuestarias declaradas recibieron asignación real.'},
+        {id:'PK-03',name:'Infrastructure requests addressed',nameEs:'Solicitudes de infraestructura atendidas',source:'311 reports / ward office records',sourceEs:'Reportes 311 / registros de oficina',desc:'Streetlights, potholes, sidewalks, and other infrastructure requests resolved.',descEs:'Luces, baches, aceras y otras solicitudes de infraestructura resueltas.'},
+        {id:'PK-04',name:'Timeline commitments met',nameEs:'Plazos comprometidos cumplidos',source:'Public statements with dates',sourceEs:'Declaraciones públicas con fechas',desc:'When a specific timeline was given, it was honored.',descEs:'Cuando se dio un plazo específico, se cumplió.'}
+      ]},
+      { id:'transparency', name:'Transparency', nameEs:'Transparencia', items:[
+        {id:'TR-01',name:'Public meetings held as scheduled',nameEs:'Reuniones públicas realizadas según programadas',source:'Posted meeting schedule',sourceEs:'Calendario de reuniones publicado',desc:'Regular ward/town hall meetings held on published dates.',descEs:'Reuniones regulares del distrito realizadas en las fechas publicadas.'},
+        {id:'TR-02',name:'Meeting agendas posted in advance',nameEs:'Agendas publicadas con anticipación',source:'Ward website / bulletin board',sourceEs:'Sitio web del distrito / tablero',desc:'Agendas available at least 48 hours before meetings.',descEs:'Agendas disponibles al menos 48 horas antes de las reuniones.'},
+        {id:'TR-03',name:'Spending records accessible',nameEs:'Registros de gastos accesibles',source:'FOIA / public portal',sourceEs:'FOIA / portal público',desc:'Ward discretionary spending records available without FOIA.',descEs:'Registros de gastos discrecionales disponibles sin FOIA.'},
+        {id:'TR-04',name:'Decisions explained publicly',nameEs:'Decisiones explicadas públicamente',source:'Meeting minutes / newsletters',sourceEs:'Actas de reuniones / boletines',desc:'Major votes and decisions explained with reasoning, not just announced.',descEs:'Votos y decisiones importantes explicados con razonamiento.'}
+      ]},
+      { id:'responsiveness', name:'Responsiveness', nameEs:'Capacidad de Respuesta', items:[
+        {id:'RS-01',name:'Constituent inquiries answered',nameEs:'Consultas de electores respondidas',source:'Office response time tracking',sourceEs:'Seguimiento de tiempo de respuesta',desc:'Phone calls, emails, and walk-ins receive substantive response within 5 business days.',descEs:'Llamadas, correos y visitas reciben respuesta sustancial en 5 días hábiles.'},
+        {id:'RS-02',name:'311 follow-through',nameEs:'Seguimiento de reportes 311',source:'311 case resolution data',sourceEs:'Datos de resolución de casos 311',desc:'311 requests in the ward closed at a rate comparable to citywide average.',descEs:'Solicitudes 311 en el distrito cerradas a una tasa comparable al promedio de la ciudad.'},
+        {id:'RS-03',name:'Emergency/crisis response',nameEs:'Respuesta a emergencias/crisis',source:'Community feedback / news reports',sourceEs:'Retroalimentación comunitaria / noticias',desc:'Office visibly engaged during ward emergencies (floods, fires, violence, closures).',descEs:'Oficina visiblemente comprometida durante emergencias del distrito.'},
+        {id:'RS-04',name:'Community input incorporated',nameEs:'Aportes comunitarios incorporados',source:'Meeting records / policy changes',sourceEs:'Registros de reuniones / cambios de política',desc:'Evidence that community feedback changed a decision or action.',descEs:'Evidencia de que la retroalimentación comunitaria cambió una decisión.'}
+      ]},
+      { id:'equity', name:'Equity & Access', nameEs:'Equidad y Acceso', items:[
+        {id:'EQ-01',name:'Services reach underserved areas',nameEs:'Servicios llegan a áreas desatendidas',source:'Service delivery data by block/area',sourceEs:'Datos de prestación de servicios por área',desc:'Ward services distributed proportionally, not concentrated in one area.',descEs:'Servicios del distrito distribuidos proporcionalmente.'},
+        {id:'EQ-02',name:'Multilingual communication',nameEs:'Comunicación multilingüe',source:'Office materials / website / outreach',sourceEs:'Materiales de oficina / sitio web',desc:'Ward communications available in languages spoken by constituents.',descEs:'Comunicaciones del distrito disponibles en idiomas de los electores.'},
+        {id:'EQ-03',name:'Accessible meeting locations',nameEs:'Ubicaciones de reuniones accesibles',source:'ADA compliance / transit access',sourceEs:'Cumplimiento ADA / acceso de transporte',desc:'Public meetings held at ADA-compliant, transit-accessible locations.',descEs:'Reuniones públicas en ubicaciones accesibles por transporte y ADA.'},
+        {id:'EQ-04',name:'Development benefits shared',nameEs:'Beneficios del desarrollo compartidos',source:'Zoning decisions / community benefits',sourceEs:'Decisiones de zonificación / beneficios comunitarios',desc:'New development includes community benefit agreements or affordable components.',descEs:'Nuevo desarrollo incluye acuerdos de beneficio comunitario.'}
+      ]},
+      { id:'fiscal', name:'Fiscal Responsibility', nameEs:'Responsabilidad Fiscal', items:[
+        {id:'FI-01',name:'Menu money spent transparently',nameEs:'Fondos discrecionales gastados transparentemente',source:'Aldermanic menu program records',sourceEs:'Registros del programa discrecional',desc:'Discretionary infrastructure funds allocated with public input and reporting.',descEs:'Fondos de infraestructura discrecional asignados con participación pública.'},
+        {id:'FI-02',name:'TIF funds benefit community',nameEs:'Fondos TIF benefician a la comunidad',source:'TIF district reports / city data',sourceEs:'Informes del distrito TIF',desc:'Tax increment financing in the ward benefits local residents, not just developers.',descEs:'Financiamiento de incremento fiscal beneficia a residentes locales.'},
+        {id:'FI-03',name:'No pay-to-play patterns',nameEs:'Sin patrones de pago por favores',source:'Campaign finance records / zoning votes',sourceEs:'Registros financieros de campaña',desc:'No pattern of zoning/permit decisions favoring campaign contributors.',descEs:'Sin patrón de decisiones favoreciendo contribuyentes de campaña.'},
+        {id:'FI-04',name:'Office budget reasonable',nameEs:'Presupuesto de oficina razonable',source:'City budget data',sourceEs:'Datos del presupuesto de la ciudad',desc:'Ward office spending in line with comparable wards.',descEs:'Gastos de oficina del distrito en línea con distritos comparables.'}
+      ]},
+      { id:'results', name:'Measurable Results', nameEs:'Resultados Medibles', items:[
+        {id:'MR-01',name:'Crime trends improving',nameEs:'Tendencias de crimen mejorando',source:'CPD CLEAR data / ward reports',sourceEs:'Datos CPD CLEAR / reportes del distrito',desc:'Violent and property crime trending down or holding steady.',descEs:'Crimen violento y de propiedad con tendencia a la baja o estable.'},
+        {id:'MR-02',name:'Vacancy rates declining',nameEs:'Tasas de vacancia disminuyendo',source:'City data / visual survey',sourceEs:'Datos de la ciudad / encuesta visual',desc:'Fewer vacant lots and buildings compared to prior year.',descEs:'Menos lotes y edificios vacantes comparado con el año anterior.'},
+        {id:'MR-03',name:'Business corridor vitality',nameEs:'Vitalidad del corredor comercial',source:'Business license data / SSA reports',sourceEs:'Datos de licencias comerciales / informes SSA',desc:'Net new businesses opening. Storefront vacancy decreasing.',descEs:'Nuevos negocios abriendo. Vacancia de locales disminuyendo.'},
+        {id:'MR-04',name:'Quality of life improvements',nameEs:'Mejoras en la calidad de vida',source:'Resident surveys / community feedback',sourceEs:'Encuestas de residentes / retroalimentación',desc:'Residents report the ward is getting better, not worse.',descEs:'Residentes reportan que el distrito está mejorando.'}
+      ]}
+    ]
+  },
+  program: {
+    name: 'Community Program',
+    nameEs: 'Programa Comunitario',
+    desc: '5 domains, 20 accountability items',
+    descEs: '5 dominios, 20 ítems de rendición de cuentas',
+    domains: [
+      { id:'delivery', name:'Service Delivery', nameEs:'Prestación de Servicios', items:[
+        {id:'SD-01',name:'Hours of operation kept',nameEs:'Horarios de operación mantenidos',source:'Posted schedule vs. actual',sourceEs:'Horario publicado vs. real',desc:'Program operates during posted hours consistently.',descEs:'El programa opera consistentemente en los horarios publicados.'},
+        {id:'SD-02',name:'Staff present and trained',nameEs:'Personal presente y capacitado',source:'Staffing records / credentials',sourceEs:'Registros de personal / credenciales',desc:'Qualified staff present during operating hours.',descEs:'Personal calificado presente durante horarios de operación.'},
+        {id:'SD-03',name:'Capacity meets demand',nameEs:'Capacidad satisface demanda',source:'Waitlist data / utilization rates',sourceEs:'Datos de lista de espera / tasas de utilización',desc:'No persistent waitlist. Services available when needed.',descEs:'Sin lista de espera persistente. Servicios disponibles cuando se necesitan.'},
+        {id:'SD-04',name:'Physical space adequate',nameEs:'Espacio físico adecuado',source:'Inspection / community observation',sourceEs:'Inspección / observación comunitaria',desc:'Clean, safe, accessible, and appropriate for the service.',descEs:'Limpio, seguro, accesible y apropiado para el servicio.'}
+      ]},
+      { id:'outcomes', name:'Outcomes', nameEs:'Resultados', items:[
+        {id:'OC-01',name:'Stated goals being met',nameEs:'Metas declaradas siendo cumplidas',source:'Program reports / grant applications',sourceEs:'Informes del programa / solicitudes de subvención',desc:'The program is achieving what it said it would achieve.',descEs:'El programa está logrando lo que dijo que lograría.'},
+        {id:'OC-02',name:'Data collected and shared',nameEs:'Datos recopilados y compartidos',source:'Annual report / community presentation',sourceEs:'Informe anual / presentación comunitaria',desc:'Outcome data collected and shared with the community it serves.',descEs:'Datos de resultados recopilados y compartidos con la comunidad.'},
+        {id:'OC-03',name:'Participant satisfaction',nameEs:'Satisfacción de participantes',source:'Surveys / feedback mechanisms',sourceEs:'Encuestas / mecanismos de retroalimentación',desc:'People who use the program report positive experience.',descEs:'Las personas que usan el programa reportan experiencia positiva.'},
+        {id:'OC-04',name:'Long-term impact visible',nameEs:'Impacto a largo plazo visible',source:'Longitudinal data / follow-up',sourceEs:'Datos longitudinales / seguimiento',desc:'Evidence of lasting benefit beyond immediate service.',descEs:'Evidencia de beneficio duradero más allá del servicio inmediato.'}
+      ]},
+      { id:'access', name:'Access & Equity', nameEs:'Acceso y Equidad', items:[
+        {id:'AE-01',name:'No barriers to entry',nameEs:'Sin barreras de entrada',source:'Enrollment process / eligibility criteria',sourceEs:'Proceso de inscripción / criterios de elegibilidad',desc:'Enrollment process is simple, documented, and doesn\'t exclude people unnecessarily.',descEs:'El proceso de inscripción es simple y no excluye personas innecesariamente.'},
+        {id:'AE-02',name:'Serves diverse community',nameEs:'Sirve a comunidad diversa',source:'Demographic data vs. community demographics',sourceEs:'Datos demográficos vs. demografía comunitaria',desc:'Participant demographics reflect the community being served.',descEs:'La demografía de participantes refleja la comunidad atendida.'},
+        {id:'AE-03',name:'Language access provided',nameEs:'Acceso lingüístico proporcionado',source:'Materials / interpreter availability',sourceEs:'Materiales / disponibilidad de intérpretes',desc:'Services available in languages spoken in the community.',descEs:'Servicios disponibles en idiomas hablados en la comunidad.'},
+        {id:'AE-04',name:'ADA/accessibility compliance',nameEs:'Cumplimiento ADA/accesibilidad',source:'Physical inspection / policy review',sourceEs:'Inspección física / revisión de política',desc:'Facility and program accessible to people with disabilities.',descEs:'Instalación y programa accesibles para personas con discapacidad.'}
+      ]},
+      { id:'governance', name:'Program Governance', nameEs:'Gobernanza del Programa', items:[
+        {id:'PG-01',name:'Community voice in decisions',nameEs:'Voz comunitaria en decisiones',source:'Advisory board / feedback process',sourceEs:'Junta asesora / proceso de retroalimentación',desc:'Community members have formal input into program direction.',descEs:'Los miembros de la comunidad tienen aporte formal en la dirección del programa.'},
+        {id:'PG-02',name:'Complaints process exists',nameEs:'Proceso de quejas existe',source:'Posted policy / resolution records',sourceEs:'Política publicada / registros de resolución',desc:'Clear process for raising and resolving complaints.',descEs:'Proceso claro para presentar y resolver quejas.'},
+        {id:'PG-03',name:'Leadership accountable',nameEs:'Liderazgo responsable',source:'Board meetings / public reporting',sourceEs:'Reuniones de junta / informes públicos',desc:'Program leadership reports to community, not just funders.',descEs:'El liderazgo del programa rinde cuentas a la comunidad, no solo a los financiadores.'},
+        {id:'PG-04',name:'Conflict of interest managed',nameEs:'Conflictos de interés manejados',source:'Disclosure policy / board records',sourceEs:'Política de divulgación / registros de junta',desc:'No undisclosed conflicts between leadership and contractors/vendors.',descEs:'Sin conflictos no divulgados entre liderazgo y contratistas.'}
+      ]},
+      { id:'sustainability', name:'Sustainability', nameEs:'Sostenibilidad', items:[
+        {id:'SU-01',name:'Funding secured for next cycle',nameEs:'Financiamiento asegurado para el próximo ciclo',source:'Grant status / budget documents',sourceEs:'Estado de subvención / documentos presupuestarios',desc:'Funding in place or actively pursued for continued operation.',descEs:'Financiamiento en lugar o buscándose activamente para operación continua.'},
+        {id:'SU-02',name:'Staff retention stable',nameEs:'Retención de personal estable',source:'Turnover data / staff interviews',sourceEs:'Datos de rotación / entrevistas de personal',desc:'Low staff turnover. Institutional knowledge preserved.',descEs:'Baja rotación de personal. Conocimiento institucional preservado.'},
+        {id:'SU-03',name:'Community ownership growing',nameEs:'Propiedad comunitaria creciendo',source:'Volunteer data / community leadership roles',sourceEs:'Datos de voluntarios / roles de liderazgo comunitario',desc:'Community members increasingly involved in running the program.',descEs:'Miembros de la comunidad cada vez más involucrados en dirigir el programa.'},
+        {id:'SU-04',name:'Adaptation to changing needs',nameEs:'Adaptación a necesidades cambiantes',source:'Needs assessment / program modifications',sourceEs:'Evaluación de necesidades / modificaciones al programa',desc:'Program adjusts based on community feedback and changing conditions.',descEs:'El programa se ajusta según retroalimentación comunitaria y condiciones cambiantes.'}
+      ]}
+    ]
+  },
+  school: {
+    name: 'School / Principal',
+    nameEs: 'Escuela / Director',
+    desc: '5 domains, 20 accountability items',
+    descEs: '5 dominios, 20 ítems de rendición de cuentas',
+    domains: [
+      { id:'academics', name:'Academic Quality', nameEs:'Calidad Académica', items:[
+        {id:'AQ-01',name:'Student achievement trending up',nameEs:'Logro estudiantil en tendencia ascendente',source:'IL Report Card / IAR data',sourceEs:'Boleta de calificaciones IL / datos IAR',desc:'Standardized test scores improving year over year.',descEs:'Puntajes de pruebas estandarizadas mejorando año tras año.'},
+        {id:'AQ-02',name:'Curriculum alignment current',nameEs:'Alineación curricular actualizada',source:'Curriculum documents / teacher interviews',sourceEs:'Documentos curriculares / entrevistas con maestros',desc:'Curriculum aligned to current state standards.',descEs:'Currículo alineado con estándares estatales actuales.'},
+        {id:'AQ-03',name:'Support for struggling students',nameEs:'Apoyo para estudiantes con dificultades',source:'RTI/MTSS data / intervention records',sourceEs:'Datos RTI/MTSS / registros de intervención',desc:'Systematic support for students below grade level.',descEs:'Apoyo sistemático para estudiantes por debajo del nivel.'},
+        {id:'AQ-04',name:'Advanced opportunities available',nameEs:'Oportunidades avanzadas disponibles',source:'Course catalog / enrollment data',sourceEs:'Catálogo de cursos / datos de inscripción',desc:'Honors, AP, or enrichment available and accessible.',descEs:'Opciones de honores, AP o enriquecimiento disponibles y accesibles.'}
+      ]},
+      { id:'safety', name:'Safety & Climate', nameEs:'Seguridad y Clima', items:[
+        {id:'SC-01',name:'Building safe and maintained',nameEs:'Edificio seguro y mantenido',source:'CPS facility reports / inspection',sourceEs:'Informes de instalaciones CPS / inspección',desc:'No safety hazards. Building clean, heated, cooled.',descEs:'Sin peligros de seguridad. Edificio limpio, con calefacción y refrigeración.'},
+        {id:'SC-02',name:'Bullying/discipline handled fairly',nameEs:'Acoso/disciplina manejados justamente',source:'Discipline data / parent feedback',sourceEs:'Datos disciplinarios / retroalimentación de padres',desc:'Discipline proportional and not racially disproportionate.',descEs:'Disciplina proporcional y no racialmente desproporcionada.'},
+        {id:'SC-03',name:'Social-emotional support',nameEs:'Apoyo socioemocional',source:'Counselor ratios / SEL programming',sourceEs:'Ratios de consejeros / programación SEL',desc:'Counselors available. SEL curriculum implemented.',descEs:'Consejeros disponibles. Currículo SEL implementado.'},
+        {id:'SC-04',name:'Emergency preparedness',nameEs:'Preparación para emergencias',source:'Drill records / emergency plan',sourceEs:'Registros de simulacros / plan de emergencia',desc:'Regular drills. Updated emergency plan. Staff trained.',descEs:'Simulacros regulares. Plan de emergencia actualizado.'}
+      ]},
+      { id:'engagement', name:'Family Engagement', nameEs:'Participación Familiar', items:[
+        {id:'FE-01',name:'Communication timely and clear',nameEs:'Comunicación oportuna y clara',source:'School communications / parent surveys',sourceEs:'Comunicaciones escolares / encuestas de padres',desc:'Regular updates in home languages. Not just crisis communication.',descEs:'Actualizaciones regulares en idiomas del hogar.'},
+        {id:'FE-02',name:'Parent voice in governance',nameEs:'Voz de padres en gobernanza',source:'LSC meetings / PAC records',sourceEs:'Reuniones LSC / registros PAC',desc:'Active Local School Council. Parents meaningfully involved.',descEs:'Consejo Escolar Local activo. Padres significativamente involucrados.'},
+        {id:'FE-03',name:'Conferences and events accessible',nameEs:'Conferencias y eventos accesibles',source:'Attendance data / scheduling',sourceEs:'Datos de asistencia / programación',desc:'Events at varied times. Childcare and translation provided.',descEs:'Eventos en horarios variados. Cuidado infantil y traducción proporcionados.'},
+        {id:'FE-04',name:'Volunteer opportunities meaningful',nameEs:'Oportunidades de voluntariado significativas',source:'Volunteer program / parent feedback',sourceEs:'Programa de voluntarios / retroalimentación de padres',desc:'Parents can contribute in ways that matter, not just fundraising.',descEs:'Los padres pueden contribuir de maneras que importan.'}
+      ]},
+      { id:'resources', name:'Resource Management', nameEs:'Gestión de Recursos', items:[
+        {id:'RM-01',name:'Budget transparent',nameEs:'Presupuesto transparente',source:'School budget / CPS portal',sourceEs:'Presupuesto escolar / portal CPS',desc:'Budget available and explained to community.',descEs:'Presupuesto disponible y explicado a la comunidad.'},
+        {id:'RM-02',name:'Class sizes manageable',nameEs:'Tamaños de clase manejables',source:'Enrollment data / teacher reports',sourceEs:'Datos de inscripción / informes de maestros',desc:'Class sizes within contract limits and effective for learning.',descEs:'Tamaños de clase dentro de los límites del contrato.'},
+        {id:'RM-03',name:'Materials and technology adequate',nameEs:'Materiales y tecnología adecuados',source:'Classroom inventory / student access',sourceEs:'Inventario del aula / acceso estudiantil',desc:'Students have textbooks, devices, and materials they need.',descEs:'Estudiantes tienen libros de texto, dispositivos y materiales que necesitan.'},
+        {id:'RM-04',name:'Special education compliance',nameEs:'Cumplimiento de educación especial',source:'IEP compliance data / parent reports',sourceEs:'Datos de cumplimiento IEP / informes de padres',desc:'IEPs implemented. Services delivered as documented.',descEs:'IEPs implementados. Servicios entregados según documentado.'}
+      ]},
+      { id:'leadership', name:'Principal Leadership', nameEs:'Liderazgo del Director', items:[
+        {id:'PL-01',name:'Visible and accessible',nameEs:'Visible y accesible',source:'Community observation / parent feedback',sourceEs:'Observación comunitaria / retroalimentación de padres',desc:'Principal regularly visible. Approachable by parents and staff.',descEs:'Director regularmente visible. Accesible para padres y personal.'},
+        {id:'PL-02',name:'Staff supported and retained',nameEs:'Personal apoyado y retenido',source:'Turnover data / staff surveys',sourceEs:'Datos de rotación / encuestas de personal',desc:'Low teacher turnover. Staff report feeling supported.',descEs:'Baja rotación de maestros. Personal reporta sentirse apoyado.'},
+        {id:'PL-03',name:'Data-driven decisions',nameEs:'Decisiones basadas en datos',source:'School improvement plan / assessment data use',sourceEs:'Plan de mejora escolar / uso de datos de evaluación',desc:'Decisions grounded in student data, not just intuition.',descEs:'Decisiones basadas en datos estudiantiles, no solo intuición.'},
+        {id:'PL-04',name:'School improvement plan current',nameEs:'Plan de mejora escolar actualizado',source:'CIWP / school plan documents',sourceEs:'CIWP / documentos del plan escolar',desc:'Written improvement plan with measurable goals, updated annually.',descEs:'Plan de mejora escrito con metas medibles, actualizado anualmente.'}
+      ]}
+    ]
+  }
+};
+
+var currentTemplate = null;
+var currentItems = [];
+var currentFilter = 'all';
+
+function renderTemplates() {
+  var isEs = EQ && EQ.lang === 'es';
+  var grid = document.getElementById('templateGrid');
+  var html = '';
+  var keys = Object.keys(TEMPLATES);
+  keys.forEach(function(k) {
+    var t = TEMPLATES[k];
+    var totalItems = 0;
+    t.domains.forEach(function(d) { totalItems += d.items.length; });
+    html += '<div class="template-btn" data-key="'+k+'" onclick="selectTemplate(\''+k+'\')">' +
+      '<h4>'+(isEs ? t.nameEs : t.name)+'</h4>' +
+      '<p>'+(isEs ? t.descEs : t.desc)+'</p>' +
+      '<div class="count">'+t.domains.length+' domains · '+totalItems+' items</div></div>';
+  });
+  grid.innerHTML = html;
+}
+
+function selectTemplate(key) {
+  currentTemplate = key;
+  document.querySelectorAll('.template-btn').forEach(function(b) {
+    b.classList.toggle('selected', b.dataset.key === key);
+  });
+}
+
+function startAudit() {
+  var entity = document.getElementById('entityName').value.trim();
+  if (!entity) { showToast('Name the entity you\'re auditing'); return; }
+  if (!currentTemplate) { showToast('Choose a template'); return; }
+
+  document.getElementById('setupPanel').classList.add('hidden');
+  document.getElementById('auditPanel').classList.remove('hidden');
+
+  var t = TEMPLATES[currentTemplate];
+  currentItems = [];
+  t.domains.forEach(function(d) {
+    d.items.forEach(function(item) {
+      currentItems.push(Object.assign({}, item, { domain: d.id, domainName: d.name, domainNameEs: d.nameEs, status: '' }));
+    });
+  });
+
+  renderDomainBars(t);
+  renderFilterBar(t);
+  renderItems();
+  renderHeatmap(t);
+  updateScore();
+  loadHistory(entity);
+}
+
+function renderDomainBars(t) {
+  var isEs = EQ && EQ.lang === 'es';
+  var html = '';
+  t.domains.forEach(function(d) {
+    html += '<div class="domain-bar" data-domain="'+d.id+'">' +
+      '<div class="db-head"><div class="db-name">'+(isEs ? d.nameEs : d.name)+'</div><div class="db-score" id="db-score-'+d.id+'">0%</div></div>' +
+      '<div class="db-track"><div class="db-fill fill-green" id="db-fill-'+d.id+'" style="width:0"></div></div></div>';
+  });
+  document.getElementById('domainBars').innerHTML = html;
+}
+
+function renderFilterBar(t) {
+  var isEs = EQ && EQ.lang === 'es';
+  var html = '<button class="filter-btn active" onclick="setFilter(\'all\',this)">'+(isEs?'Todos':'All')+'</button>';
+  t.domains.forEach(function(d) {
+    html += '<button class="filter-btn" onclick="setFilter(\''+d.id+'\',this)">'+(isEs ? d.nameEs : d.name)+'</button>';
+  });
+  html += '<button class="filter-btn" onclick="setFilter(\'gaps\',this)" style="border-color:var(--coral);color:var(--coral)">'+(isEs?'Brechas':'Gaps Only')+'</button>';
+  document.getElementById('filterBar').innerHTML = html;
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderItems();
+}
+
+function renderItems() {
+  var isEs = EQ && EQ.lang === 'es';
+  var container = document.getElementById('itemsContainer');
+  var filtered = currentItems;
+  if (currentFilter !== 'all' && currentFilter !== 'gaps') {
+    filtered = currentItems.filter(function(i) { return i.domain === currentFilter; });
+  }
+  if (currentFilter === 'gaps') {
+    filtered = currentItems.filter(function(i) { return i.status === 'not-met' || i.status === 'partial' || !i.status; });
+  }
+
+  var html = '';
+  filtered.forEach(function(item, idx) {
+    var realIdx = currentItems.indexOf(item);
+    var cls = item.status || 'na';
+    html += '<div class="item-card '+cls+'" data-idx="'+realIdx+'">' +
+      '<div class="ic-head"><div class="ic-name">'+(isEs && item.nameEs ? item.nameEs : item.name)+'</div>' +
+      '<div class="ic-domain">'+(isEs && item.domainNameEs ? item.domainNameEs : item.domainName)+'</div></div>' +
+      '<div class="ic-desc">'+(isEs && item.descEs ? item.descEs : item.desc)+'</div>' +
+      '<div class="ic-source">'+(isEs?'Fuente: ':'Source: ')+(isEs && item.sourceEs ? item.sourceEs : item.source)+'</div>' +
+      '<div class="status-btns">' +
+        '<div class="status-btn sb-met'+(item.status==='met'?' on':'')+'" onclick="setStatus('+realIdx+',\'met\')">'+(isEs?'Cumplido':'Met')+'</div>' +
+        '<div class="status-btn sb-partial'+(item.status==='partial'?' on':'')+'" onclick="setStatus('+realIdx+',\'partial\')">'+(isEs?'Parcial':'Partial')+'</div>' +
+        '<div class="status-btn sb-not'+(item.status==='not-met'?' on':'')+'" onclick="setStatus('+realIdx+',\'not-met\')">'+(isEs?'No Cumplido':'Not Met')+'</div>' +
+        '<div class="status-btn sb-na'+(item.status==='na'?' on':'')+'" onclick="setStatus('+realIdx+',\'na\')">'+(isEs?'N/A':'N/A')+'</div>' +
+      '</div>' +
+      '<div class="evidence-inline"><label>'+(isEs?'Evidencia / notas':'Evidence / notes')+'</label>' +
+      '<textarea placeholder="'+(isEs?'¿Qué viste? ¿Qué falta?':'What did you observe? What\'s missing?')+'" onchange="setEvidence('+realIdx+',this.value)">'+(item.evidence||'')+'</textarea></div>' +
+    '</div>';
+  });
+  container.innerHTML = html || '<p style="color:var(--dim);text-align:center;padding:20px">'+(currentFilter==='gaps'?(isEs?'Sin brechas identificadas':'No gaps identified'):(isEs?'Sin ítems':'No items'))+'</p>';
+}
+
+function setStatus(idx, status) {
+  currentItems[idx].status = status;
+  renderItems();
+  updateScore();
+  renderHeatmap(TEMPLATES[currentTemplate]);
+}
+
+function setEvidence(idx, val) {
+  currentItems[idx].evidence = val;
+}
+
+function updateScore() {
+  var scored = currentItems.filter(function(i) { return i.status && i.status !== 'na'; });
+  var met = currentItems.filter(function(i) { return i.status === 'met'; });
+  var partial = currentItems.filter(function(i) { return i.status === 'partial'; });
+  var total = scored.length || 1;
+  var pct = Math.round(((met.length + partial.length * 0.5) / Math.max(currentItems.length, 1)) * 100);
+
+  document.getElementById('auditPct').textContent = pct;
+  var g = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'F';
+  var gEl = document.getElementById('auditGrade');
+  gEl.textContent = g;
+  gEl.className = 'grade grade-' + g.toLowerCase();
+
+  // Domain bars
+  var t = TEMPLATES[currentTemplate];
+  t.domains.forEach(function(d) {
+    var dItems = currentItems.filter(function(i) { return i.domain === d.id; });
+    var dMet = dItems.filter(function(i) { return i.status === 'met'; }).length;
+    var dPartial = dItems.filter(function(i) { return i.status === 'partial'; }).length;
+    var dPct = Math.round(((dMet + dPartial * 0.5) / dItems.length) * 100);
+    var fillEl = document.getElementById('db-fill-' + d.id);
+    var scoreEl = document.getElementById('db-score-' + d.id);
+    if (fillEl) {
+      fillEl.style.width = dPct + '%';
+      fillEl.className = 'db-fill ' + (dPct >= 70 ? 'fill-green' : dPct >= 40 ? 'fill-yellow' : 'fill-red');
+    }
+    if (scoreEl) scoreEl.textContent = dPct + '%';
+  });
+}
+
+function renderHeatmap(t) {
+  var isEs = EQ && EQ.lang === 'es';
+  var statusLabels = { met:'✓', partial:'~', 'not-met':'✗', na:'—', '':'?' };
+  var dotClass = { met:'dot-green', partial:'dot-yellow', 'not-met':'dot-red', na:'dot-gray', '':'dot-gray' };
+
+  var html = '<thead><tr><th style="text-align:left">'+(isEs?'Ítem':'Item')+'</th>';
+  html += '<th>'+(isEs?'Estado':'Status')+'</th>';
+  html += '<th>'+(isEs?'Dominio':'Domain')+'</th></tr></thead><tbody>';
+
+  currentItems.forEach(function(item) {
+    var s = item.status || '';
+    html += '<tr><td>'+(isEs && item.nameEs ? item.nameEs : item.name)+'</td>' +
+      '<td><span class="dot '+dotClass[s]+'">'+statusLabels[s]+'</span></td>' +
+      '<td style="font-size:.65rem;color:var(--dim)">'+(isEs && item.domainNameEs ? item.domainNameEs : item.domainName)+'</td></tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('heatmapTable').innerHTML = html;
+}
+
+async function submitAudit() {
+  var entity = document.getElementById('entityName').value.trim();
+  var auditor = document.getElementById('auditorName').value.trim();
+  var zip = document.getElementById('auditZip').value.trim();
+  var unrated = currentItems.filter(function(i) { return !i.status; });
+  if (unrated.length > 0) { showToast('Rate all items before submitting ('+unrated.length+' remaining)'); return; }
+
+  var ratings = {};
+  var evidence = {};
+  currentItems.forEach(function(i) {
+    ratings[i.id] = i.status;
+    if (i.evidence) evidence[i.id] = i.evidence;
+  });
+
+  if (!API) { showToast('Audit recorded (demo)'); renderDemoHistory(); return; }
+
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action:'submit_audit',
+        entity: entity,
+        template: currentTemplate,
+        auditor: auditor,
+        zip: zip,
+        ratings: ratings,
+        evidence: evidence,
+        score: parseInt(document.getElementById('auditPct').textContent),
+        timestamp: new Date().toISOString()
+      })
+    });
+    showToast('Audit submitted!');
+    loadHistory(entity);
+  } catch(e) { showToast('Saved locally'); }
+}
+
+async function loadHistory(entity) {
+  if (!API) { renderDemoHistory(); return; }
+  try {
+    var res = await fetch(API + '?action=get_audits&entity=' + encodeURIComponent(entity));
+    var data = await res.json();
+    if (data.status === 'ok' && data.audits && data.audits.length > 1) renderHistory(data.audits);
+  } catch(e) {}
+}
+
+function renderHistory(audits) {
+  document.getElementById('historyPanel').classList.remove('hidden');
+  audits.sort(function(a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+
+  var dotMap = { met:'🟢', partial:'🟡', 'not-met':'🔴', na:'⚪', '':'⚪' };
+  var isEs = EQ && EQ.lang === 'es';
+  var t = TEMPLATES[currentTemplate];
+  if (!t) return;
+
+  // Show score trend
+  var html = '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">';
+  audits.forEach(function(a) {
+    var date = a.timestamp ? new Date(a.timestamp).toLocaleDateString() : '—';
+    var score = a.score || 0;
+    var g = score >= 90 ? 'A' : score >= 80 ? 'B' : score >= 70 ? 'C' : score >= 60 ? 'D' : 'F';
+    html += '<div style="background:var(--warm);border-radius:10px;padding:12px 16px;text-align:center;min-width:80px">' +
+      '<div style="font-size:.65rem;color:var(--dim)">'+date+'</div>' +
+      '<div style="font-size:1.4rem;font-weight:700;color:var(--forest)">'+score+'%</div>' +
+      '<div class="grade grade-'+g.toLowerCase()+'" style="font-size:.6rem;padding:2px 8px">'+g+'</div></div>';
+  });
+  html += '</div>';
+
+  // Domain comparison table
+  html += '<table style="width:100%;border-collapse:collapse;font-size:.72rem">';
+  html += '<thead><tr><th style="text-align:left;padding:6px;border-bottom:2px solid var(--sand);font-size:.6rem;color:var(--dim)">'+(isEs?'Dominio':'Domain')+'</th>';
+  audits.forEach(function(a) {
+    var date = a.timestamp ? new Date(a.timestamp).toLocaleDateString() : '—';
+    html += '<th style="text-align:center;padding:6px;border-bottom:2px solid var(--sand);font-size:.6rem;color:var(--dim)">'+date+'</th>';
+  });
+  html += '</tr></thead><tbody>';
+
+  t.domains.forEach(function(d) {
+    html += '<tr><td style="padding:6px;border-bottom:1px solid var(--sand);font-weight:500">'+(isEs && d.nameEs ? d.nameEs : d.name)+'</td>';
+    audits.forEach(function(a, ai) {
+      var ratings = typeof a.ratings === 'string' ? JSON.parse(a.ratings) : (a.ratings || {});
+      var dItems = d.items || [];
+      var met = 0, partial = 0, total = dItems.length;
+      dItems.forEach(function(item) {
+        if (ratings[item.id] === 'met') met++;
+        else if (ratings[item.id] === 'partial') partial++;
+      });
+      var pct = Math.round(((met + partial * 0.5) / total) * 100);
+      var prev = ai > 0 ? null : null; // calculate delta
+      var color = pct >= 70 ? 'var(--forest)' : pct >= 40 ? 'var(--gold)' : 'var(--coral)';
+      html += '<td style="text-align:center;padding:6px;border-bottom:1px solid var(--sand);color:'+color+';font-weight:600">'+pct+'%</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+
+  document.getElementById('historyGrid').innerHTML = html;
+}
+
+function renderDemoHistory() {
+  var t = TEMPLATES[currentTemplate];
+  if (!t) return;
+  var demo = [];
+  // Generate a plausible previous audit
+  var prevRatings = {};
+  t.domains.forEach(function(d) {
+    d.items.forEach(function(item, i) {
+      prevRatings[item.id] = i % 3 === 0 ? 'not-met' : i % 3 === 1 ? 'partial' : 'met';
+    });
+  });
+  demo.push({ timestamp: new Date(Date.now() - 90*86400000).toISOString(), ratings: prevRatings, score: 42 });
+
+  // Current
+  var curRatings = {};
+  currentItems.forEach(function(i) { curRatings[i.id] = i.status || ''; });
+  var curScore = parseInt(document.getElementById('auditPct').textContent) || 0;
+  demo.push({ timestamp: new Date().toISOString(), ratings: curRatings, score: curScore });
+
+  renderHistory(demo);
+}
+
+function resetAudit() {
+  currentItems.forEach(function(i) { i.status = ''; i.evidence = ''; });
+  renderItems();
+  updateScore();
+  renderHeatmap(TEMPLATES[currentTemplate]);
+}
+
+function showToast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 3000); }
+
+// Init
+renderTemplates();
+selectTemplate('alderperson');
+
+EQ.init({
+  en: {
+    arc_label:'Govern', title:'Are They Keeping Their Promises?',
+    subtitle:'Pick a leader or a program. Go through the list. Check what they said they\'d do against what actually happened. Write down what you saw. Bring it to the next meeting.',
+    how_title:'How this works',
+    how_p1:'<strong style="color:var(--forest)">What did they promise?</strong> Every item on the list comes from something specific — a campaign pledge, a budget commitment, a posted policy.',
+    how_p2:'<strong style="color:var(--coral)">Did they do it?</strong> For each promise: Met, Partially Met, or Not Met. Write down what you saw — no rating without a reason.',
+    how_p3:'<strong style="color:var(--sage)">What should change?</strong> Print the results. Take them to the meeting. Come back in three months and check again. That\'s how things move.',
+    what_label:'Who are you checking on?', entity_label:'Name the person, program, or office',
+    assessor_label:'Your name or group (optional)', zip_label:'Zip code',
+    template_title:'What kind of promises are you checking?', start_btn:'Start Checking',
+    score_label:'Promise-Keeping Score', items_title:'The Promises',
+    heatmap_title:'At a Glance', print_btn:'🖨 Print This',
+    reset_btn:'Start Over', submit_btn:'Save Results',
+    history_title:'Last Time vs. This Time',
+    history_desc:'If you\'ve checked before, compare. Red areas that turned green — that\'s progress. Green areas that turned red — that\'s the conversation for the next meeting.'
+  },
+  es: {
+    arc_label:'Gobernar', title:'¿Están Cumpliendo Lo Que Prometieron?',
+    subtitle:'Elige un líder o un programa. Revisa la lista. Compara lo que dijeron que harían con lo que realmente pasó. Anota lo que viste. Llévalo a la próxima reunión.',
+    how_title:'Cómo funciona',
+    how_p1:'<strong style="color:var(--forest)">¿Qué prometieron?</strong> Cada punto de la lista viene de algo específico — una promesa de campaña, un compromiso de presupuesto, una política publicada.',
+    how_p2:'<strong style="color:var(--coral)">¿Lo hicieron?</strong> Para cada promesa: Cumplido, Parcial, o No Cumplido. Escribe lo que viste — no hay calificación sin razón.',
+    how_p3:'<strong style="color:var(--sage)">¿Qué debería cambiar?</strong> Imprime los resultados. Llévalos a la reunión. Regresa en tres meses y revisa de nuevo. Así es como las cosas se mueven.',
+    what_label:'¿A quién estás revisando?', entity_label:'Nombre de la persona, programa u oficina',
+    assessor_label:'Tu nombre o grupo (opcional)', zip_label:'Código postal',
+    template_title:'¿Qué tipo de promesas estás revisando?', start_btn:'Empezar a Revisar',
+    score_label:'Puntaje de Cumplimiento', items_title:'Las Promesas',
+    heatmap_title:'De un Vistazo', print_btn:'🖨 Imprimir Esto',
+    reset_btn:'Empezar de Nuevo', submit_btn:'Guardar Resultados',
+    history_title:'La Última Vez vs. Esta Vez',
+    history_desc:'Si ya revisaste antes, compara. Áreas rojas que se volvieron verdes — eso es progreso. Áreas verdes que se volvieron rojas — esa es la conversación para la próxima reunión.'
+  }
+}, { footer: true, alertPage: 'audit' });
+</script>
+</body>
+</html>

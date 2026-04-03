@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Civic Case Studies — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Complex civic problems that require multiple perspectives. No single lens sees the whole picture. Practice holding complexity.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.cs-hero{text-align:center;padding:28px 16px 16px}
+.cs-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.cs-hero p{font-size:.82rem;color:var(--body);line-height:1.7;max-width:500px;margin:0 auto 16px}
+.cs-domains{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.cs-domain{font-size:.58rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(91,140,122,.06);color:var(--sage)}
+.cs-links{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.cs-links a{font-size:.65rem;font-weight:600;padding:4px 10px;border-radius:6px;border:1px solid var(--sage);color:var(--forest);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="cs-hero">
+    <h1 data-t="cs_t">Civic Case Studies</h1>
+    <p data-t="cs_s">Real problems don't fit in one box. A vacant lot is an environment problem, a food access problem, a housing problem, an education problem, and a safety problem — all at once. Practice holding complexity.</p>
+  </div>
+  <div id="caseList"></div>
+</div>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var cases = CivicIntel.CASE_STUDIES || [];
+var h = '';
+cases.forEach(function(c) {
+  h += '<div class="ci-case">';
+  h += '<h3>' + c.title + '</h3>';
+  h += '<div class="ci-case-sub">' + c.subtitle + '</div>';
+  h += '<div class="cs-domains">';
+  c.domains.forEach(function(d) {
+    var dom = CivicIntel.CIVIC_DOMAINS[d];
+    h += '<span class="cs-domain">' + (dom ? dom.icon : '') + ' ' + d + '</span>';
+  });
+  h += '</div>';
+  h += '<div class="ci-case-scenario">' + c.scenario + '</div>';
+
+  c.perspectives.forEach(function(p) {
+    var dom = CivicIntel.CIVIC_DOMAINS[p.domain] || {};
+    var bgMap = { healthcare:'#eff6ff', education:'#f5f3ff', housing:'#fffbeb', environment:'#f0fdf4', safety:'#fee2e2', economy:'#fefce8', immigration:'#ecfeff' };
+    h += '<div class="ci-case-persp" style="background:' + (bgMap[p.domain] || '#f8fafc') + ';border:1px solid rgba(0,0,0,.05)">';
+    h += '<strong>' + (dom.icon || '') + ' ' + p.domain.charAt(0).toUpperCase() + p.domain.slice(1) + ' lens: ' + p.question + '</strong>';
+    h += '<div class="ci-blind">Blind spot: ' + p.blindSpot + '</div>';
+    h += '</div>';
+  });
+
+  h += '<div class="ci-case-prompt">' + c.integrationPrompt + '</div>';
+
+  if (c.dataLinks) {
+    h += '<div class="cs-links">';
+    c.dataLinks.forEach(function(l) { h += '<a href="' + l.href + '">' + l.label + ' →</a>'; });
+    h += '<a href="/discuss.html">💬 Discuss this case →</a>';
+    h += '</div>';
+  }
+  h += '</div>';
+});
+document.getElementById('caseList').innerHTML = h;
+EQ.init({cs_t:'Civic Case Studies',cs_t_es:'Estudios de Caso Cívicos',cs_s:"Real problems don't fit in one box. Practice holding complexity.",cs_s_es:'Los problemas reales no caben en una caja. Practica sostener la complejidad.'});
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "_comment": "Annually updated configuration. Check each January for new FPL, minimum wages, EITC limits.",
+  "_last_updated": "2026-03-31",
+  "_next_review": "2027-01-15",
+  "fpl_year": 2025,
+  "eitc_tax_year": 2025,
+  "minimum_wage_year": "2025-2026",
+  "medicaid_expansion_updated": "2026-03-31",
+  "census_acs_year": 2022,
+  "medicaid_non_expansion_states": ["AL","FL","GA","KS","MS","SC","TN","TX","WI","WY"]
+}

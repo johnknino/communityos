@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Benefit Screener — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Benefit Screener — CommUnity OS">
+<meta property="og:description" content="Find out what benefits you may qualify for in 2 minutes. Free. Private. No data collected.">
+<meta name="description" content="Free benefit eligibility screener for SNAP, WIC, Medicaid, CHIP, EITC, LIHEAP, housing assistance, and school lunch. Based on federal poverty guidelines. Bilingual English/Spanish. No data stored.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.bs-priv{background:var(--warm);border-radius:12px;padding:14px 16px;margin:0 0 20px;border-left:3px solid var(--sage);font-size:.78rem;color:var(--body);line-height:1.6}
+.bs-form{background:var(--warm);border-radius:14px;padding:20px;margin:14px 0;border:1px solid var(--sand)}
+.bs-form h3{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:10px}
+.bs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:400px){.bs-row{grid-template-columns:1fr}}
+.bs-field{margin-bottom:8px}
+.bs-field label{display:block;font-size:.7rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.bs-field input,.bs-field select{width:100%;font-family:var(--sans);font-size:.85rem;padding:9px 12px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--ink)}
+.bs-field input:focus,.bs-field select:focus{outline:none;border-color:var(--sage)}
+.bs-field .bs-hint{font-size:.58rem;color:var(--dim);margin-top:1px}
+.bs-check{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:.82rem;color:var(--body)}
+.bs-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--forest)}
+.bs-go{font-family:var(--display);font-size:.82rem;font-weight:700;padding:14px 28px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s;margin-top:10px;width:100%}
+.bs-go:hover{background:var(--deep)}
+.bs-results{margin:16px 0}
+.bs-prog{background:var(--warm);border-radius:12px;padding:16px;margin:8px 0;border:1px solid var(--sand);display:flex;align-items:flex-start;gap:12px}
+.bs-prog .bs-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.bs-likely .bs-badge{background:rgba(91,140,122,.12);color:var(--forest)}
+.bs-maybe .bs-badge{background:rgba(201,168,76,.12);color:var(--gold)}
+.bs-unlikely .bs-badge{background:rgba(212,112,74,.08);color:var(--coral)}
+.bs-prog .bs-info{flex:1}
+.bs-prog .bs-pname{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--deep)}
+.bs-prog .bs-pdesc{font-size:.72rem;color:var(--body);line-height:1.5;margin-top:2px}
+.bs-prog .bs-paction{display:inline-block;font-size:.65rem;font-weight:600;color:var(--forest);margin-top:6px;text-decoration:none;border-bottom:1px solid var(--sage)}
+.bs-summary{background:rgba(91,140,122,.06);border:1.5px solid var(--sage);border-radius:14px;padding:18px;margin:16px 0}
+.bs-summary h3{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:8px}
+.bs-summary p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:6px}
+.bs-legal{font-size:.62rem;color:var(--dim);line-height:1.6;margin:20px 0;padding-top:14px;border-top:1px solid var(--sand)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">SURVIVE</div>
+    <h1 data-t="be_title">Benefit Screener</h1>
+    <p class="subtitle" data-t="be_sub">Find out what you may qualify for. 2 minutes. 100% private.</p>
+  </div>
+
+  <div class="bs-priv">
+    <strong>Nothing you enter leaves your phone.</strong> This screener uses published federal income guidelines to estimate eligibility. No data is saved, sent, or recorded. No one will know you used this tool.
+  </div>
+
+  <div class="bs-form">
+    <h3>Tell us about your household</h3>
+    <div class="bs-row">
+      <div class="bs-field"><label>Household size</label><select id="beSize"><option value="">—</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option><option value="4">4 people</option><option value="5">5 people</option><option value="6">6 people</option><option value="7">7 people</option><option value="8">8 people</option></select></div>
+      <div class="bs-field"><label>Annual household income (before taxes)</label><input type="number" id="beIncome" placeholder="e.g. 32000"><div class="bs-hint">All earnings from everyone in the household</div></div>
+    </div>
+    <div class="bs-row">
+      <div class="bs-field"><label>State</label><select id="beState"><option value="">—</option></select></div>
+      <div class="bs-field"><label>Zip code</label><input type="text" id="beZip" maxlength="5" placeholder="e.g. 60608" inputmode="numeric"></div>
+    </div>
+
+    <h3 style="margin-top:14px;font-size:.82rem">Check all that apply:</h3>
+    <div class="bs-check"><input type="checkbox" id="bePregnant"><label for="bePregnant">Someone in the household is pregnant</label></div>
+    <div class="bs-check"><input type="checkbox" id="beChildren"><label for="beChildren">Children under 18 in household</label></div>
+    <div class="bs-check"><input type="checkbox" id="beInfant"><label for="beInfant">Child under 5 or breastfeeding</label></div>
+    <div class="bs-check"><input type="checkbox" id="beSenior"><label for="beSenior">Someone is 65 or older</label></div>
+    <div class="bs-check"><input type="checkbox" id="beDisabled"><label for="beDisabled">Someone has a disability</label></div>
+    <div class="bs-check"><input type="checkbox" id="beCitizen"><label for="beCitizen">At least one US citizen or qualified immigrant in household</label></div>
+    <div class="bs-check"><input type="checkbox" id="beEmployed"><label for="beEmployed">Someone is employed (even part-time)</label></div>
+
+    <button class="bs-go" onclick="screenBenefits()">Check My Eligibility</button>
+  </div>
+
+  <div id="beResults" style="display:none"></div>
+
+  <div class="bs-legal">
+    This screener provides estimates based on 2025 Federal Poverty Level guidelines and published program income limits. Actual eligibility depends on state rules, assets, immigration status, and other factors. This tool does not determine eligibility — only the program agency can do that. Apply to know for sure. This tool does not collect or store identifying data.
+  </div>
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+// 2025 Federal Poverty Level (48 contiguous states)
+var FPL_2025 = { 1:15650, 2:21150, 3:26650, 4:32150, 5:37650, 6:43150, 7:48650, 8:54150 };
+// Alaska and Hawaii adjustments
+var FPL_AK = { 1:19560, 2:26430, 3:33300, 4:40170, 5:47040, 6:53910, 7:60780, 8:67650 };
+var FPL_HI = { 1:18000, 2:24330, 3:30660, 4:36990, 5:43320, 6:49650, 7:55980, 8:62310 };
+
+// Medicaid expansion states (as of 2025)
+var EXPANSION = ['AK','AZ','AR','CA','CO','CT','DE','DC','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SD','UT','VT','VA','WA','WV'];
+
+var STATES = {'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'Washington DC','FL':'Florida','GA':'Georgia','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'};
+
+// Populate state dropdown
+var sSel = document.getElementById('beState');
+Object.keys(STATES).sort(function(a,b){return STATES[a].localeCompare(STATES[b])}).forEach(function(st){
+  var o = document.createElement('option'); o.value = st; o.textContent = STATES[st]; sSel.appendChild(o);
+});
+
+function getFPL(size, state) {
+  size = Math.min(8, Math.max(1, size));
+  if (state === 'AK') return FPL_AK[size];
+  if (state === 'HI') return FPL_HI[size];
+  return FPL_2025[size];
+}
+
+function pctFPL(income, size, state) {
+  return (income / getFPL(size, state)) * 100;
+}
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+function screenBenefits() {
+  var size = +document.getElementById('beSize').value;
+  var income = +document.getElementById('beIncome').value;
+  var state = document.getElementById('beState').value;
+  if (!size || !state) { alert('Please select your household size (1-8 people) and state from the dropdowns.'); return; }
+  if (income < 0) income = 0;
+
+  var fpl = getFPL(size, state);
+  var pct = pctFPL(income, size, state);
+  var pregnant = document.getElementById('bePregnant').checked;
+  var children = document.getElementById('beChildren').checked;
+  var infant = document.getElementById('beInfant').checked;
+  var senior = document.getElementById('beSenior').checked;
+  var disabled = document.getElementById('beDisabled').checked;
+  var citizen = document.getElementById('beCitizen').checked;
+  var employed = document.getElementById('beEmployed').checked;
+  var expansion = EXPANSION.indexOf(state) >= 0;
+
+  var results = [];
+
+  // SNAP — 130% FPL gross income test
+  results.push({
+    name: 'SNAP (Food Stamps)',
+    likely: pct <= 130,
+    maybe: pct <= 200,
+    desc: pct <= 130
+      ? 'Your income is below 130% FPL (' + fmt(Math.round(fpl * 1.3)) + '). You likely qualify for SNAP. Average benefit: ~$6/person/day. Note: SNAP also has a net income test at 100% FPL after deductions — you may still qualify even if gross income is slightly over 130%.'
+      : pct <= 200
+      ? 'Your income is above the standard limit but some states have expanded eligibility. Check with your state SNAP office.'
+      : 'Your income exceeds typical SNAP limits, but seniors and disabled individuals may have different thresholds.',
+    url: 'https://www.fns.usda.gov/snap/recipient/eligibility',
+    action: 'Apply for SNAP'
+  });
+
+  // WIC — 185% FPL, must be pregnant/breastfeeding or child under 5
+  if (pregnant || infant) {
+    results.push({
+      name: 'WIC (Women, Infants, Children)',
+      likely: pct <= 185,
+      maybe: false,
+      desc: pct <= 185
+        ? 'Your income is below 185% FPL (' + fmt(Math.round(fpl * 1.85)) + ') and you have a pregnant/postpartum person or child under 5. WIC is fully funded — the only barrier is applying.'
+        : 'Your income exceeds WIC limits (185% FPL), but if you receive SNAP, Medicaid, or TANF, you automatically qualify for WIC.',
+      url: 'https://www.fns.usda.gov/wic/wic-how-apply',
+      action: 'Apply for WIC'
+    });
+  }
+
+  // Medicaid — varies by expansion status
+  var medicaidLikely = expansion ? pct <= 138 : (children && pct <= 200) || (pregnant && pct <= 200);
+  var medicaidMaybe = !expansion && pct <= 138;
+  results.push({
+    name: 'Medicaid',
+    likely: medicaidLikely,
+    maybe: medicaidMaybe,
+    desc: expansion
+      ? (pct <= 138 ? 'Your state expanded Medicaid. Adults under 138% FPL (' + fmt(Math.round(fpl * 1.38)) + ') qualify. Children qualify at higher levels.' : 'Your income exceeds Medicaid limits in your state. Check Healthcare.gov for marketplace subsidies.')
+      : (pct <= 138 ? 'Your state has NOT expanded Medicaid. You may fall in the coverage gap — too much for Medicaid, too little for marketplace subsidies. Check Healthcare.gov anyway.' : 'Check Healthcare.gov for marketplace plans with subsidies.'),
+    url: 'https://www.healthcare.gov/screener/',
+    action: 'Check at Healthcare.gov'
+  });
+
+  // CHIP — children, typically 200-300% FPL
+  if (children) {
+    results.push({
+      name: 'CHIP (Children\'s Health Insurance)',
+      likely: pct <= 200,
+      maybe: pct <= 300,
+      desc: pct <= 200
+        ? 'Children in families under 200% FPL typically qualify for CHIP or Medicaid. Most states cover children at even higher income levels.'
+        : pct <= 300
+        ? 'Many states cover children up to 300% FPL through CHIP. Worth applying.'
+        : 'Your income may exceed CHIP limits, but thresholds vary by state. Apply to find out.',
+      url: 'https://www.insurekidsnow.gov/',
+      action: 'Apply at InsureKidsNow'
+    });
+  }
+
+  // EITC — must have earned income, varies by children
+  if (employed) {
+    var eitcLimit = children ? (size >= 4 ? 63398 : size === 3 ? 59899 : 55768) : 18591;
+    results.push({
+      name: 'Earned Income Tax Credit (EITC)',
+      likely: income <= eitcLimit && income > 0,
+      maybe: false,
+      desc: income <= eitcLimit
+        ? 'You may qualify for the EITC — worth up to $7,830 with 3+ children. ' + (income < 20000 ? 'You may also qualify for free tax filing through VITA.' : 'File taxes even if your income is low — the EITC is a refund.')
+        : 'Your income exceeds EITC limits for your household size.',
+      url: 'https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc',
+      action: 'Check EITC Eligibility'
+    });
+  }
+
+  // LIHEAP — 150% FPL or 60% state median income
+  results.push({
+    name: 'LIHEAP (Heating/Cooling Help)',
+    likely: pct <= 150,
+    maybe: pct <= 200,
+    desc: pct <= 150
+      ? 'Your income is below 150% FPL. You likely qualify for help with heating and cooling bills. Only 17% of eligible households apply — don\'t leave money on the table.'
+      : pct <= 200
+      ? 'Some states set LIHEAP eligibility at 60% of state median income, which may be higher than 150% FPL. Apply to check.'
+      : 'Your income may exceed LIHEAP limits, but seniors and disabled individuals sometimes qualify at higher levels.',
+    url: 'https://www.acf.hhs.gov/ocs/programs/liheap',
+    action: 'Find Your State LIHEAP'
+  });
+
+  // School lunch — 130% free, 185% reduced
+  if (children) {
+    results.push({
+      name: 'Free/Reduced School Lunch',
+      likely: pct <= 130,
+      maybe: pct <= 185,
+      desc: pct <= 130
+        ? 'Your children qualify for FREE school meals. Many schools now serve free meals to ALL students under CEP — ask your school.'
+        : pct <= 185
+        ? 'Your children likely qualify for REDUCED-PRICE meals (40¢ lunch, 30¢ breakfast). Ask your school about CEP — they may serve free meals to everyone.'
+        : 'Your income exceeds standard limits, but check if your school participates in CEP (Community Eligibility Provision) — meals may be free for all students regardless of income.',
+      url: 'https://www.fns.usda.gov/cn/applying-free-and-reduced-price-school-meals',
+      action: 'Learn About School Meals'
+    });
+  }
+
+  // Housing — 50% area median income for most programs
+  results.push({
+    name: 'Housing Assistance (Section 8 / Public Housing)',
+    likely: pct <= 100,
+    maybe: pct <= 150,
+    desc: pct <= 100
+      ? 'Your income is at or below the poverty level. You likely qualify for housing assistance, but waitlists average 27 months nationally. Apply now even if you don\'t need it yet.'
+      : pct <= 150
+      ? 'Housing assistance uses Area Median Income (AMI), not FPL. Your income may qualify depending on local AMI levels. Contact your local housing authority.'
+      : 'Federal housing assistance is limited. Contact your local housing authority for current income limits and waitlist status.',
+    url: 'https://www.hud.gov/topics/housing_choice_voucher_program_section_8',
+    action: 'Find Local Housing Authority'
+  });
+
+  // SSI — if disabled or senior
+  if (disabled || senior) {
+    results.push({
+      name: 'SSI (Supplemental Security Income)',
+      likely: income < 23000 && (disabled || senior),
+      maybe: income < 40000,
+      desc: 'SSI provides monthly payments to people 65+ or with disabilities who have limited income and resources. The 2025 maximum is $967/month individual, $1,450/couple. SSI can count under public charge for some immigration categories — use the Benefit Safety Check tool if this concerns you.',
+      url: 'https://www.ssa.gov/ssi/',
+      action: 'Learn About SSI'
+    });
+  }
+
+  // Render results
+  var likely = results.filter(function(r) { return r.likely; });
+  var maybe = results.filter(function(r) { return !r.likely && r.maybe; });
+  var unlikely = results.filter(function(r) { return !r.likely && !r.maybe; });
+
+  var html = '<div class="bs-summary"><h3>Your Screening Results</h3>';
+  html += '<p>Based on a household of ' + size + ' with ' + fmt(income) + ' annual income (' + Math.round(pct) + '% of the Federal Poverty Level' + (pct <= 100 ? ' — below the poverty line' : '') + '):</p>';
+  if (likely.length > 0) html += '<p><strong style="color:var(--forest)">' + likely.length + ' program' + (likely.length > 1 ? 's' : '') + ' you likely qualify for.</strong></p>';
+  if (maybe.length > 0) html += '<p><strong style="color:var(--gold)">' + maybe.length + ' program' + (maybe.length > 1 ? 's' : '') + ' worth checking.</strong></p>';
+  html += '</div>';
+
+  html += '<div class="bs-results">';
+  likely.forEach(function(r) {
+    html += '<div class="bs-prog bs-likely"><div class="bs-badge">✓</div><div class="bs-info"><div class="bs-pname">' + r.name + '</div><div class="bs-pdesc">' + r.desc + '</div><a href="' + r.url + '" target="_blank" rel="noopener" class="bs-paction">' + r.action + ' →</a></div></div>';
+  });
+  maybe.forEach(function(r) {
+    html += '<div class="bs-prog bs-maybe"><div class="bs-badge">?</div><div class="bs-info"><div class="bs-pname">' + r.name + '</div><div class="bs-pdesc">' + r.desc + '</div><a href="' + r.url + '" target="_blank" rel="noopener" class="bs-paction">' + r.action + ' →</a></div></div>';
+  });
+  unlikely.forEach(function(r) {
+    html += '<div class="bs-prog bs-unlikely"><div class="bs-badge">—</div><div class="bs-info"><div class="bs-pname">' + r.name + '</div><div class="bs-pdesc">' + r.desc + '</div><a href="' + r.url + '" target="_blank" rel="noopener" class="bs-paction">' + r.action + ' →</a></div></div>';
+  });
+  html += '</div>';
+
+  html += '<div style="text-align:center;margin:16px 0"><a href="/benefits-check.html" style="font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block">Check Benefit Safety for Immigration →</a></div>';
+
+  document.getElementById('beResults').innerHTML = html;
+  document.getElementById('beResults').style.display = '';
+  document.getElementById('beResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+EQ.init({
+  be_title: 'Benefit Screener',
+  be_title_es: 'Evaluador de Beneficios',
+  be_sub: 'Find out what you may qualify for. 2 minutes. 100% private.',
+  be_sub_es: 'Descubre para qué puedes calificar. 2 minutos. 100% privado.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

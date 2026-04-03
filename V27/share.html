@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Share — CommUnity OS</title>
+<meta name="description" content="Share your story or suggest a resource. Your experience makes this platform better for your neighbors.">
+<meta property="og:title" content="Share — CommUnity OS">
+<meta property="og:description" content="Your experience makes this platform better for everyone.">
+<meta property="og:url" content="https://comm-unity-os.org/share.html">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.share-toggle{display:flex;gap:8px;justify-content:center;margin:20px 0}
+.share-toggle button{font-family:var(--sans);font-size:.82rem;font-weight:500;padding:10px 24px;border-radius:12px;border:2px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
+.share-toggle button.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.06)}
+.share-form{display:none;max-width:480px;margin:0 auto}
+.share-form.active{display:block}
+.share-form label{display:block;font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--deep);margin:16px 0 6px}
+.share-form input,.share-form textarea,.share-form select{width:100%;font-family:var(--sans);font-size:.9rem;padding:10px 14px;border:1.5px solid var(--sand);border-radius:10px;background:var(--warm);color:var(--ink);box-sizing:border-box}
+.share-form input:focus,.share-form textarea:focus,.share-form select:focus{outline:none;border-color:var(--sage)}
+.share-form textarea{resize:vertical;min-height:100px}
+.share-form .permission-row{display:flex;align-items:center;gap:10px;margin:16px 0;padding:14px;background:rgba(90,138,120,.04);border-radius:10px;border:1px solid rgba(90,138,120,.12)}
+.share-form .permission-row input[type=checkbox]{width:auto;margin:0}
+.share-form .permission-row label{margin:0;font-size:.78rem;color:var(--dim);line-height:1.5}
+.share-form button[type=submit]{font-family:var(--sans);font-size:.85rem;font-weight:500;padding:12px 28px;border:none;border-radius:12px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.15s;margin-top:20px;width:100%}
+.share-form button[type=submit]:hover{background:var(--deep)}
+.share-form button[type=submit]:disabled{background:var(--dim);cursor:not-allowed}
+.share-success{display:none;text-align:center;padding:40px 20px}
+.share-success h3{font-family:var(--display);font-size:1.2rem;color:var(--deep);margin-bottom:10px}
+.share-success p{font-size:.85rem;color:var(--dim);line-height:1.6}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/share.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Share Your Story — CommUnity OS", "url": "https://comm-unity-os.org/share.html", "description": "Community storytelling with category and neighborhood tagging.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+<div class="page" role="main">
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Community</div>
+    <h1 data-t="title">Share With Your Neighbors</h1>
+    <div class="subtitle" data-t="subtitle">Your experience makes this platform better. Share a story about how a tool helped, or suggest a resource your community needs.</div>
+  </div>
+
+  <div class="narrative fade-in fade-in-1">
+    <p data-t="story_intro">Every resource on this site started with someone who knew something their neighbor needed to hear. The food pantry with Saturday hours. The free bank account nobody talked about. The WIC benefit at the farmers market. If you know something — or if these tools helped you — share it here. What you write may become part of the site your neighbors see.</p>
+  </div>
+
+  <div class="share-toggle fade-in fade-in-1">
+    <button class="active" onclick="showForm('story')" data-t="toggle_story">Share a story</button>
+    <button onclick="showForm('resource')" data-t="toggle_resource">Suggest a resource</button>
+  </div>
+
+  <!-- STORY FORM -->
+  <div class="share-form active" id="storyForm">
+    <label data-t="lbl_zip">Your zip code</label>
+    <input type="text" id="storyZip" maxlength="5" pattern="[0-9]{5}" placeholder="60608" inputmode="numeric">
+
+    <label data-t="lbl_name">Name (optional — a first name or nickname is fine)</label>
+    <input type="text" id="storyName" maxlength="40" placeholder="How you'd like to be credited">
+
+    <label data-t="lbl_category">Which part of the site does this relate to?</label>
+    <select id="storyCategory">
+      <option value="survive" data-t="cat_survive">Survive — Food, Health, Emergency</option>
+      <option value="understand" data-t="cat_understand">Understand — Money, Rights, Civic</option>
+      <option value="connect" data-t="cat_connect">Connect — Neighbors, Mutual Aid</option>
+      <option value="govern" data-t="cat_govern">Govern — Leaders, Accountability</option>
+    </select>
+
+    <label data-t="lbl_story">What happened?</label>
+    <textarea id="storyContent" maxlength="2000" placeholder="Tell us your experience — what tool did you use, what changed, what did you learn?"></textarea>
+
+    <div class="permission-row">
+      <input type="checkbox" id="storyPermission">
+      <label for="storyPermission" data-t="lbl_permission">It's okay to share my story on the site (your name will only appear if you provided one above)</label>
+    </div>
+
+    <button type="submit" onclick="submitShare('story')" data-t="btn_story">Share your story</button>
+  </div>
+
+  <!-- RESOURCE FORM -->
+  <div class="share-form" id="resourceForm">
+    <label data-t="lbl_zip">Your zip code</label>
+    <input type="text" id="resourceZip" maxlength="5" pattern="[0-9]{5}" placeholder="60608" inputmode="numeric">
+
+    <label data-t="lbl_name_r">Name (optional)</label>
+    <input type="text" id="resourceName" maxlength="40" placeholder="How you'd like to be credited">
+
+    <label data-t="lbl_category">Which part of the site does this belong on?</label>
+    <select id="resourceCategory">
+      <option value="survive" data-t="cat_survive">Survive — Food, Health, Emergency</option>
+      <option value="understand" data-t="cat_understand">Understand — Money, Rights, Civic</option>
+      <option value="connect" data-t="cat_connect">Connect — Neighbors, Mutual Aid</option>
+      <option value="govern" data-t="cat_govern">Govern — Leaders, Accountability</option>
+    </select>
+
+    <label data-t="lbl_resource_name">Resource name</label>
+    <input type="text" id="resourceTitle" maxlength="200" placeholder="Name of the organization, service, or tool">
+
+    <label data-t="lbl_resource_url">Link (if you have one)</label>
+    <input type="url" id="resourceUrl" maxlength="500" placeholder="https://...">
+
+    <label data-t="lbl_resource_why">Why is this useful?</label>
+    <textarea id="resourceContent" maxlength="2000" placeholder="What does it do? Who is it for? Why should your neighbors know about it?"></textarea>
+
+    <button type="submit" onclick="submitShare('resource')" data-t="btn_resource">Suggest this resource</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="share-success" id="successMsg">
+    <h3 data-t="success_title">Thank you.</h3>
+    <p data-t="success_body">Your submission will be reviewed. If you gave permission, your story may become part of the site your neighbors see. That's how this platform grows — one voice at a time.</p>
+    <div style="margin-top:24px">
+      <a class="cta-btn" href="/discuss.html" data-t="success_cta">Join the discussion →</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+function showForm(type) {
+  document.getElementById('storyForm').classList.toggle('active', type === 'story');
+  document.getElementById('resourceForm').classList.toggle('active', type === 'resource');
+  document.querySelectorAll('.share-toggle button').forEach(function(b, i) {
+    b.classList.toggle('active', (i === 0 && type === 'story') || (i === 1 && type === 'resource'));
+  });
+}
+
+async function submitShare(type) {
+  var zip, name, category, content, url, permission;
+
+  if (type === 'story') {
+    zip = document.getElementById('storyZip').value.trim();
+    name = document.getElementById('storyName').value.trim();
+    category = document.getElementById('storyCategory').value;
+    content = document.getElementById('storyContent').value.trim();
+    permission = document.getElementById('storyPermission').checked;
+    url = '';
+  } else {
+    zip = document.getElementById('resourceZip').value.trim();
+    name = document.getElementById('resourceName').value.trim();
+    category = document.getElementById('resourceCategory').value;
+    content = document.getElementById('resourceContent').value.trim();
+    url = document.getElementById('resourceUrl').value.trim();
+    permission = true;
+  }
+
+  if (!/^\d{5}$/.test(zip)) { showToast('Enter a valid 5-digit zip code'); return; }
+  if (!content) { showToast(type === 'story' ? 'Tell us what happened' : 'Describe the resource'); return; }
+
+  var btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    var res = await fetch(API, {
+      method: 'POST', headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action: 'community_share',
+        type: type,
+        zip: zip,
+        display_name: name || 'Anonymous',
+        content: content,
+        resource_url: url,
+        category: category,
+        permission: permission
+      })
+    });
+    var data = await res.json();
+    if (data.status === 'ok') {
+      document.getElementById('storyForm').classList.remove('active');
+      document.getElementById('resourceForm').classList.remove('active');
+      document.querySelector('.share-toggle').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    } else {
+      showToast('Something went wrong. Try again.');
+      btn.disabled = false;
+      btn.textContent = type === 'story' ? 'Share your story' : 'Suggest this resource';
+    }
+  } catch(e) {
+    showToast('Network error. Try again.');
+    btn.disabled = false;
+    btn.textContent = type === 'story' ? 'Share your story' : 'Suggest this resource';
+  }
+}
+
+EQ.init({
+  en: {
+    arc_label: 'Community',
+    title: 'Share With Your Neighbors',
+    subtitle: 'Your experience makes this platform better. Share a story about how a tool helped, or suggest a resource your community needs.',
+    story_intro: 'Every resource on this site started with someone who knew something their neighbor needed to hear. The food pantry with Saturday hours. The free bank account nobody talked about. The WIC benefit at the farmers market. If you know something — or if these tools helped you — share it here. What you write may become part of the site your neighbors see.',
+    toggle_story: 'Share a story',
+    toggle_resource: 'Suggest a resource',
+    lbl_zip: 'Your zip code',
+    lbl_name: 'Name (optional — a first name or nickname is fine)',
+    lbl_name_r: 'Name (optional)',
+    lbl_category: 'Which part of the site does this relate to?',
+    cat_survive: 'Survive — Food, Health, Emergency',
+    cat_understand: 'Understand — Money, Rights, Civic',
+    cat_connect: 'Connect — Neighbors, Mutual Aid',
+    cat_govern: 'Govern — Leaders, Accountability',
+    lbl_story: 'What happened?',
+    lbl_permission: 'It\'s okay to share my story on the site (your name will only appear if you provided one above)',
+    btn_story: 'Share your story',
+    lbl_resource_name: 'Resource name',
+    lbl_resource_url: 'Link (if you have one)',
+    lbl_resource_why: 'Why is this useful?',
+    btn_resource: 'Suggest this resource',
+    success_title: 'Thank you.',
+    success_body: 'Your submission will be reviewed. If you gave permission, your story may become part of the site your neighbors see. That\'s how this platform grows — one voice at a time.',
+    success_cta: 'Join the discussion →'
+  },
+  es: {
+    arc_label: 'Comunidad',
+    title: 'Comparte Con Tus Vecinos',
+    subtitle: 'Tu experiencia hace esta plataforma mejor. Comparte una historia sobre cómo una herramienta te ayudó, o sugiere un recurso que tu comunidad necesita.',
+    story_intro: 'Cada recurso en este sitio comenzó con alguien que sabía algo que su vecino necesitaba escuchar. La despensa con horario sabatino. La cuenta de banco gratuita de la que nadie hablaba. El beneficio de WIC en el mercado de agricultores. Si sabes algo — o si estas herramientas te ayudaron — compártelo aquí. Lo que escribas podría ser parte del sitio que tus vecinos ven.',
+    toggle_story: 'Compartir una historia',
+    toggle_resource: 'Sugerir un recurso',
+    lbl_zip: 'Tu código postal',
+    lbl_name: 'Nombre (opcional — un primer nombre o apodo está bien)',
+    lbl_name_r: 'Nombre (opcional)',
+    lbl_category: '¿A qué parte del sitio se relaciona esto?',
+    cat_survive: 'Sobrevivir — Comida, Salud, Emergencia',
+    cat_understand: 'Comprender — Dinero, Derechos, Cívico',
+    cat_connect: 'Conectar — Vecinos, Ayuda Mutua',
+    cat_govern: 'Gobernar — Líderes, Rendición de Cuentas',
+    lbl_story: '¿Qué pasó?',
+    lbl_permission: 'Está bien compartir mi historia en el sitio (tu nombre solo aparecerá si lo proporcionaste arriba)',
+    btn_story: 'Compartir tu historia',
+    lbl_resource_name: 'Nombre del recurso',
+    lbl_resource_url: 'Enlace (si lo tienes)',
+    lbl_resource_why: '¿Por qué es útil?',
+    btn_resource: 'Sugerir este recurso',
+    success_title: 'Gracias.',
+    success_body: 'Tu envío será revisado. Si diste permiso, tu historia podría ser parte del sitio que tus vecinos ven. Así es como esta plataforma crece — una voz a la vez.',
+    success_cta: 'Únete a la discusión →'
+  }
+}, { footer: true, closingKey: null, alertPage: 'share' });
+</script>
+</body>
+</html>

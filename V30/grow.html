@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Grow — CommUnity OS</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"Container Garden Guide","description":"40 plants personalized to your USDA zone by zip code.","isPartOf":{"@type":"WebApplication","name":"CommUnity OS","url":"https://comm-unity-os.org"},"inLanguage":["en","es"]}
+</script>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta property="og:title" content="Grow Your Own Food — CommUnity OS">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:description" content="Free personalized container garden guide for your zip code. What to plant, when to plant, how to grow — in English and Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.grow-hero{background:linear-gradient(160deg,#2d4a35 0%,#3d6b4f 40%,#4a7c59 100%);border-radius:14px;padding:24px 20px;color:#fff;margin-bottom:20px}
+.grow-hero h2{font-family:var(--display);font-size:1.3rem;margin-bottom:4px}
+.grow-hero .grow-meta{font-size:.78rem;opacity:.85;margin-bottom:12px}
+.grow-badges{display:flex;flex-wrap:wrap;gap:6px}
+.grow-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:100px;font-size:.7rem;font-weight:600;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)}
+.zip-entry{display:flex;gap:8px;margin:20px 0}
+.zip-entry input{font-family:var(--sans);font-size:1rem;padding:12px 16px;border:2px solid var(--sand);border-radius:10px;width:140px;background:var(--cream);text-align:center;letter-spacing:.1em}
+.zip-entry button{font-family:var(--sans);font-size:.88rem;font-weight:600;padding:12px 24px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.2s}
+.zip-entry button:hover{background:var(--deep)}
+.month-block{margin:16px 0;border:1.5px solid var(--sand);border-radius:14px;overflow:hidden;background:var(--warm)}
+.month-header{padding:14px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.month-header:hover{background:rgba(90,138,120,.03)}
+.month-name{font-family:var(--display);font-size:.95rem;font-weight:600;color:var(--deep);flex:1}
+.month-tag{font-size:.6rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:6px;color:#fff}
+.tag-start{background:var(--sage)}.tag-peak{background:var(--forest)}.tag-harvest{background:#c4654a}.tag-wind{background:#b8963e}
+.month-chevron{font-size:.7rem;color:var(--dim);transition:transform .3s}
+.month-block.open .month-chevron{transform:rotate(90deg)}
+.month-body{max-height:0;overflow:hidden;transition:max-height .4s ease-out}
+.month-block.open .month-body{max-height:5000px}
+.month-content{padding:0 18px 18px}
+.task{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--sand);font-size:.82rem}
+.task:last-child{border-bottom:none}
+.task-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.task-text{color:var(--ink);line-height:1.6}
+.task-text strong{color:var(--deep)}
+.plant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:16px 0}
+.plant-card{background:var(--warm);border-radius:12px;padding:16px;border:1px solid var(--sand)}
+.plant-card .pc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.plant-card .pc-emoji{font-size:1.4rem}
+.plant-card .pc-name{font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--deep)}
+.plant-card .pc-type{font-size:.6rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--sage)}
+.plant-card dl{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:.72rem}
+.plant-card dt{color:var(--dim);font-weight:600}
+.plant-card dd{color:var(--ink)}
+.plant-card .pc-note{font-size:.72rem;color:var(--dim);margin-top:8px;line-height:1.5;border-top:1px solid var(--sand);padding-top:8px}
+.plant-card .pc-companions{font-size:.68rem;color:var(--sage);margin-top:4px}
+.section-label{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin:24px 0 8px;display:flex;align-items:center;gap:8px}
+.nbf-box{background:var(--warm);border-radius:12px;padding:18px;margin:16px 0;border-left:4px solid var(--sage)}
+.nbf-box h4{font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.nbf-box p{font-size:.78rem;color:var(--ink);line-height:1.6;margin-bottom:8px}
+.nbf-box p:last-child{margin-bottom:0}
+.shop-section{margin:16px 0}
+.shop-cat{font-family:var(--sans);font-size:.78rem;font-weight:600;color:var(--sage);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.shop-item{font-size:.78rem;color:var(--ink);padding:6px 0;border-bottom:1px solid var(--sand);line-height:1.5}
+.shop-item:last-child{border-bottom:none}
+.shop-item strong{color:var(--deep)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--dim)}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:10px}
+.empty-state p{font-size:.88rem;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Grow</div>
+    <h1 data-t="title">Grow Your Own Food</h1>
+    <div class="subtitle" data-t="subtitle">Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and how to grow it. No yard required.</div>
+  </div>
+  <div id="alertsContainer"></div>
+  <div class="zip-entry fade-in fade-in-1">
+    <input type="text" id="growZip" maxlength="5" inputmode="numeric" placeholder="60608" aria-label="Zip code">
+    <button onclick="generateGuide()" data-t="grow_btn">Grow 🌱</button>
+  </div>
+  <div id="gardenOutput">
+    <div class="empty-state">
+      <div class="es-icon">🌱</div>
+      <p data-t="empty">Enter your zip code above. We'll look up your hardiness zone, frost dates, and growing season — then build a planting guide just for you.</p>
+    </div>
+  </div>
+  <div class="section text-center" style="margin:20px 0">
+    <p style="font-size:.72rem;color:var(--light)" data-t="bottom_note">Plant data sourced from USDA hardiness zones and cooperative extension research. No account. No data collected.</p>
+  </div>
+</div>
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+var DB = null;
+EQ.init({
+  en: {
+    arc_label:'Grow', title:'Grow Your Own Food',
+    subtitle:'Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and how to grow it. No yard required.',
+    grow_btn:'Grow 🌱',
+    empty:'Enter your zip code above. We\'ll look up your hardiness zone, frost dates, and growing season — then build a planting guide just for you.',
+    bottom_note:'Plant data sourced from USDA hardiness zones and cooperative extension research. No account. No data collected.',
+    loading:'Looking up your growing zone...',
+    error_zip:'Enter a valid 5-digit zip code.',
+    error_zone:'Could not determine your hardiness zone. Try a nearby zip code.',
+    your_zone:'Your Zone', last_frost:'Last frost', first_frost:'First frost', season:'Growing season', days:'days',
+    vegetables:'Vegetables', herbs:'Herbs', flowers:'Flowers & Pollinators', fruit:'Fruit',
+    nbf_title:'How Container Gardening Works',
+    nbf_normal:'Plants need sun, water, soil, and time. Container gardening puts all four under your control — you choose the soil (no lead, no clay, no contamination), the location (a porch, a fire escape, a windowsill), and the timing (frost dates set the calendar). A 5-gallon bucket with drainage holes grows tomatoes. A window box grows herbs. A bag of potting mix and a few seeds costs less than a week of grocery store produce and keeps producing for months.',
+    nbf_broken:'Most people who try container gardening fail because of three things: wrong timing (planting before frost kills everything), wrong container (too small, no drainage, soil dries out), or wrong expectations (a tomato needs 5 gallons of soil and full sun — a lettuce needs 6 inches and tolerates shade). Zone maps exist but nobody connects them to actual planting dates for your specific zip code.',
+    nbf_fix:'This guide does. Your zone is looked up automatically. Your frost dates set the calendar. Every plant below is filtered to what actually grows in your zone, in a container. The calendar tells you what to do each month. The shopping list tells you what to buy. Start with one pot of cherry tomatoes and one pot of herbs. If those survive, add more next month.',
+    sun_full:'Full sun (6+ hrs)', sun_partial:'Partial sun (3-6 hrs)', sun_shade:'Shade tolerant',
+    water_high:'Water daily', water_medium:'Water when dry', water_low:'Drought tolerant',
+    frost_tender:'Frost tender', frost_semi:'Light frost OK', frost_hardy:'Frost hardy',
+    depth:'Container depth', dtm:'Days to harvest', companions_label:'Good with'
+  },
+  es: {
+    arc_label:'Cultivar', title:'Cultiva Tu Propia Comida',
+    subtitle:'Ingresa tu código postal. Obtén una guía personalizada de jardín en contenedores — qué plantar, cuándo plantar, y cómo cultivar. No se necesita patio.',
+    grow_btn:'Cultivar 🌱',
+    empty:'Ingresa tu código postal. Buscaremos tu zona de rusticidad, fechas de helada y temporada de cultivo — y construiremos una guía solo para ti.',
+    bottom_note:'Datos de plantas basados en zonas de rusticidad USDA e investigación de extensión cooperativa. Sin cuenta. Sin datos recopilados.',
+    loading:'Buscando tu zona de cultivo...',
+    error_zip:'Ingresa un código postal válido de 5 dígitos.',
+    error_zone:'No se pudo determinar tu zona. Intenta un código postal cercano.',
+    your_zone:'Tu Zona', last_frost:'Última helada', first_frost:'Primera helada', season:'Temporada de cultivo', days:'días',
+    vegetables:'Vegetales', herbs:'Hierbas', flowers:'Flores y Polinizadores', fruit:'Frutas',
+    nbf_title:'Cómo Funciona el Jardín en Contenedores',
+    nbf_normal:'Las plantas necesitan sol, agua, tierra y tiempo. El jardín en contenedores pone los cuatro bajo tu control — tú eliges la tierra, la ubicación, y el momento. Un balde de 5 galones cultiva tomates. Una jardinera cultiva hierbas. Una bolsa de tierra y unas semillas cuestan menos que una semana de vegetales del supermercado.',
+    nbf_broken:'La mayoría falla por tres cosas: mal momento (plantar antes de helada mata todo), contenedor equivocado (muy pequeño, sin drenaje), o expectativas equivocadas (un tomate necesita 5 galones y sol directo — una lechuga necesita 15 cm y tolera sombra).',
+    nbf_fix:'Esta guía lo resuelve. Tu zona se busca automáticamente. Tus fechas de helada fijan el calendario. Cada planta está filtrada a lo que realmente crece en tu zona. Empieza con una maceta de tomates cherry y una de hierbas.',
+    sun_full:'Sol directo (6+ hrs)', sun_partial:'Sol parcial (3-6 hrs)', sun_shade:'Tolera sombra',
+    water_high:'Regar diario', water_medium:'Regar cuando seco', water_low:'Tolerante a sequía',
+    frost_tender:'Sensible a helada', frost_semi:'Helada leve OK', frost_hardy:'Resistente a helada',
+    depth:'Profundidad', dtm:'Días a cosecha', companions_label:'Combina con'
+  }
+}, { footer: true, closingKey: null, alertPage: 'grow' });
+
+var savedZip = localStorage.getItem('cos-zip') || '';
+if (savedZip) document.getElementById('growZip').value = savedZip;
+
+fetch('/data/plant_database.json').then(function(r){return r.json();}).then(function(d){DB=d;}).catch(function(){});
+
+function tt(key){return (EQ.t && EQ.t(key)) || key;}
+
+async function generateGuide(){
+  var zip = document.getElementById('growZip').value.trim();
+  if(!/^\d{5}$/.test(zip)){document.getElementById('gardenOutput').innerHTML='<p style="color:var(--coral);text-align:center;padding:20px">'+tt('error_zip')+'</p>';return;}
+  localStorage.setItem('cos-zip',zip);
+  if(EQ&&EQ.resolveApi)EQ.resolveApi(zip);
+  var out=document.getElementById('gardenOutput');
+  var isEs=EQ&&EQ.lang==='es';
+  out.innerHTML='<div class="triage-loading">'+tt('loading')+'</div>';
+
+  var zone=null,geo=null;
+  try{
+    var gr=await fetch(API+'?action=geocode&zip='+zip);
+    var gd=await gr.json(); geo=gd.data||gd;
+    if(geo&&geo.lat&&geo.lon){
+      try{var zr=await fetch('https://phzmapi.org/'+geo.lat+'/'+geo.lon+'.json');var zd=await zr.json();zone=zd.zone;}
+      catch(e){zone=estimateZone(geo.lat);}
+    }
+  }catch(e){zone=estimateZoneFromZip(zip);}
+
+  if(!zone)zone='6a';
+  if(!DB){out.innerHTML='<p style="color:var(--coral);text-align:center">'+tt('error_zone')+'</p>';return;}
+
+  var zk=zone.toLowerCase().replace(/\s/g,'');
+  var frost=DB.frost_by_zone[zk];
+  if(!frost){var zn=parseInt(zk);frost=DB.frost_by_zone[zn+'a']||DB.frost_by_zone[zn+'b']||{last_frost:'Apr 25',first_frost:'Oct 10',season_days:168};}
+  var zoneNum=parseInt(zk);
+
+  var plants=DB.plants.filter(function(p){return zoneNum>=p.min_zone&&zoneNum<=p.max_zone;});
+  var vegs=plants.filter(function(p){return p.type==='vegetable';}),herbs=plants.filter(function(p){return p.type==='herb';}),
+      flowers=plants.filter(function(p){return p.type==='flower';}),fruit=plants.filter(function(p){return p.type==='fruit';});
+
+  var h='';
+  h+='<div class="grow-hero"><h2>'+(isEs?'Guía de Jardín en Contenedores':'Container Garden Guide')+'</h2>';
+  h+='<div class="grow-meta">'+(isEs?'Código postal ':'Zip ')+zip+' · '+tt('your_zone')+' '+zone+' · 2026</div>';
+  h+='<div class="grow-badges"><span class="grow-badge">🧊 '+tt('last_frost')+' '+frost.last_frost+'</span>';
+  h+='<span class="grow-badge">🍂 '+tt('first_frost')+' '+frost.first_frost+'</span>';
+  h+='<span class="grow-badge">📅 '+frost.season_days+' '+tt('days')+'</span></div></div>';
+
+  h+='<div class="nbf-box"><h4>'+tt('nbf_title')+'</h4>';
+  h+='<p><strong>'+(isEs?'Cómo funciona:':'How it works:')+'</strong> '+tt('nbf_normal')+'</p>';
+  h+='<p><strong>'+(isEs?'Dónde falla:':'Where it breaks:')+'</strong> '+tt('nbf_broken')+'</p>';
+  h+='<p><strong>'+(isEs?'Qué hacer:':'What you do:')+'</strong> '+tt('nbf_fix')+'</p></div>';
+
+  function cards(arr,label){
+    if(!arr.length)return '';
+    var c='<div class="section-label">'+label+' ('+arr.length+')</div><div class="plant-grid">';
+    arr.forEach(function(p){
+      c+='<div class="plant-card"><div class="pc-top"><span class="pc-emoji">'+p.emoji+'</span><div><div class="pc-name">'+(isEs&&p.name_es?p.name_es:p.name)+'</div><div class="pc-type">'+p.type+'</div></div></div>';
+      c+='<dl><dt>☀️</dt><dd>'+tt('sun_'+p.sun)+'</dd><dt>💧</dt><dd>'+tt('water_'+p.water)+'</dd>';
+      c+='<dt>🧊</dt><dd>'+tt('frost_'+(p.frost_tolerance==='semi-hardy'?'semi':p.frost_tolerance))+'</dd>';
+      c+='<dt>📏</dt><dd>'+tt('depth')+': '+p.container_depth_in+'"</dd>';
+      c+='<dt>📅</dt><dd>'+tt('dtm')+': '+p.days_to_maturity+'</dd></dl>';
+      if(p.varieties)c+='<div class="pc-note"><strong>'+(isEs?'Variedades: ':'Varieties: ')+'</strong>'+p.varieties+'</div>';
+      c+='<div class="pc-note">'+(isEs&&p.notes_es?p.notes_es:p.notes)+'</div>';
+      if(p.companions&&p.companions.length){
+        var cn=p.companions.map(function(cid){var cp=plants.find(function(pp){return pp.id===cid;});return cp?(isEs&&cp.name_es?cp.name_es:cp.name):cid;});
+        c+='<div class="pc-companions">'+tt('companions_label')+': '+cn.join(', ')+'</div>';
+      }
+      c+='</div>';
+    });
+    return c+'</div>';
+  }
+
+  h+=cards(vegs,'🥬 '+tt('vegetables'));
+  h+=cards(herbs,'🌿 '+tt('herbs'));
+  h+=cards(flowers,'🌼 '+tt('flowers'));
+  h+=cards(fruit,'🍓 '+tt('fruit'));
+
+  h+='<div class="section-label">📅 '+(isEs?'Tu Calendario de Siembra':'Your Planting Calendar')+'</div>';
+  h+=buildCal(plants,frost,zoneNum,isEs);
+
+  h+='<div class="section-label">🛒 '+(isEs?'Lista de Compras':'Shopping List')+'</div>';
+  h+=buildShop(plants,isEs);
+
+  out.innerHTML=h;
+  var cm=new Date().getMonth();
+  var fb=document.querySelector('.month-block[data-month="'+cm+'"]');
+  if(fb){fb.classList.add('open');fb.querySelector('.month-body').style.maxHeight='5000px';}
+}
+
+function buildCal(plants,frost,zn,isEs){
+  var lf=parseMD(frost.last_frost),ff=parseMD(frost.first_frost);
+  var mos=isEs?['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    :['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var h='';
+  for(var m=0;m<12;m++){
+    var tasks=getTasks(m,plants,lf,ff,zn,isEs);
+    if(!tasks.length)continue;
+    var tag=mTag(m,lf,ff,isEs);
+    h+='<div class="month-block" data-month="'+m+'"><div class="month-header" onclick="toggleMonth(this)">';
+    h+='<span class="month-name">'+mos[m]+'</span><span class="month-tag '+tag.c+'">'+tag.l+'</span><span class="month-chevron">▶</span></div>';
+    h+='<div class="month-body"><div class="month-content">';
+    tasks.forEach(function(t){h+='<div class="task"><span class="task-icon">'+t.i+'</span><span class="task-text">'+t.t+'</span></div>';});
+    h+='</div></div></div>';
+  }
+  return h;
+}
+
+function getTasks(mo,plants,lf,ff,zn,isEs){
+  var t=[];
+  plants.forEach(function(p){
+    if(p.start_indoors_weeks&&p.start_indoors_weeks<0){
+      if(awm(lf.m,lf.d,p.start_indoors_weeks)===mo)
+        t.push({i:'🏠',t:'<strong>'+(isEs?'Iniciar adentro: ':'Start indoors: ')+(isEs&&p.name_es?p.name_es:p.name)+'</strong> — '+Math.abs(p.start_indoors_weeks)+(isEs?' sem antes de helada':' wks before frost')});
+    }
+    if(p.transplant_weeks!==null){
+      if(awm(lf.m,lf.d,p.transplant_weeks)===mo)
+        t.push({i:'🌱',t:'<strong>'+(isEs?'Trasplantar: ':'Transplant: ')+(isEs&&p.name_es?p.name_es:p.name)+'</strong>'+(p.frost_tolerance==='tender'?(isEs?' — después de helada':' — after frost'):'')});
+    }
+    if(p.direct_sow_weeks!==null){
+      if(awm(lf.m,lf.d,p.direct_sow_weeks)===mo)
+        t.push({i:'🌰',t:'<strong>'+(isEs?'Siembra directa: ':'Direct sow: ')+(isEs&&p.name_es?p.name_es:p.name)+'</strong>'+(p.frost_tolerance==='hardy'?(isEs?' — tolera helada':' — frost tolerant'):'')});
+    }
+    var pw=p.transplant_weeks!==null?p.transplant_weeks:(p.direct_sow_weeks!==null?p.direct_sow_weeks:0);
+    if(awm(lf.m,lf.d,pw+Math.ceil(p.days_to_maturity/7))===mo)
+      t.push({i:'🍽️',t:'<strong>'+(isEs?'Cosecha: ':'Harvest: ')+(isEs&&p.name_es?p.name_es:p.name)+'</strong>'});
+  });
+  if(mo===lf.m)t.unshift({i:'🧊',t:'<strong>'+(isEs?'Última helada esperada':'Expected last frost')+'</strong> — '+lf.d+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][lf.m]+(isEs?'. No trasplantes plantas sensibles antes.':'. Do not transplant tender plants before this date.')});
+  if(mo===ff.m)t.unshift({i:'🍂',t:'<strong>'+(isEs?'Primera helada esperada':'Expected first frost')+'</strong> — '+ff.d+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][ff.m]+(isEs?'. Cosecha todo lo sensible antes.':'. Harvest all frost-tender crops before this.')});
+  if(mo>=5&&mo<=7)t.push({i:'💧',t:'<strong>'+(isEs?'Regar diario.':'Water daily.')+'</strong> '+(isEs?'Contenedores se secan rápido. Revisa humedad cada mañana.':'Containers dry out fast. Check soil moisture every morning.')});
+  return t;
+}
+
+function buildShop(plants,isEs){
+  var depths={};
+  plants.forEach(function(p){var d=p.container_depth_in;if(!depths[d])depths[d]=[];depths[d].push(isEs&&p.name_es?p.name_es:p.name);});
+  var h='<div class="shop-section"><div class="shop-cat">'+(isEs?'Contenedores':'Containers')+'</div>';
+  Object.keys(depths).sort(function(a,b){return a-b;}).forEach(function(d){
+    h+='<div class="shop-item"><strong>'+d+'"+ '+(isEs?'profundidad':'depth')+'</strong> — '+(isEs?'para: ':'for: ')+depths[d].join(', ')+'</div>';
+  });
+  h+='<div class="shop-item"><strong>'+(isEs?'Tierra para macetas':'Potting mix')+'</strong> — '+(isEs?'NO tierra de jardín. ~$8-12/bolsa grande.':'NOT garden soil. ~$8-12 per large bag.')+'</div>';
+  h+='<div class="shop-cat">'+(isEs?'Semillas y Plantas':'Seeds & Starts')+'</div>';
+  plants.forEach(function(p){
+    var buy=p.direct_sow_weeks!==null?(isEs?'semillas':'seeds'):(isEs?'planta':'start');
+    h+='<div class="shop-item">'+p.emoji+' <strong>'+(isEs&&p.name_es?p.name_es:p.name)+'</strong> — '+buy+(p.varieties?' ('+p.varieties.split(',')[0].trim()+')':'')+'</div>';
+  });
+  h+='<div class="shop-cat">'+(isEs?'Suministros':'Supplies')+'</div>';
+  h+='<div class="shop-item"><strong>'+(isEs?'Fertilizante liberación lenta':'Slow-release fertilizer')+'</strong> (Osmocote 14-14-14) ~$8</div>';
+  h+='<div class="shop-item"><strong>'+(isEs?'Regadera':'Watering can')+'</strong></div>';
+  h+='<div class="shop-item"><strong>'+(isEs?'Jaula de tomate':'Tomato cage')+'</strong> — '+(isEs?'para tomates indeterminados':'for indeterminate tomatoes')+'</div>';
+  return h+'</div>';
+}
+
+function parseMD(s){var p=s.split(' ');var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return{m:mn.indexOf(p[0]),d:parseInt(p[1])};}
+function awm(mo,day,wks){var d=new Date(2026,mo,day);d.setDate(d.getDate()+wks*7);return d.getMonth();}
+function mTag(m,lf,ff,isEs){
+  if(m<lf.m-1)return{c:'tag-wind',l:isEs?'Planificar':'Plan'};
+  if(m<=lf.m)return{c:'tag-start',l:isEs?'Iniciar':'Start'};
+  if(m===lf.m+1)return{c:'tag-start',l:isEs?'Trasplantar':'Transplant'};
+  if(m<ff.m-1)return{c:'tag-peak',l:isEs?'Crecer':'Grow'};
+  if(m<=ff.m)return{c:'tag-harvest',l:isEs?'Cosecha':'Harvest'};
+  return{c:'tag-wind',l:isEs?'Descanso':'Rest'};
+}
+function estimateZone(lat){if(lat>=47)return'4a';if(lat>=44)return'4b';if(lat>=42)return'5b';if(lat>=40)return'6a';if(lat>=38)return'6b';if(lat>=36)return'7a';if(lat>=34)return'7b';if(lat>=32)return'8a';if(lat>=30)return'8b';if(lat>=28)return'9a';if(lat>=26)return'9b';return'10a';}
+function estimateZoneFromZip(z){var p=parseInt(z.substring(0,3));if(p>=600&&p<=629)return'5b';if(p>=100&&p<=119)return'7a';if(p>=900&&p<=935)return'9b';return'6a';}
+function toggleMonth(el){var b=el.parentElement;b.classList.toggle('open');var bd=b.querySelector('.month-body');bd.style.maxHeight=b.classList.contains('open')?bd.scrollHeight+'px':'0';}
+</script>
+</body>
+</html>

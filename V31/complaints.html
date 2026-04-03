@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Complaint Lookup — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Complaint Lookup — CommUnity OS">
+<meta property="og:description" content="See which companies have the most consumer complaints in your area. Free data from the CFPB.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Look up consumer complaints by zip code using free CFPB data. See which banks, lenders, and debt collectors have the most complaints in your area. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.cl-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
+.cl-search input{font-family:var(--sans);font-size:.95rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;width:140px}
+.cl-search input:focus{outline:none;border-color:var(--sage)}
+.cl-search select{font-family:var(--sans);font-size:.82rem;padding:11px 12px;border:1.5px solid var(--sand);border-radius:10px;background:#fff}
+.cl-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.cl-go:hover{background:var(--deep)}
+.cl-loading{text-align:center;padding:30px;font-size:.82rem;color:var(--dim)}
+.cl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
+.cl-stat{background:var(--warm);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--sand)}
+.cl-stat .cl-num{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--deep)}
+.cl-stat .cl-label{font-size:.62rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.cl-company{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center}
+.cl-company .cl-co-name{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep)}
+.cl-company .cl-co-count{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--coral)}
+.cl-company .cl-co-product{font-size:.62rem;color:var(--dim);margin-top:2px}
+.cl-section{margin:20px 0}
+.cl-section h3{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.cl-bar{display:flex;align-items:center;gap:8px;margin:4px 0}
+.cl-bar-label{font-size:.68rem;color:var(--body);width:120px;flex-shrink:0;text-align:right}
+.cl-bar-fill{height:18px;border-radius:4px;background:var(--sage);min-width:4px;transition:width .6s}
+.cl-bar-count{font-size:.65rem;font-weight:600;color:var(--dim);width:40px}
+.cl-nbf{background:var(--warm);border-radius:14px;padding:18px;margin:20px 0;border-left:3px solid var(--sage)}
+.cl-nbf h4{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.cl-nbf p{font-size:.78rem;line-height:1.6;color:var(--body);margin-bottom:6px}
+.cl-nbf .n-t{color:var(--forest);font-weight:700}.cl-nbf .b-t{color:var(--coral);font-weight:700}.cl-nbf .f-t{color:var(--sage);font-weight:700}
+.cl-file{text-align:center;margin:16px 0}
+.cl-file a{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 24px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block;transition:.2s}
+.cl-file a:hover{background:var(--deep);color:#fff}
+.cl-empty{text-align:center;padding:30px;font-size:.85rem;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">AUDIT</div>
+    <h1 data-t="cl_title">Complaint Lookup</h1>
+    <p class="subtitle" data-t="cl_sub">See which companies have the most consumer complaints in your area. Real data from the Consumer Financial Protection Bureau.</p>
+  </div>
+
+  <div class="cl-search">
+    <div>
+      <label style="font-size:.65rem;font-weight:600;color:var(--deep);display:block;margin-bottom:2px">Zip Code</label>
+      <input type="text" id="clZip" maxlength="5" inputmode="numeric" placeholder="60608">
+    </div>
+    <div>
+      <label style="font-size:.65rem;font-weight:600;color:var(--deep);display:block;margin-bottom:2px">Category</label>
+      <select id="clProduct">
+        <option value="">All</option>
+        <option value="Credit reporting or other personal consumer reports">Credit Reports</option>
+        <option value="Debt collection">Debt Collection</option>
+        <option value="Mortgage">Mortgage</option>
+        <option value="Credit card">Credit Card</option>
+        <option value="Checking or savings account">Banking</option>
+        <option value="Student loan">Student Loan</option>
+        <option value="Payday loan, title loan, personal loan, or advance">Payday/Personal Loan</option>
+        <option value="Vehicle loan or lease">Auto Loan</option>
+        <option value="Money transfer, virtual currency, or money service">Money Transfer</option>
+      </select>
+    </div>
+    <button class="cl-go" onclick="searchComplaints()">Search</button>
+  </div>
+
+  <div id="clLoading" class="cl-loading" style="display:none">Searching CFPB database...</div>
+  <div id="clResults" style="display:none"></div>
+  <div id="clEmpty" class="cl-empty" style="display:none"></div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var CFPB_API = 'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/';
+
+function searchComplaints() {
+  var zip = document.getElementById('clZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+
+  var product = document.getElementById('clProduct').value;
+  document.getElementById('clLoading').style.display = '';
+  document.getElementById('clResults').style.display = 'none';
+  document.getElementById('clEmpty').style.display = 'none';
+
+  // Build query — last 12 months
+  var oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  var dateMin = oneYearAgo.toISOString().split('T')[0];
+
+  var params = '?field=all&size=0&zip_code=' + zip + '&date_received_min=' + dateMin;
+  if (product) params += '&product=' + encodeURIComponent(product);
+
+  // We need aggregations — use the _suggest or aggregation endpoint
+  // The CFPB API supports company aggregation
+  var url = CFPB_API + params + '&company&no_aggs=false';
+
+  // Fetch with two calls: one for totals, one for top companies
+  var totalUrl = CFPB_API + '?size=0&zip_code=' + zip + '&date_received_min=' + dateMin + (product ? '&product=' + encodeURIComponent(product) : '');
+  var detailUrl = CFPB_API + '?size=10&sort=created_date_desc&zip_code=' + zip + '&date_received_min=' + dateMin + (product ? '&product=' + encodeURIComponent(product) : '');
+
+  Promise.all([
+    fetch(totalUrl).then(function(r) { return r.json(); }),
+    fetch(detailUrl).then(function(r) { return r.json(); })
+  ]).then(function(results) {
+    document.getElementById('clLoading').style.display = 'none';
+    renderResults(zip, product, results[0], results[1]);
+  }).catch(function(err) {
+    document.getElementById('clLoading').style.display = 'none';
+    document.getElementById('clEmpty').style.display = '';
+    document.getElementById('clEmpty').textContent = 'Could not reach the CFPB database. Try again in a moment.';
+  });
+}
+
+function renderResults(zip, product, totalData, detailData) {
+  var total = totalData.hits && totalData.hits.total ? (totalData.hits.total.value || totalData.hits.total) : 0;
+  var hits = detailData.hits && detailData.hits.hits ? detailData.hits.hits : [];
+  var aggs = totalData.aggregations || {};
+
+  if (total === 0) {
+    document.getElementById('clEmpty').style.display = '';
+    document.getElementById('clEmpty').innerHTML = '<p>No complaints found for zip code <strong>' + zip + '</strong> in the last 12 months' + (product ? ' in that category' : '') + '.</p><p style="margin-top:8px">This could mean the area has fewer complaints, or that complaints were filed under a different zip code. Try a nearby zip or remove the category filter.</p>';
+    return;
+  }
+
+  // Count companies from hits
+  var companies = {};
+  var products = {};
+  hits.forEach(function(h) {
+    var src = h._source || {};
+    var co = src.company || 'Unknown';
+    var pr = src.product || 'Other';
+    companies[co] = (companies[co] || 0) + 1;
+    products[pr] = (products[pr] || 0) + 1;
+  });
+
+  // Also use aggregations if available
+  var companyAgg = aggs.company ? aggs.company.company.buckets || [] : [];
+  var productAgg = aggs.product ? aggs.product.product.buckets || [] : [];
+
+  // Prefer aggregations for company/product breakdowns
+  if (companyAgg.length > 0) {
+    companies = {};
+    companyAgg.slice(0, 10).forEach(function(b) { companies[b.key] = b.doc_count; });
+  }
+  if (productAgg.length > 0) {
+    products = {};
+    productAgg.slice(0, 8).forEach(function(b) { products[b.key] = b.doc_count; });
+  }
+
+  var sortedCo = Object.entries(companies).sort(function(a, b) { return b[1] - a[1]; });
+  var sortedPr = Object.entries(products).sort(function(a, b) { return b[1] - a[1]; });
+  var maxCo = sortedCo.length > 0 ? sortedCo[0][1] : 1;
+  var maxPr = sortedPr.length > 0 ? sortedPr[0][1] : 1;
+
+  var html = '';
+
+  // Stats row
+  html += '<div class="cl-stats">' +
+    '<div class="cl-stat"><div class="cl-num">' + total.toLocaleString() + '</div><div class="cl-label">Complaints (12 mo)</div></div>' +
+    '<div class="cl-stat"><div class="cl-num">' + sortedCo.length + '</div><div class="cl-label">Companies</div></div>' +
+    '<div class="cl-stat"><div class="cl-num">' + zip + '</div><div class="cl-label">Zip Code</div></div>' +
+    '</div>';
+
+  // Top companies
+  if (sortedCo.length > 0) {
+    html += '<div class="cl-section"><h3>Top Companies by Complaints</h3>';
+    sortedCo.slice(0, 8).forEach(function(c) {
+      var pct = Math.round((c[1] / maxCo) * 100);
+      html += '<div class="cl-bar"><span class="cl-bar-label">' + c[0].substring(0, 20) + '</span>' +
+        '<div class="cl-bar-fill" style="width:' + pct + '%"></div>' +
+        '<span class="cl-bar-count">' + c[1] + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // Product breakdown
+  if (sortedPr.length > 0) {
+    html += '<div class="cl-section"><h3>By Category</h3>';
+    sortedPr.slice(0, 6).forEach(function(p) {
+      var pct = Math.round((p[1] / maxPr) * 100);
+      html += '<div class="cl-bar"><span class="cl-bar-label">' + p[0].substring(0, 22) + '</span>' +
+        '<div class="cl-bar-fill" style="width:' + pct + '%;background:var(--gold)"></div>' +
+        '<span class="cl-bar-count">' + p[1] + '</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // N→B→F
+  html += '<div class="cl-nbf">' +
+    '<h4>What This Data Means</h4>' +
+    '<p><span class="n-t">Normal:</span> Companies that handle money — banks, lenders, insurers, debt collectors — are regulated by federal law. When they make mistakes, consumers can file complaints with the CFPB. The database is public.</p>' +
+    '<p><span class="b-t">Broken:</span> Companies with high complaint volumes in your zip code may have patterns of billing errors, unauthorized accounts, aggressive collection, or poor customer service. One complaint is a problem. Hundreds of complaints is a pattern.</p>' +
+    '<p><span class="f-t">Fix:</span> If you see a company you do business with on this list, check your accounts. If you\'ve been affected, file your own complaint at consumerfinance.gov/complaint — 85% of complaints get a company response. For debt collection and credit report issues, use the Defend tool to generate a dispute letter.</p>' +
+    '</div>';
+
+  // File complaint CTA
+  html += '<div class="cl-file"><a href="https://www.consumerfinance.gov/complaint/" target="_blank" rel="noopener">File a Complaint at CFPB.gov →</a></div>';
+
+  document.getElementById('clResults').innerHTML = html;
+  document.getElementById('clResults').style.display = '';
+  document.getElementById('clResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Auto-fill zip from community config or URL
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var z = params.get('zip');
+  if (z) document.getElementById('clZip').value = z;
+})();
+
+EQ.init({
+  cl_title: 'Complaint Lookup',
+  cl_title_es: 'Búsqueda de Quejas',
+  cl_sub: 'See which companies have the most consumer complaints in your area. Real data from the CFPB.',
+  cl_sub_es: 'Mira qué empresas tienen más quejas de consumidores en tu área. Datos reales del CFPB.'
+}, { closingKey: 'footer_closing_audit' });
+</script>
+</body>
+</html>

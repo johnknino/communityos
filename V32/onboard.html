@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Seed Leader — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.ob-hero{text-align:center;padding:30px 16px 20px}
+.ob-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:6px}
+.ob-hero p{font-size:.82rem;color:var(--body);line-height:1.7;max-width:500px;margin:0 auto 20px}
+.ob-section{background:var(--warm);border-radius:14px;padding:18px;margin:14px 0;border:1px solid var(--sand)}
+.ob-section h2{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.ob-section p,.ob-section li{font-size:.8rem;color:var(--body);line-height:1.7}
+.ob-section ol{padding-left:20px;margin:8px 0}
+.ob-section li{margin:6px 0}
+.ob-section strong{color:var(--deep)}
+.ob-code{font-family:var(--display);font-size:1.4rem;font-weight:800;letter-spacing:.15em;color:var(--forest);background:rgba(91,140,122,.08);padding:12px 24px;border-radius:10px;display:inline-block;margin:10px 0}
+.ob-highlight{background:rgba(212,112,74,.04);border:1.5px solid rgba(212,112,74,.15);border-radius:10px;padding:14px;margin:10px 0;font-size:.8rem;color:var(--body);line-height:1.7}
+.ob-privacy{background:rgba(91,140,122,.04);border:1.5px solid var(--sage);border-radius:10px;padding:14px;margin:10px 0;font-size:.78rem;color:var(--body);line-height:1.7}
+.ob-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0}
+.ob-actions a{font-family:var(--display);font-size:.75rem;font-weight:700;padding:12px 20px;border-radius:10px;text-decoration:none}
+.ob-actions .primary{background:var(--forest);color:#fff}
+.ob-actions .secondary{border:1.5px solid var(--sage);color:var(--forest)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="ob-hero">
+    <h1 data-t="ob_title">You've Been Invited to Help Your Community</h1>
+    <p data-t="ob_sub">Someone you trust gave you an invite code. Here's what that means, what you can do with it, and why it matters.</p>
+  </div>
+
+  <div class="ob-section">
+    <h2>🔐 What the Token System Is</h2>
+    <p>CommUnity OS lets communities evaluate their leaders, vote on proposals, and track promises — anonymously. To prevent spam and manipulation, high-stakes actions (evaluating an official, voting on a proposal, recording a promise) require <strong>civic tokens</strong>.</p>
+    <p>Tokens are anonymous. Nobody — not even the platform — can link a token to the person who used it. They prove you're a real community member without revealing who you are.</p>
+  </div>
+
+  <div class="ob-section">
+    <h2>🎟️ What Your Invite Code Does</h2>
+    <ol>
+      <li>Enter your code on any community page (evaluate, propose, govern)</li>
+      <li>You receive <strong>20 anonymous civic tokens</strong></li>
+      <li>You also receive <strong>3 invite codes to share</strong> with people you trust</li>
+      <li>Each person you invite gets 20 tokens and 3 more codes</li>
+    </ol>
+    <div class="ob-highlight">
+      <strong>⚡ This is how the network grows.</strong> You vouch for 3 people. They each vouch for 3 more. Trust flows through real relationships — not accounts, not IDs, not email addresses. The social cost of gaming the system is real: you'd have to burn trust relationships to do it.
+    </div>
+  </div>
+
+  <div class="ob-section">
+    <h2>🗳️ What You Can Do with Tokens</h2>
+    <p>Each token lets you perform one high-stakes civic action:</p>
+    <ol>
+      <li><strong>Evaluate a leader</strong> — rate an official on Responsiveness, Transparency, Follow-through, and Impact (1-5 each)</li>
+      <li><strong>Vote on a proposal</strong> — support a community project</li>
+      <li><strong>Record a promise</strong> — document what an official promised and track whether they delivered</li>
+      <li><strong>Add a local official</strong> — city council, school board, park district — the data nobody else tracks</li>
+    </ol>
+    <p>Reading, browsing, discussing, posting needs, and using all 18 tools require no tokens. Only actions that generate accountability data are token-gated.</p>
+  </div>
+
+  <div class="ob-section">
+    <h2>📋 Who to Share Your Codes With</h2>
+    <p>You have 3 invite codes. Give them to people who:</p>
+    <ol>
+      <li>Live or work in the community</li>
+      <li>Will use them to participate honestly — not to game ratings</li>
+      <li>Understand that each code creates more codes, so trust compounds</li>
+    </ol>
+    <p>Good seed leaders: <strong>block club presidents, church leaders, school counselors, clinic staff, library workers, small business owners</strong> — people the community already trusts.</p>
+  </div>
+
+  <div class="ob-privacy">
+    <strong>🛡️ Privacy guarantee:</strong> CommUnity OS does not collect, store, or transmit any identifying information. No names, emails, phone numbers, or government IDs. Tokens are anonymous — they prove you're a community member without revealing who you are. The data that doesn't exist can't be subpoenaed, breached, or weaponized.
+  </div>
+
+  <div class="ob-actions">
+    <a href="/evaluate.html" class="primary">Evaluate a Leader →</a>
+    <a href="/govern.html" class="secondary">Track Promises →</a>
+    <a href="/propose.html" class="secondary">Vote on Proposals →</a>
+    <a href="/dashboard.html" class="secondary">Community Pulse →</a>
+  </div>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+EQ.init({ob_title:"You've Been Invited to Help Your Community",ob_title_es:'Has Sido Invitado a Ayudar a Tu Comunidad',ob_sub:'Someone you trust gave you an invite code. Here\'s what that means.',ob_sub_es:'Alguien en quien confías te dio un código. Esto es lo que significa.'});
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Education Strategy Dashboard — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Education needs assessment by zip code. Attainment, enrollment, language barriers, and school poverty indicators for districts and nonprofits.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+<div class="page">
+  <div class="ds-hero">
+    <h1>Education Strategy Dashboard</h1>
+    <p>For school districts, tutoring nonprofits, after-school programs. Education landscape by zip code.</p>
+    <div class="ds-search">
+      <input type="text" class="ds-zip" id="dsZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')runDashboard()">
+      <button class="ds-go" onclick="runDashboard()">Generate Brief</button>
+    </div>
+  </div>
+  <div id="dsLoading" class="ds-loading" style="display:none">Querying federal data sources...</div>
+  <div id="dsResults" style="display:none"></div>
+</div>
+<script src="/js/shared.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script>
+var DE = DashEngine;
+
+var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B11001_001E','B03003_003E','B25064_001E','B15003_001E','B15003_002E','B15003_003E','B15003_004E','B15003_005E','B15003_006E','B15003_007E','B15003_008E','B15003_009E','B15003_010E','B15003_011E','B15003_012E','B15003_013E','B15003_014E','B15003_015E','B15003_016E','B15003_017E','B15003_022E','B15003_023E','B15003_024E','B15003_025E','B14001_001E','B14001_002E'];
+
+function runDashboard() {
+  var zip = document.getElementById('dsZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+  document.getElementById('dsLoading').style.display = '';
+  document.getElementById('dsResults').style.display = 'none';
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryGeo(zip)
+  ]).then(function(r) {
+    var census=r[0].value||{},geo=r[1].value||{};
+    document.getElementById('dsLoading').style.display='none';
+    render(zip,census,geo);
+  });
+}
+
+function render(zip,c,geo) {
+  var h = DE.renderProfile(zip,c,geo);
+  var signals=[];
+  var pop=c.B01003_001E||0;
+  var eduTotal=c.B15003_001E||0;
+  var noHS=0; for(var i=2;i<=16;i++){noHS+=(c['B15003_0'+String(i).padStart(2,'0')+'E']||0)}
+  var bachelor=(c.B15003_022E||0)+(c.B15003_023E||0)+(c.B15003_024E||0)+(c.B15003_025E||0);
+  var noHSPct=DE.pct(noHS,eduTotal);
+  var bachPct=DE.pct(bachelor,eduTotal);
+  var enrolled=c.B14001_002E||0, enrollTot=c.B14001_001E||0;
+  var enrollPct=DE.pct(enrolled,enrollTot);
+  var povRate=DE.pct(c.B17001_002E||0,c.B17001_001E||0);
+  var hispPct=DE.pct(c.B03003_003E||0,pop);
+
+  h += DE.sectionOpen('🎓','Education Profile');
+  h += '<div class="ds-grid">';
+  h += DE.statCard(noHSPct+'%','No HS Diploma',noHSPct>25?'highlight':'');
+  h += DE.statCard(bachPct+'%','Bachelors+',bachPct<20?'highlight':bachPct>40?'good':'');
+  h += DE.statCard(enrollPct+'%','Currently Enrolled');
+  h += DE.statCard(povRate+'%','Poverty Rate',povRate>20?'highlight':'');
+  h += DE.statCard(hispPct+'%','Hispanic/Latino');
+  h += DE.statCard(DE.fmt(Math.round(noHS)),'Adults Without HS');
+  h += '</div>';
+
+  if (noHSPct>25){signals.push({w:3});h+=DE.signalRow('🔴',noHSPct+'% of adults lack HS diploma — '+DE.fmt(Math.round(noHS))+' people. GED programs critical.')}
+  if (bachPct<15){signals.push({w:1});h+=DE.signalRow('🟡','Only '+bachPct+'% have bachelors degree — workforce development pipeline needed')}
+  if (povRate>25){signals.push({w:2});h+=DE.signalRow('🔴','Poverty at '+povRate+'% — high free lunch eligibility, after-school meal programs needed')}
+  if (hispPct>30){signals.push({w:1});h+=DE.signalRow('🟡',hispPct+'% Hispanic/Latino — bilingual tutors and ESL programs essential')}
+  h += DE.sectionClose();
+
+  var need=DE.calcNeedScore(signals);
+  h += DE.briefOpen('Education Deployment Brief');
+  h += '<p><strong>Need level: '+need.level+'.</strong></p>';
+  if (noHSPct>25) h+='<p>📖 <strong>Adult education:</strong> '+DE.fmt(Math.round(noHS))+' adults without HS diploma. GED prep, digital literacy, and workforce readiness programs.</p>';
+  if (povRate>25) h+='<p>🍎 <strong>School poverty:</strong> High poverty means high free lunch eligibility. After-school programs should include meals and tutoring.</p>';
+  if (hispPct>30) h+='<p>🌎 <strong>Bilingual services:</strong> '+hispPct+'% Hispanic/Latino. All materials, tutoring, and parent engagement in English and Spanish.</p>';
+  h+='<p>📚 <strong>Knowledge guides:</strong> CommUnity OS school rights navigator covers IEP, 504, discipline, bilingual education, and free meals.</p>';
+  h += DE.briefClose();
+
+  h += DE.actionLinks([
+    {href:'/school-rights.html',label:'School rights navigator →',primary:true},
+    {href:'/neighborhood.html?zip='+zip,label:'Full neighborhood profile →'},
+    {href:'/knowledge.html',label:'54 guides →'}
+  ]);
+  h += (typeof CivicIntel!=='undefined' ? CivicIntel.deidentNotice() : '') + DE.sourceNote('Sources: Census ACS 2022 (educational attainment, enrollment). Zero data collected.');
+  document.getElementById('dsResults').innerHTML=h;
+  document.getElementById('dsResults').style.display='';
+  document.getElementById('dsResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+DE.autoLoad('dsZip', runDashboard);
+EQ.init({});
+</script>
+</body>
+</html>

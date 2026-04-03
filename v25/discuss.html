@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Discussion — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Talk about what is happening in your neighborhood. Zip-scoped, tagged, community-moderated.">
+<meta property="og:title" content="Community Discussion — CommUnity OS">
+<meta property="og:description" content="Talk about what is happening in your neighborhood. Zip-scoped, tagged, community-moderated.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/discuss.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.zip-gate{text-align:center;padding:60px 20px}
+.zip-gate h2{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--deep);margin-bottom:8px}
+.zip-gate p{color:var(--dim);font-size:.9rem;margin-bottom:24px}
+.zip-form{display:flex;gap:10px;max-width:360px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.zip-form input{font-family:var(--sans);font-size:1rem;padding:10px 14px;border:1.5px solid var(--sand);border-radius:10px;background:var(--warm);color:var(--ink);text-align:center;width:120px}
+.zip-form input:focus{outline:none;border-color:var(--sage)}
+.zip-form input.name-input{width:160px;text-align:left}
+.zip-form button{font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:10px 24px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.2s}
+.zip-form button:hover{background:var(--deep)}
+
+.board{display:none}
+.board.active{display:block}
+
+.user-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;margin-bottom:20px;border-bottom:1px solid var(--sand);flex-wrap:wrap}
+.user-info{font-size:.82rem;color:var(--dim)}
+.user-info strong{color:var(--deep)}
+.tag-filters{display:flex;gap:6px;flex-wrap:wrap}
+.tag-btn{font-family:var(--sans);font-size:.65rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:12px;border:1.5px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.2s}
+.tag-btn:hover,.tag-btn.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.06)}
+
+.compose-box{background:var(--warm);border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid var(--sand)}
+.compose-box input,.compose-box textarea,.compose-box select{font-family:var(--sans);font-size:.9rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);margin-bottom:10px;resize:vertical}
+.compose-box input:focus,.compose-box textarea:focus{outline:none;border-color:var(--sage)}
+.compose-box select{appearance:auto}
+.compose-row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.compose-row button{font-family:var(--sans);font-size:.75rem;font-weight:500;padding:8px 20px;border:none;border-radius:8px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.2s;white-space:nowrap}
+.compose-row button:hover{background:var(--deep)}
+.compose-row .char-count{font-size:.7rem;color:var(--dim)}
+
+.post-card{background:var(--warm);border-radius:12px;padding:16px 20px;margin-bottom:10px;border:1px solid transparent;transition:.2s}
+.post-card:hover{border-color:var(--sand)}
+.post-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.post-name{font-weight:600;font-size:.85rem;color:var(--deep)}
+.post-zip{font-size:.7rem;color:var(--dim)}
+.post-tag{font-size:.55rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:8px}
+.post-tag.survive{background:rgba(196,101,74,.1);color:var(--coral)}
+.post-tag.understand{background:rgba(184,150,62,.1);color:var(--gold)}
+.post-tag.connect{background:rgba(90,138,120,.1);color:var(--sage)}
+.post-tag.govern{background:rgba(45,90,78,.1);color:var(--forest)}
+.post-tag.general{background:rgba(138,138,130,.1);color:var(--dim)}
+.starter-badge{font-size:.55rem;font-weight:500;color:var(--sage);background:rgba(90,138,120,.06);padding:2px 8px;border-radius:8px;letter-spacing:.02em}
+.post-title{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin-bottom:6px}
+.post-body{font-size:.88rem;color:var(--body);line-height:1.7;margin-bottom:10px}
+.post-time{font-size:.7rem;color:var(--light)}
+.post-actions{display:flex;gap:12px;align-items:center;margin-top:8px}
+.post-actions button{font-family:var(--sans);font-size:.7rem;color:var(--dim);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;transition:.2s}
+.post-actions button:hover{background:var(--cream);color:var(--forest)}
+.reply-count{font-size:.75rem;color:var(--sage);cursor:pointer}
+.reply-count:hover{color:var(--forest)}
+
+.replies{margin-left:20px;border-left:2px solid var(--sand);padding-left:16px;margin-top:8px}
+.reply-card{background:var(--cream);border-radius:10px;padding:12px 16px;margin-bottom:8px}
+.reply-compose{margin-top:8px}
+.reply-compose textarea{font-family:var(--sans);font-size:.85rem;width:100%;padding:8px 10px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);resize:vertical;min-height:60px}
+.reply-compose button{font-family:var(--sans);font-size:.7rem;padding:6px 16px;border:none;border-radius:6px;background:var(--sage);color:var(--cream);cursor:pointer;margin-top:6px}
+
+.loading{text-align:center;padding:40px;color:var(--dim);font-size:.88rem}
+.empty{text-align:center;padding:40px;color:var(--dim)}
+.empty p{margin-bottom:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+
+.scope-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.scope-btn{font-family:var(--sans);font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:10px;border:1.5px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.2s}
+.scope-btn:hover,.scope-btn.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.06)}
+.pulse-count{font-size:.7rem;color:var(--sage);margin-left:auto}
+
+.community-prompt{background:linear-gradient(135deg,rgba(90,138,120,.06),rgba(184,150,62,.06));border:1px solid var(--sand);border-radius:12px;padding:16px 20px;margin-bottom:16px}
+.prompt-label{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+.prompt-text{font-family:var(--display);font-size:.95rem;font-weight:600;color:var(--deep);line-height:1.5;margin-bottom:6px}
+.prompt-hint{font-size:.75rem;color:var(--dim);line-height:1.5;font-style:italic}
+
+.cross-zip-badge{font-size:.55rem;font-weight:500;color:var(--sage);background:rgba(90,138,120,.08);padding:1px 6px;border-radius:6px;letter-spacing:.02em}
+
+.reply-framing{font-size:.72rem;color:var(--dim);font-style:italic;margin-bottom:6px;line-height:1.4}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/discuss.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Community Discussion — CommUnity OS", "url": "https://comm-unity-os.org/discuss.html", "description": "Zip-code-scoped community discussion board with weekly bilingual civic reasoning prompts. Neighbors talk about how systems work, where they fail, what to do.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Connect</div>
+    <h1 data-t="title">Community Discussion</h1>
+    <div class="subtitle" data-t="subtitle">Talk about what's happening in your neighborhood. See what other neighborhoods see. The problem was never scarcity — it was visibility.</div>
+  </div>
+
+  <!-- ZIP GATE -->
+  <div class="zip-gate fade-in fade-in-1" id="zipGate">
+    <h2 data-t="gate_title">Enter your zip code to join</h2>
+    <p data-t="gate_desc">Your zip code connects you to your neighbors. Choose any display name — it doesn't have to be your real name.</p>
+    <div class="zip-form">
+      <input type="text" id="zipInput" maxlength="5" pattern="[0-9]{5}" placeholder="Zip" inputmode="numeric">
+      <div id="zipSuggestions" class="zip-suggestions" style="display:none"></div>
+      <input type="text" id="nameInput" class="name-input" maxlength="30" placeholder="Display name">
+      <button onclick="enterBoard()" data-t="gate_btn">Enter</button>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board" id="board">
+
+    <div class="user-bar">
+      <div class="user-info"><strong id="userName"></strong> · <span id="userZip"></span> · <a href="#" onclick="leaveBoard();return false" style="color:var(--coral);font-size:.75rem" data-t="change_zip">change</a></div>
+      <div class="tag-filters">
+        <button class="tag-btn active" onclick="filterTag('')" data-t="tag_all">All</button>
+        <button class="tag-btn" onclick="filterTag('survive')" data-t="tag_survive">Survive</button>
+        <button class="tag-btn" onclick="filterTag('understand')" data-t="tag_understand">Understand</button>
+        <button class="tag-btn" onclick="filterTag('connect')" data-t="tag_connect">Connect</button>
+        <button class="tag-btn" onclick="filterTag('govern')" data-t="tag_govern">Govern</button>
+      </div>
+    </div>
+
+    <!-- SCOPE TOGGLE — My Zip vs Nearby -->
+    <div class="scope-bar">
+      <button class="scope-btn active" onclick="setScope('mine')" id="scopeMine" data-t="scope_mine">My Zip</button>
+      <button class="scope-btn" onclick="setScope('nearby')" id="scopeNearby" data-t="scope_nearby">Nearby</button>
+      <span class="pulse-count" id="pulseCount" data-t="pulse_count"></span>
+    </div>
+
+    <!-- WEEKLY COMMUNITY PROMPT — the N→B→F reasoning trigger -->
+    <div class="community-prompt" id="communityPrompt">
+      <div class="prompt-label" data-t="prompt_label">This week's question</div>
+      <div class="prompt-text" id="promptText"></div>
+      <div class="prompt-hint" id="promptHint"></div>
+    </div>
+
+    <!-- COMPOSE -->
+    <div class="compose-box">
+      <input type="text" id="postTitle" placeholder="Title (optional)" maxlength="120">
+      <textarea id="postBody" rows="3" placeholder="What's on your mind?" maxlength="2000" oninput="updateCharCount()"></textarea>
+      <div class="compose-row">
+        <select id="postTag">
+          <option value="general">General</option>
+          <option value="survive">Survive — Food, Health, Emergency</option>
+          <option value="understand">Understand — Rights, Money, Civic</option>
+          <option value="connect">Connect — Neighbors, Mutual Aid</option>
+          <option value="govern">Govern — Leaders, Programs</option>
+        </select>
+        <span class="char-count" id="charCount">0/2000</span>
+        <button onclick="submitPost()" data-t="post_btn">Post</button>
+      </div>
+    </div>
+
+    <!-- POSTS -->
+    <div id="postsContainer">
+      <div class="loading" data-t="loading">Loading discussions...</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+// ── CONFIG ──
+// IMPORTANT: Replace this URL after deploying the Apps Script
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+var currentZip = '';
+var currentName = '';
+var currentTag = '';
+var currentScope = 'mine';
+var posts = [];
+
+// ── WEEKLY PROMPTS — N→B→F reasoning triggers ──
+var PROMPTS = {
+  en: [
+    { text:'What works in your neighborhood that people outside it don\'t know about?', hint:'Start with what\'s Normal — the strengths your community has that don\'t make the news.', tag:'connect' },
+    { text:'What closed, left, or stopped working in your neighborhood — and what changed after?', hint:'Name the Broken — not just the loss, but what it revealed about what was holding things together.', tag:'survive' },
+    { text:'If you had 5 minutes with your alderman, what one thing would you ask them to fix?', hint:'Move from the problem to the Fix — what specific action would make the biggest difference?', tag:'govern' },
+    { text:'What\'s one thing about money — budgeting, credit, taxes, insurance — that you wish someone had explained to you earlier?', hint:'The gap between what systems expect you to know and what anyone actually teaches you — that gap is where people get hurt.', tag:'understand' },
+    { text:'Who in your neighborhood helps without being asked? What do they do?', hint:'Mutual aid isn\'t a program. It\'s the neighbor who notices. Name them (or what they do) so others can find each other.', tag:'connect' },
+    { text:'What does your neighborhood need that money alone can\'t buy?', hint:'Some problems aren\'t scarcity — they\'re visibility. What would change if people could see what you see?', tag:'survive' },
+    { text:'Have you ever gone to a public meeting — school board, park district, budget hearing? What happened?', hint:'The meeting is where the loop closes. What you saw there tells the rest of us whether the system is listening.', tag:'govern' },
+    { text:'What\'s one financial decision you made that worked out — and what did you learn from it?', hint:'Every family has financial wisdom passed down. Share yours — it might be exactly what a neighbor needs to hear.', tag:'understand' }
+  ],
+  es: [
+    { text:'¿Qué funciona en tu barrio que la gente de afuera no sabe?', hint:'Empieza con lo Normal — las fortalezas de tu comunidad que no salen en las noticias.', tag:'connect' },
+    { text:'¿Qué cerró, se fue o dejó de funcionar en tu barrio — y qué cambió después?', hint:'Nombra lo Roto — no solo la pérdida, sino lo que reveló sobre lo que mantenía las cosas unidas.', tag:'survive' },
+    { text:'Si tuvieras 5 minutos con tu concejal, ¿qué cosa le pedirías que arregle?', hint:'Pasa del problema a la Solución — ¿qué acción específica haría la mayor diferencia?', tag:'govern' },
+    { text:'¿Qué cosa sobre el dinero — presupuesto, crédito, impuestos, seguro — desearías que alguien te hubiera explicado antes?', hint:'La brecha entre lo que los sistemas esperan que sepas y lo que alguien realmente te enseña — ahí es donde la gente se lastima.', tag:'understand' },
+    { text:'¿Quién en tu barrio ayuda sin que se lo pidan? ¿Qué hacen?', hint:'La ayuda mutua no es un programa. Es el vecino que se da cuenta. Nómbralos para que otros puedan encontrarse.', tag:'connect' },
+    { text:'¿Qué necesita tu barrio que el dinero solo no puede comprar?', hint:'Algunos problemas no son de escasez — son de visibilidad. ¿Qué cambiaría si la gente pudiera ver lo que tú ves?', tag:'survive' },
+    { text:'¿Has ido alguna vez a una reunión pública — junta escolar, distrito de parques, audiencia de presupuesto? ¿Qué pasó?', hint:'La reunión es donde el ciclo se cierra. Lo que viste ahí le dice al resto si el sistema está escuchando.', tag:'govern' },
+    { text:'¿Cuál es una decisión financiera que tomaste que salió bien — y qué aprendiste?', hint:'Cada familia tiene sabiduría financiera. Comparte la tuya — puede ser exactamente lo que un vecino necesita escuchar.', tag:'understand' }
+  ]
+};
+
+function getWeeklyPrompt() {
+  var weekNum = Math.floor(Date.now() / (7*24*60*60*1000));
+  var lang = (typeof EQ !== 'undefined' && EQ.getLang) ? EQ.getLang() : 'en';
+  var prompts = PROMPTS[lang] || PROMPTS.en;
+  return prompts[weekNum % prompts.length];
+}
+
+function renderPrompt() {
+  var prompt = getWeeklyPrompt();
+  document.getElementById('promptText').textContent = prompt.text;
+  document.getElementById('promptHint').textContent = prompt.hint;
+}
+
+function setScope(scope) {
+  currentScope = scope;
+  document.getElementById('scopeMine').classList.toggle('active', scope === 'mine');
+  document.getElementById('scopeNearby').classList.toggle('active', scope === 'nearby');
+  loadPosts();
+}
+
+function getNearbyPrefix() {
+  return currentZip ? currentZip.substring(0, 3) : '';
+}
+
+function enterBoard() {
+  var zip = document.getElementById('zipInput').value.trim();
+  var name = document.getElementById('nameInput').value.trim();
+  if (!/^\d{5}$/.test(zip)) { showToast('Enter a valid 5-digit zip code'); return; }
+  if (!name) { showToast('Choose a display name'); return; }
+  currentZip = zip;
+  currentName = name;
+  localStorage.setItem('eqos-zip', zip);
+  localStorage.setItem('eqos-name', name);
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userZip').textContent = zip;
+  document.getElementById('zipGate').style.display = 'none';
+  document.getElementById('board').classList.add('active');
+  renderPrompt();
+  loadPosts();
+}
+
+function leaveBoard() {
+  currentZip = '';
+  currentName = '';
+  localStorage.removeItem('eqos-zip');
+  localStorage.removeItem('eqos-name');
+  document.getElementById('zipGate').style.display = '';
+  document.getElementById('board').classList.remove('active');
+}
+
+function filterTag(tag) {
+  currentTag = tag;
+  document.querySelectorAll('.tag-btn').forEach(function(b) { b.classList.remove('active'); });
+  event.target.classList.add('active');
+  renderPosts();
+}
+
+function updateCharCount() {
+  var len = document.getElementById('postBody').value.length;
+  document.getElementById('charCount').textContent = len + '/2000';
+}
+
+// ── API CALLS ──
+async function loadPosts() {
+  if (!API) { renderDemo(); return; }
+  try {
+    var zipParam = currentScope === 'nearby' ? 'zip_prefix=' + getNearbyPrefix() : 'zip=' + currentZip;
+    var url = API + '?action=get_discussions&' + zipParam + (currentTag ? '&tag=' + currentTag : '');
+    var res = await fetch(url, { redirect: 'follow' });
+    var data = await res.json();
+    if (data.status === 'ok') {
+      posts = data.posts;
+      var uniqueNames = {};
+      posts.forEach(function(p) { uniqueNames[p.display_name + p.zip] = true; });
+      var count = Object.keys(uniqueNames).length;
+      var lang = (typeof EQ !== 'undefined' && EQ.getLang) ? EQ.getLang() : 'en';
+      document.getElementById('pulseCount').textContent = count > 0 ?
+        (lang === 'es' ? count + ' vecinos activos' : count + ' neighbors active') : '';
+      renderPosts();
+    }
+  } catch (e) { renderDemo(); }
+}
+
+async function submitPost() {
+  var title = document.getElementById('postTitle').value.trim();
+  var body = document.getElementById('postBody').value.trim();
+  var tag = document.getElementById('postTag').value;
+  if (!body) { showToast('Write something first'); return; }
+
+  if (!API) {
+    // Demo mode
+    posts.unshift({
+      post_id: 'demo-' + Date.now(), zip: currentZip, display_name: currentName,
+      topic_tag: tag, title: title, body: body,
+      timestamp: new Date().toISOString(), upvotes: 0, reply_count: 0
+    });
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postBody').value = '';
+    updateCharCount();
+    renderPosts();
+    showToast('Posted! (demo mode — connect Apps Script for live data)');
+    return;
+  }
+
+  try {
+    var res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'post_discussion', zip: currentZip, display_name: currentName,
+        topic_tag: tag, title: title, body: body
+      })
+    });
+    var data = await res.json();
+    if (data.status === 'ok') {
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postBody').value = '';
+      updateCharCount();
+      showToast('Posted!');
+      loadPosts();
+    }
+  } catch (e) { showToast('Error posting — try again'); }
+}
+
+// ── RENDERING ──
+function renderPosts() {
+  var container = document.getElementById('postsContainer');
+  var filtered = currentTag ? posts.filter(function(p) { return p.topic_tag === currentTag; }) : posts;
+
+  if (filtered.length === 0) {
+    var lang = (typeof EQ !== 'undefined' && EQ.getLang) ? EQ.getLang() : 'en';
+    var scopeLabel = currentScope === 'nearby' ? (lang === 'es' ? 'zonas cercanas' : 'nearby') : currentZip;
+    container.innerHTML = '<div class="empty"><p>' + (lang === 'es' ? 'No hay publicaciones aún para ' : 'No posts yet for ') + scopeLabel + (currentTag ? ' in ' + currentTag : '') + '.</p><p style="color:var(--sage)">' + (lang === 'es' ? 'Eres el primero aquí. Lo que escribas, tus vecinos lo verán cuando lleguen.' : 'You\'re the first one here. What you write, your neighbors will see when they arrive.') + '</p></div>';
+    return;
+  }
+
+  var html = '';
+  filtered.forEach(function(p) {
+    var ago = timeAgo(p.timestamp);
+    var starterBadge = p.display_name === 'CommUnity OS' ? '<span class="starter-badge">🌱 conversation starter</span>' : '';
+    var crossZipBadge = (p.zip && p.zip !== currentZip) ? '<span class="cross-zip-badge">' + esc(p.zip) + '</span>' : '';
+    html += '<div class="post-card">' +
+      '<div class="post-header">' +
+        '<span class="post-name">' + esc(p.display_name) + '</span>' +
+        starterBadge +
+        '<span class="post-zip">' + esc(p.zip) + '</span>' +
+        crossZipBadge +
+        '<span class="post-tag ' + esc(p.topic_tag) + '">' + esc(p.topic_tag) + '</span>' +
+      '</div>' +
+      (p.title ? '<div class="post-title">' + esc(p.title) + '</div>' : '') +
+      '<div class="post-body">' + esc(p.body) + '</div>' +
+      '<div class="post-actions">' +
+        '<button onclick="upvote(\'' + p.post_id + '\')">▲ ' + (p.upvotes || 0) + '</button>' +
+        '<span class="reply-count" onclick="toggleReplies(\'' + p.post_id + '\')">' + (p.reply_count || 0) + ' replies</span>' +
+        '<span class="post-time">' + ago + '</span>' +
+        '<button onclick="flagItem(\'' + p.post_id + '\')" style="margin-left:auto;font-size:.65rem">⚑</button>' +
+      '</div>' +
+      '<div class="replies" id="replies-' + p.post_id + '" style="display:none"></div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderDemo() {
+  renderPrompt();
+  var nearbyZip = currentZip.substring(0,3) + (parseInt(currentZip.substring(3)) > 50 ? '08' : '52');
+  posts = [
+    { post_id:'demo-1', zip: currentZip, display_name:'Maria', topic_tag:'survive', title:'Food pantry hours changed', body:'The pantry on Main Street is now closing at 2pm instead of 5pm. Does anyone know if this is permanent?', timestamp: new Date(Date.now()-3600000).toISOString(), upvotes:3, reply_count:2 },
+    { post_id:'demo-2', zip: currentZip, display_name:'Carlos', topic_tag:'understand', title:'', body:'Does anyone know if the new SNAP work requirements apply to people over 55? I keep getting different answers.', timestamp: new Date(Date.now()-7200000).toISOString(), upvotes:5, reply_count:4 },
+    { post_id:'demo-3', zip: currentZip, display_name:'Doris', topic_tag:'govern', title:'Town hall next week', body:'Town hall on Tuesday at 6pm at the community center. They said they would fix the streetlights three months ago. Let\'s ask what happened.', timestamp: new Date(Date.now()-14400000).toISOString(), upvotes:8, reply_count:1 },
+    { post_id:'demo-4', zip: nearbyZip, display_name:'Ana', topic_tag:'connect', title:'Evening food pickup help', body:'I can pick up from the pantry on Tuesdays — I get off at 1. Happy to grab extra for anyone in ' + nearbyZip + ' who can\'t make it during the day.', timestamp: new Date(Date.now()-10800000).toISOString(), upvotes:12, reply_count:3 }
+  ];
+  renderPosts();
+  document.getElementById('pulseCount').textContent = '4 neighbors active';
+  showToast('Demo mode — deploy Apps Script for live data');
+}
+
+async function upvote(postId) {
+  if (!API) {
+    var p = posts.find(function(x) { return x.post_id === postId; });
+    if (p) { p.upvotes = (p.upvotes||0)+1; renderPosts(); }
+    return;
+  }
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'upvote_post', post_id:postId, zip:currentZip })
+    });
+    loadPosts();
+  } catch(e) {}
+}
+
+async function flagItem(postId) {
+  if (!confirm('Flag this post for review?')) return;
+  if (!API) { showToast('Flagged (demo mode)'); return; }
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'flag_post', post_id:postId, zip:currentZip, reason:'inappropriate' })
+    });
+    showToast('Flagged for community review');
+  } catch(e) {}
+}
+
+function toggleReplies(postId) {
+  var el = document.getElementById('replies-' + postId);
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    var post = posts.find(function(p) { return p.post_id === postId; });
+    var isCrossZip = post && post.zip !== currentZip;
+    var lang = (typeof EQ !== 'undefined' && EQ.getLang) ? EQ.getLang() : 'en';
+    var framing = isCrossZip ?
+      (lang === 'es' ? 'Esta persona está en otro barrio. ¿Qué ve tu barrio que el de ellos podría no ver?' : 'This person is in a different neighborhood. What does your neighborhood see that theirs might not?') :
+      (lang === 'es' ? 'Son vecinos. ¿Qué puedes agregar desde tu propia experiencia?' : 'You\'re neighbors. What can you add from your own experience?');
+    el.innerHTML = '<div class="reply-framing">' + framing + '</div>' +
+      '<div class="reply-compose"><textarea id="reply-text-' + postId + '" placeholder="' + (lang === 'es' ? 'Escribe una respuesta...' : 'Write a reply...') + '" rows="2" maxlength="1000"></textarea><button onclick="submitReply(\'' + postId + '\')">' + (lang === 'es' ? 'Responder' : 'Reply') + '</button></div>';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+async function submitReply(postId) {
+  var text = document.getElementById('reply-text-' + postId);
+  if (!text || !text.value.trim()) return;
+  if (!API) { showToast('Reply posted (demo mode)'); text.value=''; return; }
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'reply_discussion', parent_id:postId, zip:currentZip, display_name:currentName, body:text.value.trim() })
+    });
+    text.value = '';
+    showToast('Reply posted');
+    loadPosts();
+  } catch(e) { showToast('Error — try again'); }
+}
+
+// ── UTILS ──
+function timeAgo(ts) {
+  if (!ts) return '';
+  var diff = (Date.now() - new Date(ts).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+function esc(s) { return s ? String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''; }
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+// ── INIT ──
+var savedZip = localStorage.getItem('eqos-zip');
+var savedName = localStorage.getItem('eqos-name');
+if (savedZip && savedName) {
+  document.getElementById('zipInput').value = savedZip;
+  document.getElementById('nameInput').value = savedName;
+  enterBoard();
+}
+
+// Deep-link: ?topic=survive auto-filters on load
+var urlParams = new URLSearchParams(window.location.search);
+var deepTopic = urlParams.get('topic');
+if (deepTopic && ['survive','understand','connect','govern'].indexOf(deepTopic) !== -1) {
+  filterTag(deepTopic);
+  document.querySelectorAll('.tag-btn').forEach(function(b) {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === deepTopic);
+  });
+}
+
+EQ.init({
+  en: {
+    arc_label:'Connect', title:'Community Discussion',
+    subtitle:'Talk about what\'s happening in your neighborhood. See what other neighborhoods see. The problem was never scarcity — it was visibility.',
+    gate_title:'Enter your zip code to join', gate_desc:'Your zip code connects you to your neighbors. Choose any display name — it doesn\'t have to be your real name.',
+    gate_btn:'Enter', change_zip:'change', tag_all:'All', tag_survive:'Survive', tag_understand:'Understand',
+    tag_connect:'Connect', tag_govern:'Govern', post_btn:'Post', loading:'Loading discussions...',
+    scope_mine:'My Zip', scope_nearby:'Nearby', prompt_label:'This week\'s question'
+  },
+  es: {
+    arc_label:'Conectar', title:'Discusión Comunitaria',
+    subtitle:'Habla sobre lo que pasa en tu barrio. Ve lo que otros barrios ven. El problema nunca fue la escasez — fue la visibilidad.',
+    gate_title:'Ingresa tu código postal para unirte', gate_desc:'Tu código postal te conecta con tus vecinos. Elige cualquier nombre — no tiene que ser tu nombre real.',
+    gate_btn:'Entrar', change_zip:'cambiar', tag_all:'Todos', tag_survive:'Sobrevivir', tag_understand:'Comprender',
+    tag_connect:'Conectar', tag_govern:'Gobernar', post_btn:'Publicar', loading:'Cargando discusiones...',
+    scope_mine:'Mi Zona', scope_nearby:'Cercanos', prompt_label:'La pregunta de esta semana'
+  }
+}, { footer: true, alertPage: 'discuss' });
+
+EQ.initFuzzyZip('zipInput', 'zipSuggestions', function(zip) {
+  document.getElementById('zipInput').value = zip;
+});
+</script>
+</body>
+</html>

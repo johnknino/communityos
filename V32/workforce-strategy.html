@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Workforce Strategy Dashboard — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Workforce needs assessment by zip code. Employment, industry, commute patterns, and earnings data for workforce boards and job training programs.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+<div class="page">
+  <div class="ds-hero">
+    <h1>Workforce Strategy Dashboard</h1>
+    <p>For workforce boards, staffing agencies, community colleges. Labor market profile by zip code.</p>
+    <div class="ds-search">
+      <input type="text" class="ds-zip" id="dsZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')runDashboard()">
+      <button class="ds-go" onclick="runDashboard()">Generate Brief</button>
+    </div>
+  </div>
+  <div id="dsLoading" class="ds-loading" style="display:none">Querying federal data sources...</div>
+  <div id="dsResults" style="display:none"></div>
+</div>
+<script src="/js/shared.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script>
+var DE = DashEngine;
+
+var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B11001_001E','B03003_003E','B25064_001E','B23025_003E','B23025_005E','B08301_001E','B08301_010E','B08301_019E','B08303_001E','B08303_012E','B08303_013E','B20017_001E','B15003_001E','B15003_002E','B15003_003E','B15003_004E','B15003_005E','B15003_006E','B15003_007E','B15003_008E','B15003_009E','B15003_010E','B15003_011E','B15003_012E','B15003_013E','B15003_014E','B15003_015E','B15003_016E','B15003_017E','B28002_013E','B28002_001E'];
+
+function runDashboard() {
+  var zip = document.getElementById('dsZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+  document.getElementById('dsLoading').style.display = '';
+  document.getElementById('dsResults').style.display = 'none';
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryGeo(zip)
+  ]).then(function(r) {
+    var census=r[0].value||{},geo=r[1].value||{};
+    document.getElementById('dsLoading').style.display='none';
+    render(zip,census,geo);
+  });
+}
+
+function render(zip,c,geo) {
+  var h = DE.renderProfile(zip,c,geo);
+  var signals=[];
+  var laborForce=c.B23025_003E||0, unemployed=c.B23025_005E||0;
+  var unempRate=DE.pct(unemployed,laborForce);
+  var commTotal=c.B08301_001E||0, transit=c.B08301_010E||0, wfh=c.B08301_019E||0;
+  var transitPct=DE.pct(transit,commTotal);
+  var longComm=(c.B08303_012E||0)+(c.B08303_013E||0);
+  var commTot2=c.B08303_001E||0;
+  var longPct=DE.pct(longComm,commTot2);
+  var medEarn=c.B20017_001E||0;
+  var noInternet=c.B28002_013E||0, intTot=c.B28002_001E||0;
+  var noIntPct=DE.pct(noInternet,intTot);
+  var eduTotal=c.B15003_001E||0;
+  var noHS=0; for(var i=2;i<=16;i++){noHS+=(c['B15003_0'+String(i).padStart(2,'0')+'E']||0)}
+  var noHSPct=DE.pct(noHS,eduTotal);
+
+  h += DE.sectionOpen('💼','Workforce Profile');
+  h += '<div class="ds-grid">';
+  h += DE.statCard(unempRate+'%','Unemployment',unempRate>8?'highlight':unempRate<4?'good':'');
+  h += DE.statCard(DE.money(medEarn),'Median Earnings');
+  h += DE.statCard(DE.fmt(laborForce),'Labor Force');
+  h += DE.statCard(transitPct+'%','Use Public Transit');
+  h += DE.statCard(longPct+'%','Commute 45+ min',longPct>20?'highlight':'');
+  h += DE.statCard(noHSPct+'%','No HS Diploma',noHSPct>25?'highlight':'');
+  h += DE.statCard(noIntPct+'%','No Internet',noIntPct>20?'highlight':'');
+  h += DE.statCard(DE.fmt(unemployed),'Unemployed');
+  h += '</div>';
+
+  if (unempRate>8){signals.push({w:3});h+=DE.signalRow('🔴','Unemployment '+unempRate+'% — '+DE.fmt(unemployed)+' people actively seeking work')}
+  if (noHSPct>25){signals.push({w:2});h+=DE.signalRow('🔴',noHSPct+'% without HS diploma — GED pipeline needed before job training')}
+  if (longPct>25){signals.push({w:1});h+=DE.signalRow('🟡',longPct+'% commute 45+ minutes — jobs accessible only by long commute')}
+  if (noIntPct>20){signals.push({w:2});h+=DE.signalRow('🔴',noIntPct+'% without internet — online job applications inaccessible')}
+  h += DE.sectionClose();
+
+  var need=DE.calcNeedScore(signals);
+  h += DE.briefOpen('Workforce Deployment Brief');
+  h += '<p><strong>Need level: '+need.level+'.</strong></p>';
+  if (unempRate>8) h+='<p>💼 <strong>Job connection:</strong> '+DE.fmt(unemployed)+' unemployed. Job fairs, direct employer partnerships, on-the-job training subsidies.</p>';
+  if (noHSPct>25) h+='<p>📖 <strong>Education first:</strong> '+noHSPct+'% without HS diploma. GED+job training bundled programs, not sequential.</p>';
+  if (noIntPct>20) h+='<p>💻 <strong>Digital access:</strong> '+noIntPct+'% without internet. Computer lab at job center, digital literacy, resume building.</p>';
+  h+='<p>💰 <strong>Worker rights:</strong> CommUnity OS wage calculator covers minimum wage for 50 states + 20 city overrides with overtime computation.</p>';
+  h += DE.briefClose();
+
+  h += DE.actionLinks([
+    {href:'/worker-rights.html',label:'Worker rights calculator →',primary:true},
+    {href:'/neighborhood.html?zip='+zip,label:'Full neighborhood profile →'},
+    {href:'/benefits-screener.html',label:'Benefit screener →'}
+  ]);
+  h += (typeof CivicIntel!=='undefined' ? CivicIntel.deidentNotice() : '') + DE.sourceNote('Sources: Census ACS 2022 (employment, commute, earnings, education, internet). Zero data collected.');
+  document.getElementById('dsResults').innerHTML=h;
+  document.getElementById('dsResults').style.display='';
+  document.getElementById('dsResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+DE.autoLoad('dsZip', runDashboard);
+EQ.init({});
+</script>
+</body>
+</html>

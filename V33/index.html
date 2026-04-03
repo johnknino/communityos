@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CommUnity OS — Civic Infrastructure for Every Zip Code</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="CommUnity OS — Civic Infrastructure for Every Zip Code">
+<meta property="og:description" content="Free bilingual civic infrastructure. 8,084 officials. 54 guides. 18 tools. No accounts. No ads. $7/year. Built by a Concerned Parent.">
+<meta property="og:image" content="https://comm-unity-os.org/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CommUnity OS — Civic Infrastructure for Every Zip Code">
+<meta name="twitter:description" content="Free bilingual civic infrastructure. 8,084 officials. 54 guides. 18 tools. $7/year.">
+<meta name="twitter:image" content="https://comm-unity-os.org/og-image.png">
+<meta name="description" content="Free civic infrastructure platform. Benefit eligibility screener, dispute letter generator, health calculators, environmental data, court navigator, worker rights. Bilingual. Private. $7/year.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+/* Dark hero — full bleed from within .page */
+.hero{text-align:center;padding:clamp(48px,10vw,80px) 16px clamp(32px,6vw,48px);margin-left:calc(-50vw + 50%);width:100vw;position:relative;overflow:hidden;background:var(--deep)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(212,112,74,.12) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(91,140,122,.15) 0%,transparent 50%),linear-gradient(180deg,rgba(0,0,0,.15) 0%,transparent 40%,rgba(0,0,0,.2) 100%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-tagline{font-family:var(--display);font-size:clamp(1.5rem,4.5vw,2.4rem);font-weight:800;color:var(--cream);line-height:1.15;margin-bottom:10px;letter-spacing:-.02em;max-width:580px;margin-left:auto;margin-right:auto}
+.hero-sub{font-family:var(--serif);font-size:clamp(.84rem,2vw,.98rem);color:rgba(250,246,240,.7);line-height:1.65;max-width:480px;margin:0 auto 28px}
+.hero-zip-wrap{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.hero-zip{font-family:var(--display);font-size:1.8rem;font-weight:700;text-align:center;width:160px;padding:16px;border:2px solid rgba(91,140,122,.4);border-radius:14px;background:rgba(255,255,255,.08);color:#fff;letter-spacing:.12em;transition:.2s}
+.hero-zip::placeholder{color:rgba(255,255,255,.35)}
+.hero-zip:focus{outline:none;border-color:var(--sage-glow);box-shadow:0 0 0 4px rgba(123,191,168,.2);background:rgba(255,255,255,.12)}
+.hero-go{font-family:var(--display);font-size:.88rem;font-weight:700;padding:18px 28px;border-radius:14px;border:none;background:var(--sage);color:#fff;cursor:pointer;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast);min-height:48px}
+.hero-go:hover{background:var(--sage-glow);color:var(--deep);transform:translateY(-2px)}
+.hero-note{font-size:.64rem;color:rgba(250,246,240,.5);margin-top:12px}
+/* Stats — glassmorphism on dark hero */
+.stats-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px auto 0;max-width:480px}
+.stat-glass{background:rgba(255,255,255,.08);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 16px;text-align:center;min-width:90px;transition:transform var(--dur-norm) var(--ease-spring),background var(--dur-fast)}
+.stat-glass:hover{transform:translateY(-2px);background:rgba(255,255,255,.14)}
+.stat-num{font-family:var(--display);font-size:1.3rem;font-weight:800;color:#fff;line-height:1}
+.stat-label{font-size:.5rem;color:rgba(123,191,168,.8);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+@media(max-width:380px){.stats-bar{gap:6px}.stat-glass{padding:8px 10px;min-width:70px}.stat-num{font-size:1rem}}
+/* Crisis bar */
+.crisis-bar{background:rgba(212,112,74,.06);border-top:1px solid rgba(212,112,74,.12);border-bottom:1px solid rgba(212,112,74,.12);padding:12px 16px;text-align:center}
+.crisis-bar a{font-family:var(--display);font-size:.72rem;font-weight:700;color:var(--coral-text);text-decoration:none;margin:0 10px;white-space:nowrap}
+.crisis-bar a:hover{text-decoration:underline}
+/* Problem grid */
+.problems{padding:0 16px;max-width:640px;margin:0 auto}
+.problems h2{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);text-align:center;margin:24px 0 14px}
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}
+.prob-icon{font-size:1.2rem;margin-bottom:4px}
+.prob-title{font-family:var(--display);font-size:.72rem;font-weight:700;color:var(--deep);line-height:1.3}
+.prob-desc{font-size:.58rem;color:var(--dim);margin-top:2px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO — Zip code is the front door -->
+  <div class="hero">
+    <h1 class="hero-tagline" data-t="h_tagline">Your rights exist. Your benefits exist. Your representatives exist.<br>Now you can reach them.</h1>
+    <p class="hero-sub" data-t="h_sub">$60 billion in benefits goes unclaimed every year. Half of medical bills have errors. 92% of legal problems get no help. The programs exist. The access doesn't. Until now.</p>
+    <div class="hero-zip-wrap">
+      <input type="text" class="hero-zip" id="heroZip" maxlength="5" inputmode="numeric" placeholder="ZIP" aria-label="Enter your zip code" onkeydown="if(event.key==='Enter')goNeighborhood()">
+      <button class="hero-go" onclick="goNeighborhood()" data-t="h_go">Show me what's mine →</button>
+    </div>
+    <p class="hero-note" data-t="h_note">Any zip code in America. No account. No identifying data collected. Free.</p>
+    <p class="hero-note" style="margin-top:6px;font-style:italic" data-t="h_origin">Built by a Concerned Parent. $7/year to operate. No venture capital. No ads. Just infrastructure.</p>
+    <div class="stats-bar">
+      <div class="stat-glass"><div class="stat-num">8,084</div><div class="stat-label" data-t="stat_officials">Officials</div></div>
+      <div class="stat-glass"><div class="stat-num">54</div><div class="stat-label" data-t="stat_guides">Guides</div></div>
+      <div class="stat-glass"><div class="stat-num">56</div><div class="stat-label" data-t="stat_pages">Pages</div></div>
+      <div class="stat-glass"><div class="stat-num">$7</div><div class="stat-label" data-t="stat_cost">/year</div></div>
+    </div>
+  </div>
+
+  <!-- CRISIS BAR — For people in immediate need -->
+  <div class="crisis-bar">
+    <a href="/disaster.html" data-t="crisis_emergency">⚡ Emergency?</a>
+    <a href="tel:988" data-t="crisis_988">988 Crisis Line</a>
+    <a href="tel:18007997233" data-t="crisis_dv">Domestic Violence: 1-800-799-7233</a>
+    <a href="/benefits-screener.html" data-t="crisis_food">Need food?</a>
+  </div>
+
+  <!-- PROBLEM GRID — What brought you here? -->
+  <div class="problems">
+    <h2 data-t="h_what">What do you need help with?</h2>
+    <div class="prob-grid">
+      <a class="prob-card" href="/survive.html">
+        <div class="prob-icon">🍎</div>
+        <div class="prob-title" data-t="p_food">I need food or benefits</div>
+        <div class="prob-desc">Food pantries, SNAP, WIC, Medicaid, EITC, heating</div>
+      </a>
+      <a class="prob-card" href="/defend.html?type=insurance">
+        <div class="prob-icon">❌</div>
+        <div class="prob-title" data-t="p_denied">Someone denied my claim</div>
+        <div class="prob-desc">Insurance, credit, medical bill, background check</div>
+      </a>
+      <a class="prob-card" href="/benefits-check.html">
+        <div class="prob-icon">🛡️</div>
+        <div class="prob-title" data-t="p_immigration">I'm worried about immigration</div>
+        <div class="prob-desc">Which benefits are safe to use</div>
+      </a>
+      <a class="prob-card" href="/worker-rights.html">
+        <div class="prob-icon">💰</div>
+        <div class="prob-title" data-t="p_wages">My job isn't paying me right</div>
+        <div class="prob-desc">Minimum wage, overtime, tips, retaliation</div>
+      </a>
+      <a class="prob-card" href="/court-nav.html">
+        <div class="prob-icon">⚖️</div>
+        <div class="prob-title" data-t="p_court">I'm going to court</div>
+        <div class="prob-desc">Eviction, small claims, traffic, family</div>
+      </a>
+      <a class="prob-card" href="/health-calc.html">
+        <div class="prob-icon">❤️</div>
+        <div class="prob-title" data-t="p_health">I need a health check</div>
+        <div class="prob-desc">Heart risk, diabetes risk, BMI, drug prices</div>
+      </a>
+      <a class="prob-card" href="/school-rights.html">
+        <div class="prob-icon">🎒</div>
+        <div class="prob-title" data-t="p_school">My child needs help at school</div>
+        <div class="prob-desc">IEP, 504 plan, discipline, free meals</div>
+      </a>
+      <a class="prob-card" href="/building-safety.html">
+        <div class="prob-icon">🏠</div>
+        <div class="prob-title" data-t="p_housing">My landlord won't fix this</div>
+        <div class="prob-desc">Building violations, tenant rights</div>
+      </a>
+      <a class="prob-card" href="/environment.html">
+        <div class="prob-icon">🏭</div>
+        <div class="prob-title" data-t="p_env">What's polluting my neighborhood</div>
+        <div class="prob-desc">EPA data the government took down</div>
+      </a>
+      <a class="prob-card" href="/lending.html">
+        <div class="prob-icon">🏦</div>
+        <div class="prob-title" data-t="p_lending">I was denied a mortgage</div>
+        <div class="prob-desc">Denial rates by race in your county</div>
+      </a>
+      <a class="prob-card" href="/drug-prices.html">
+        <div class="prob-icon">💊</div>
+        <div class="prob-title" data-t="p_drugs">My medication costs too much</div>
+        <div class="prob-desc">See what it actually costs to make</div>
+      </a>
+      <a class="prob-card" href="/disaster.html">
+        <div class="prob-icon">⚡</div>
+        <div class="prob-title" data-t="p_disaster">I need to prepare for emergencies</div>
+        <div class="prob-desc">Go bag, family plan, offline contacts</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- GUIDES LINK -->
+  <div style="text-align:center;padding:20px 16px 0">
+    <a href="/knowledge.html" style="font-family:var(--display);font-size:.78rem;font-weight:600;color:var(--forest);text-decoration:none;border-bottom:1.5px solid var(--sage);padding-bottom:2px" data-t="h_guides_link">Or read how these systems actually work — 54 bilingual guides →</a>
+  </div>
+
+  <!-- CIVIC ENGAGEMENT — beyond survival -->
+  <div style="background:var(--warm);margin:20px 0 0;padding:20px 16px;border-top:1px solid var(--sand);border-bottom:1px solid var(--sand)">
+    <p style="font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);text-align:center;margin-bottom:10px" data-t="h_beyond">Beyond survival — hold power accountable</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:520px;margin:0 auto">
+      <a href="/govern.html" style="font-size:.7rem;padding:8px 14px;background:#fff;border:1px solid var(--sand);border-radius:8px;text-decoration:none;color:var(--deep);font-weight:600">🏛️ <span data-t="h_reps">Find your reps</span></a>
+      <a href="/evaluate.html" style="font-size:.7rem;padding:8px 14px;background:#fff;border:1px solid var(--sand);border-radius:8px;text-decoration:none;color:var(--deep);font-weight:600">📋 <span data-t="h_evaluate">Rate your officials</span></a>
+      <a href="/discuss.html" style="font-size:.7rem;padding:8px 14px;background:#fff;border:1px solid var(--sand);border-radius:8px;text-decoration:none;color:var(--deep);font-weight:600">💬 <span data-t="h_discuss">Discuss</span></a>
+      <a href="/propose.html" style="font-size:.7rem;padding:8px 14px;background:#fff;border:1px solid var(--sand);border-radius:8px;text-decoration:none;color:var(--deep);font-weight:600">📝 <span data-t="h_propose">Propose</span></a>
+      <a href="/diagnostics.html" style="font-size:.7rem;padding:8px 14px;background:#fff;border:1px solid var(--sand);border-radius:8px;text-decoration:none;color:var(--deep);font-weight:600">🔬 <span data-t="h_diag">Civic health</span></a>
+      <a href="/lead.html" style="font-size:.7rem;padding:8px 14px;background:var(--forest);border:1px solid var(--forest);border-radius:8px;text-decoration:none;color:#fff;font-weight:600">🌟 <span data-t="h_lead">Lead your neighborhood</span></a>
+    </div>
+    <p style="font-size:.6rem;color:var(--dim);text-align:center;margin-top:8px;font-style:italic" data-t="h_adaptive">This platform watches its own community's health, identifies where civic access falls short, and adapts.</p>
+  </div>
+
+  <!-- TRUST — one line -->
+  <div style="text-align:center;padding:16px 16px 10px;font-size:.65rem;color:var(--dim)">
+    <span data-t="h_trust_line">Free. Bilingual. No ads. No accounts. No tracking. No identifying data collected. Works offline.</span>
+    <a href="/how-it-works.html" style="color:var(--sage);margin-left:6px;font-weight:600" data-t="h_learn_more">Learn more →</a>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function goNeighborhood() {
+  var zip = document.getElementById('heroZip').value.trim();
+  if (zip && zip.length === 5) {
+    window.location.href = '/neighborhood.html?zip=' + zip;
+  } else if (zip.length > 0) {
+    alert('Enter a 5-digit zip code.');
+  } else {
+    window.location.href = '/neighborhood.html';
+  }
+}
+if (window.innerWidth > 600) document.getElementById('heroZip').focus();
+
+EQ.init({
+  h_tagline: 'Your rights exist. Your benefits exist. Your representatives exist.<br>Now you can reach them.',
+  h_tagline_es: 'Tus derechos existen. Tus beneficios existen. Tus representantes existen.<br>Ahora puedes alcanzarlos.',
+  h_sub: '$60 billion in benefits goes unclaimed every year. Half of medical bills have errors. 92% of legal problems get no help. The programs exist. The access doesn\'t. Until now.',
+  h_sub_es: '$60 mil millones en beneficios no se reclaman cada año. La mitad de las facturas médicas tienen errores. El 92% de los problemas legales no reciben ayuda. Los programas existen. El acceso no. Hasta ahora.',
+  h_go: 'Show me what\'s mine →',
+  h_go_es: 'Muéstrame lo que es mío →',
+  h_note: 'Any zip code in America. No account. No identifying data collected. Free.',
+  h_note_es: 'Cualquier código postal en EE.UU. Sin cuenta. Sin datos identificativos. Gratis.',
+  h_origin: 'Built by a Concerned Parent. $7/year to operate. No venture capital. No ads. Just infrastructure.',
+  h_origin_es: 'Construido por un padre preocupado. $7/año para operar. Sin capital de riesgo. Sin anuncios. Solo infraestructura.',
+  h_what: 'What do you need help with?',
+  h_what_es: '¿Con qué necesitas ayuda?',
+  p_food: 'I need food or benefits', p_food_es: 'Necesito comida o beneficios',
+  p_denied: 'Someone denied my claim', p_denied_es: 'Alguien negó mi reclamo',
+  p_immigration: "I'm worried about immigration", p_immigration_es: 'Me preocupa la inmigración',
+  p_wages: "My job isn't paying me right", p_wages_es: 'Mi trabajo no me paga bien',
+  p_court: "I'm going to court", p_court_es: 'Voy a la corte',
+  p_health: 'I need a health check', p_health_es: 'Necesito un chequeo de salud',
+  p_school: 'My child needs help at school', p_school_es: 'Mi hijo necesita ayuda en la escuela',
+  p_housing: "My landlord won't fix this", p_housing_es: 'Mi propietario no arregla esto',
+  p_env: "What's polluting my neighborhood", p_env_es: 'Qué contamina mi vecindario',
+  p_lending: 'I was denied a mortgage', p_lending_es: 'Me negaron una hipoteca',
+  p_drugs: 'My medication costs too much', p_drugs_es: 'Mi medicamento cuesta demasiado',
+  p_disaster: 'I need to prepare for emergencies', p_disaster_es: 'Necesito prepararme para emergencias',
+  h_trust_line: 'Free. Bilingual. No ads. No accounts. No tracking. No identifying data collected. Works offline.',
+  h_trust_line_es: 'Gratis. Bilingüe. Sin anuncios. Sin cuentas. Sin rastreo. Sin datos identificativos. Funciona sin internet.',
+  h_learn_more: 'Learn more →',
+  h_learn_more_es: 'Aprende más →',
+  h_guides_link: 'Or read how these systems actually work — 54 bilingual guides →',
+  h_guides_link_es: 'O lee cómo realmente funcionan estos sistemas — 54 guías bilingües →',
+  h_beyond: 'Beyond survival — hold power accountable',
+  h_beyond_es: 'Más allá de la supervivencia — exige responsabilidad al poder',
+  h_reps: 'Find your reps', h_reps_es: 'Encuentra tus representantes',
+  h_evaluate: 'Rate your officials', h_evaluate_es: 'Evalúa a tus funcionarios',
+  h_discuss: 'Discuss', h_discuss_es: 'Discute',
+  h_propose: 'Propose', h_propose_es: 'Propón',
+  h_diag: 'Civic health', h_diag_es: 'Salud cívica',
+  h_lead: 'Lead your neighborhood', h_lead_es: 'Lidera tu vecindario',
+  h_adaptive: 'This platform watches its own community\'s health, identifies where civic access falls short, and adapts.',
+  h_adaptive_es: 'Esta plataforma vigila la salud de su propia comunidad, identifica dónde el acceso cívico se queda corto y se adapta.',
+  stat_officials: 'Officials', stat_officials_es: 'Funcionarios',
+  stat_guides: 'Guides', stat_guides_es: 'Guías',
+  stat_pages: 'Pages', stat_pages_es: 'Páginas',
+  stat_cost: '/year', stat_cost_es: '/año'
+});
+</script>
+</body>
+</html>

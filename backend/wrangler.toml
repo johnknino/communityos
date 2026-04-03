@@ -1,0 +1,28 @@
+name = "communityos-backend"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Create the D1 database first:
+#   npx wrangler d1 create communityos-db
+# Then paste the database_id below
+
+[[d1_databases]]
+binding = "DB"
+database_name = "communityos-db"
+database_id = "98aa6a96-79e3-43df-9424-373af6596b2d"
+
+# Deploy:
+#   npx wrangler d1 execute communityos-db --remote --file=schema_v2.sql
+#   npx wrangler deploy
+#
+# Your backend URL will be:
+#   https://communityos-backend.YOUR-ACCOUNT.workers.dev/api
+#
+# Put this URL in your community.json as backend_url
+
+# ═══ Adaptive Civic Diagnostic Engine ═══
+# Runs weekly: Sunday at 6 AM UTC (midnight CST)
+# Scans community data for civic failure patterns.
+# Produces deidentified diagnostic reports.
+[triggers]
+crons = ["0 6 * * SUN"]

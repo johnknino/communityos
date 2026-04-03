@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Intelligence — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Your community's civic health in one view. Cross-referenced federal data, community evaluations, promise tracking, and active insights.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.db-hero{text-align:center;padding:28px 16px 14px}
+.db-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.db-hero p{font-size:.78rem;color:var(--body);line-height:1.6;max-width:480px;margin:0 auto 14px}
+.db-zip{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.db-zip input{font-family:var(--display);font-size:1rem;font-weight:700;text-align:center;width:100px;padding:10px;border:2px solid var(--sand);border-radius:10px;background:#fff;color:var(--deep);letter-spacing:.08em}
+.db-zip button{font-family:var(--display);font-size:.72rem;font-weight:700;padding:10px 16px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer}
+.db-section{margin:14px 0}
+.db-section h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.db-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin:8px 0}
+.db-stat{text-align:center;padding:10px 6px;background:var(--warm);border-radius:10px;border:1px solid var(--sand)}
+.db-stat .dv{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--deep)}
+.db-stat .dl{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.db-stat .ds{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:3px}
+.ds-g{background:#22c55e}.ds-y{background:#eab308}.ds-r{background:#ef4444}
+.db-links{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;justify-content:center}
+.db-links a{font-family:var(--display);font-size:.65rem;font-weight:600;padding:7px 12px;border-radius:7px;border:1px solid var(--sage);color:var(--forest);text-decoration:none}
+.db-links a:hover{background:rgba(45,90,78,.04)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="db-hero">
+    <h1 data-t="db_t">Community Intelligence</h1>
+    <p data-t="db_s">Federal data meets community voice. Cross-referenced insights no single data source can reveal.</p>
+    <div class="db-zip">
+      <input type="text" id="dbZip" maxlength="5" inputmode="numeric" placeholder="ZIP" value="">
+      <button onclick="loadIntel()">Analyze</button>
+    </div>
+  </div>
+  <div id="healthScore"></div>
+  <div id="insights"></div>
+  <div id="communityStats"></div>
+  <div id="federalContext"></div>
+  <div id="deident"></div>
+
+  <div class="db-links">
+    <a href="/govern.html">🏛️ Leadership</a>
+    <a href="/issues.html">📊 Issues</a>
+    <a href="/evaluate.html">⭐ Evaluate</a>
+    <a href="/propose.html">📋 Proposals</a>
+    <a href="/discuss.html">💬 Discuss</a>
+    <a href="/needs.html">🤝 Needs</a>
+    <a href="/grow.html">🌱 Grow</a>
+    <a href="/food-strategy.html">🍎 Food</a>
+    <a href="/health-strategy.html">🏥 Health</a>
+    <a href="/housing-strategy.html">🏠 Housing</a>
+  </div>
+</div>
+
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var DE = window.DashEngine;
+
+function loadIntel() {
+  var zip = document.getElementById('dbZip').value.trim() || '60608';
+  var es = EQ && EQ.lang === 'es';
+
+  // Demo community data (in production, fetched from backend)
+  var community = {
+    discussions: 12, proposals: 5, evaluations: 23, needsOpen: 4, offers: 6,
+    needsMatched: 8, directorySize: 14, promises: 7, promiseFollowRate: 0.57,
+    evalCoverage: 0.3,
+    needs: [
+      {type:'need',category:'food',status:'open'},{type:'need',category:'transport',status:'open'},
+      {type:'need',category:'food',status:'open'},{type:'need',category:'legal',status:'matched'},
+      {type:'need',category:'housing',status:'open'}
+    ],
+    proposals: [
+      {title:'Community garden',votes:45,category:'food'},
+      {title:'Underpass lighting',votes:34,category:'safety'},
+      {title:'After-school tutoring',votes:28,category:'education'}
+    ],
+    promises: [
+      {official:'Ald. Johnson',promise:'Rent stabilization',status:'stalled'},
+      {official:'Ald. Johnson',promise:'Pothole program',status:'achieved'},
+      {official:'School board',promise:'After-school funding',status:'in_progress'}
+    ],
+    positions: [],
+    evaluations: []
+  };
+
+  // Community Health Score
+  var health = CivicIntel.communityHealthScore(community);
+  CivicIntel.renderHealthScore(health, 'healthScore');
+
+  // Community Activity Stats
+  var h = '<div class="db-section"><h3>📈 ' + (es ? 'Actividad Comunitaria' : 'Community Activity') + '</h3>';
+  h += '<div class="db-grid">';
+  h += stat(community.discussions, 'Discussions', community.discussions >= 5 ? 'g' : 'y');
+  h += stat(community.needsOpen, 'Open Needs', community.needsOpen <= 3 ? 'g' : community.needsOpen <= 6 ? 'y' : 'r');
+  h += stat(community.offers, 'Offers', community.offers >= 3 ? 'g' : 'y');
+  h += stat(community.proposals, 'Proposals', community.proposals >= 3 ? 'g' : 'y');
+  h += stat(community.evaluations, 'Evaluations', community.evaluations >= 10 ? 'g' : community.evaluations >= 5 ? 'y' : 'r');
+  h += stat(Math.round(community.promiseFollowRate * 100) + '%', 'Promise Rate', community.promiseFollowRate >= 0.7 ? 'g' : community.promiseFollowRate >= 0.5 ? 'y' : 'r');
+  h += '</div></div>';
+  document.getElementById('communityStats').innerHTML = h;
+
+  // Federal context (parallel API calls)
+  var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B03003_003E'];
+  var PLACES_MEASURES = ['DIABETES','OBESITY','MHLTH'];
+
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryPLACES(zip, PLACES_MEASURES),
+    DE.queryGeo(zip)
+  ]).then(function(r) {
+    var census = r[0].value || {};
+    var places = r[1].value || {};
+    var geo = r[2].value || {};
+    var pop = census.B01003_001E || 0;
+    var povRate = DE.pct(census.B17001_002E || 0, census.B17001_001E || 0);
+    var hispPct = DE.pct(census.B03003_003E || 0, pop);
+    var diabetes = places.DIABETES ? places.DIABETES.value : 0;
+    var obesity = places.OBESITY ? places.OBESITY.value : 0;
+
+    var fh = '<div class="db-section"><h3>📊 ' + (es ? 'Contexto Federal — ' : 'Federal Context — ') + (geo.city || zip) + '</h3>';
+    fh += '<div class="db-grid">';
+    fh += stat(DE.fmt(pop), 'Population', '');
+    fh += stat(povRate + '%', 'Poverty', povRate > 20 ? 'r' : povRate > 10 ? 'y' : 'g');
+    fh += stat(hispPct + '%', 'Hispanic', '');
+    fh += stat(diabetes ? diabetes.toFixed(1) + '%' : 'N/A', 'Diabetes', diabetes > 12 ? 'r' : '');
+    fh += stat(obesity ? obesity.toFixed(1) + '%' : 'N/A', 'Obesity', obesity > 35 ? 'r' : '');
+    fh += stat(DE.money(census.B19013_001E || 0), 'Median Income', '');
+    fh += '</div></div>';
+    document.getElementById('federalContext').innerHTML = fh;
+
+    // Generate cross-source insights
+    var federalData = { census: { povertyRate: povRate }, places: places };
+    var insights = CivicIntel.generateInsights(community, federalData);
+    CivicIntel.renderInsights(insights, 'insights');
+  });
+
+  document.getElementById('deident').innerHTML = CivicIntel.deidentNotice();
+}
+
+function stat(val, label, status) {
+  var dot = status ? '<span class="ds ds-' + status + '"></span>' : '';
+  return '<div class="db-stat">' + dot + '<div class="dv">' + val + '</div><div class="dl">' + label + '</div></div>';
+}
+
+// Auto-load
+(function() {
+  var p = new URLSearchParams(location.search);
+  var z = p.get('zip') || '60608';
+  document.getElementById('dbZip').value = z;
+  setTimeout(loadIntel, 200);
+})();
+
+EQ.init({db_t:'Community Intelligence',db_t_es:'Inteligencia Comunitaria',db_s:'Federal data meets community voice. Cross-referenced insights no single data source can reveal.',db_s_es:'Datos federales + voz comunitaria. Perspectivas cruzadas que ninguna fuente revela sola.'});
+</script>
+</body>
+</html>

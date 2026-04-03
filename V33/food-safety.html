@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Food Safety Check — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Food Safety Check — CommUnity OS">
+<meta property="og:description" content="Look up restaurant health inspection results in Chicago. Free public data.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Look up restaurant food inspection results in Chicago. Real data from the Chicago Department of Public Health. Free, bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.fi-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.fi-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px}
+.fi-search input:focus{outline:none;border-color:var(--sage)}
+.fi-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.fi-go:hover{background:var(--deep)}
+.fi-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
+.fi-card{background:var(--warm);border-radius:14px;padding:16px;margin:10px 0;border:1px solid var(--sand);border-left:4px solid var(--sage)}
+.fi-card.fail{border-left-color:var(--coral)}
+.fi-card.conditional{border-left-color:var(--gold)}
+.fi-card .fi-name{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep)}
+.fi-card .fi-address{font-size:.72rem;color:var(--dim);margin:2px 0}
+.fi-card .fi-result{font-size:.72rem;font-weight:700;margin-top:6px;display:inline-block;padding:3px 10px;border-radius:6px}
+.fi-card .fi-pass{background:rgba(91,140,122,.12);color:var(--forest)}
+.fi-card .fi-fail{background:rgba(212,112,74,.12);color:var(--coral)}
+.fi-card .fi-cond{background:rgba(201,168,76,.12);color:var(--gold)}
+.fi-card .fi-date{font-size:.65rem;color:var(--dim);margin-top:4px}
+.fi-card .fi-violations{margin-top:8px;font-size:.72rem;color:var(--body);line-height:1.6;padding-top:8px;border-top:1px solid var(--sand)}
+.fi-empty{text-align:center;padding:30px;font-size:.85rem;color:var(--dim)}
+.fi-count{font-size:.72rem;color:var(--dim);margin:10px 0}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label">SURVIVE</div>
+    <h1 data-t="fi_title">Food Safety Check</h1>
+    <p class="subtitle" data-t="fi_sub">Look up restaurant health inspection results. Real data from the Chicago Department of Public Health.</p>
+  </div>
+
+  <div class="bc-privacy" style="border-left-color:var(--gold)"><strong>Note:</strong> This tool uses Chicago open data. If you're outside Chicago, similar data may be available through your city's open data portal. <a href="/neighborhood.html" style="color:var(--forest);font-weight:600">Check your neighborhood →</a></div>
+
+  <div class="fi-search">
+    <input type="text" id="fiQuery" placeholder="Restaurant name or address..." onkeydown="if(event.key==='Enter')searchFood()">
+    <button class="fi-go" onclick="searchFood()">Search</button>
+  </div>
+
+  <div id="fiLoading" class="fi-loading" style="display:none">Searching inspection records...</div>
+  <div id="fiCount" class="fi-count" style="display:none"></div>
+  <div id="fiResults"></div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var SODA = 'https://data.cityofchicago.org/resource/qizy-d2wf.json';
+
+function searchFood() {
+  var q = document.getElementById('fiQuery').value.trim();
+  if (!q || q.length < 2) { alert('Enter a restaurant name or address.'); return; }
+
+  document.getElementById('fiLoading').style.display = '';
+  document.getElementById('fiResults').innerHTML = '';
+  document.getElementById('fiCount').style.display = 'none';
+
+  // Search by DBA name or address — SODA SoQL
+  var nameQ = q.toUpperCase().replace(/'/g, "''");
+  var where = encodeURIComponent("upper(dba_name) like '%" + nameQ + "%' OR upper(address) like '%" + nameQ + "%'");
+  var url = SODA + '?$where=' + where + '&$order=inspection_date DESC&$limit=20';
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('fiLoading').style.display = 'none';
+      renderFood(data, q);
+    })
+    .catch(function(err) {
+      document.getElementById('fiLoading').style.display = 'none';
+      document.getElementById('fiResults').innerHTML = '<div class="fi-empty">Could not reach Chicago open data portal. Try again.</div>';
+    });
+}
+
+function renderFood(data, query) {
+  if (!data || data.length === 0) {
+    document.getElementById('fiResults').innerHTML = '<div class="fi-empty">No inspection records found for "' + query + '". Try a different spelling or search by address.</div>';
+    return;
+  }
+
+  document.getElementById('fiCount').textContent = data.length + ' inspection record' + (data.length === 1 ? '' : 's') + ' found';
+  document.getElementById('fiCount').style.display = '';
+
+  var html = '';
+  data.forEach(function(r) {
+    var result = (r.results || '').toLowerCase();
+    var cls = '';
+    var badge = '';
+    if (result.indexOf('pass') >= 0 && result.indexOf('fail') < 0) {
+      cls = ''; badge = '<span class="fi-result fi-pass">PASS</span>';
+    } else if (result.indexOf('fail') >= 0) {
+      cls = ' fail'; badge = '<span class="fi-result fi-fail">FAIL</span>';
+    } else if (result.indexOf('conditional') >= 0 || result.indexOf('not ready') >= 0) {
+      cls = ' conditional'; badge = '<span class="fi-result fi-cond">' + (r.results || 'CONDITIONAL') + '</span>';
+    } else {
+      badge = '<span class="fi-result" style="background:var(--sand);color:var(--dim)">' + (r.results || 'N/A') + '</span>';
+    }
+
+    var date = r.inspection_date ? new Date(r.inspection_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    var violations = r.violations ? r.violations.substring(0, 300) : '';
+    if (violations.length >= 300) violations += '...';
+
+    html += '<div class="fi-card' + cls + '">' +
+      '<div class="fi-name">' + (r.dba_name || 'Unknown') + '</div>' +
+      '<div class="fi-address">' + (r.address || '') + (r.zip ? ', ' + r.zip : '') + '</div>' +
+      badge +
+      '<div class="fi-date">' + (r.inspection_type || '') + ' — ' + date + '</div>' +
+      (violations ? '<div class="fi-violations">' + violations.replace(/\|/g, ' • ') + '</div>' : '') +
+      '</div>';
+  });
+
+  document.getElementById('fiResults').innerHTML = html;
+}
+
+EQ.init({
+  fi_title: 'Food Safety Check',
+  fi_title_es: 'Verificación de Seguridad Alimentaria',
+  fi_sub: 'Look up restaurant health inspection results. Real data from the Chicago Department of Public Health.',
+  fi_sub_es: 'Busca resultados de inspección de salud de restaurantes. Datos reales del Departamento de Salud Pública de Chicago.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

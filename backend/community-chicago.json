@@ -1,0 +1,86 @@
+{
+  "community_name": "Back of the Yards / Brighton Park",
+  "city": "Chicago",
+  "county": "Cook",
+  "county_fips": "17031",
+  "state": "IL",
+  "state_fips": "17",
+  "zip_codes": ["60608", "60609", "60632", "60638"],
+  "languages": ["en", "es"],
+  "coordinates": { "lat": 41.8090, "lng": -87.6694 },
+  "state_config": "IL",
+
+  "open_data": {
+    "platform": "socrata",
+    "domain": "data.cityofchicago.org",
+    "app_token": "",
+    "datasets": {
+      "311_requests": { "id": "v6vf-nfxy", "enabled": true, "notes": "7M+ records, near real-time" },
+      "food_inspections": { "id": "qizy-d2wf", "enabled": true, "notes": "7/1/2018–present" },
+      "building_violations": { "id": "22u3-xenr", "enabled": true, "notes": "2006–present" },
+      "business_licenses": { "id": "r5kz-chrr", "enabled": false },
+      "crimes": { "id": "ijzp-q8t2", "enabled": false, "notes": "Available but not surfaced" }
+    }
+  },
+
+  "property_tax": {
+    "platform": "socrata",
+    "domain": "datacatalog.cookcountyil.gov",
+    "assessment_dataset": "uzyt-m557",
+    "sales_dataset": "wvhk-k5uv",
+    "appeal_board_name": "Cook County Board of Review",
+    "appeal_board_url": "https://www.cookcountyboardofreview.com",
+    "appeal_success_rate": "62%",
+    "appeal_deadline_note": "30 days from reassessment notice — check your township schedule",
+    "lookup_url": "https://www.cookcountypropertyinfo.com"
+  },
+
+  "organizations": {
+    "legal_aid": [
+      { "name": "Legal Aid Chicago", "phone": "312-341-1070", "url": "https://legalaidchicago.org", "services": ["housing", "benefits", "immigration", "family"], "languages": ["en", "es", "pl", "zh"] },
+      { "name": "CARPLS Legal Aid Hotline", "phone": "312-738-9200", "url": "https://www.carpls.org", "services": ["general", "housing", "consumer"], "languages": ["en", "es"] },
+      { "name": "Metropolitan Tenants Organization", "phone": "773-292-4988", "url": "https://www.tenants-rights.org", "services": ["housing", "eviction"], "languages": ["en", "es"] },
+      { "name": "Cabrini Green Legal Aid", "phone": "312-738-2452", "url": "https://www.cgla.net", "services": ["criminal records", "housing", "employment"], "languages": ["en", "es"] }
+    ],
+    "food_resources": [
+      { "name": "Greater Chicago Food Depository", "phone": "773-247-3663", "url": "https://www.chicagosfoodbank.org/find-food/", "type": "food_bank_network" },
+      { "name": "mRelief SNAP Screener", "phone": "", "url": "https://apply.mrelief.com/screener", "type": "eligibility_screener", "sms": "Text FOOD to 74544" }
+    ],
+    "immigration": [
+      { "name": "ICIRR Multilingual Hotline", "phone": "1-855-435-7693", "url": "https://www.icirr.org", "languages": ["en", "es", "pl", "ko", "zh", "ar"] },
+      { "name": "National Immigrant Justice Center", "phone": "312-660-1370", "url": "https://immigrantjustice.org", "languages": ["en", "es"] }
+    ],
+    "housing": [
+      { "name": "Spanish Coalition for Housing", "phone": "773-276-7633", "url": "https://www.sc4housing.org", "languages": ["en", "es"] },
+      { "name": "Lawyers' Committee for Better Housing", "phone": "312-347-7600", "url": "https://lcbh.org", "languages": ["en"] }
+    ],
+    "tax_help": [
+      { "name": "Ladder Up / VITA Sites", "phone": "312-588-6900", "url": "https://www.goladderup.org", "season": "January–April", "income_limit": "$67,000" },
+      { "name": "MyFreeTaxes (year-round)", "phone": "", "url": "https://www.myfreetaxes.com", "income_limit": "$84,000" }
+    ],
+    "utility_assistance": [
+      { "name": "CEDA (LIHEAP)", "phone": "773-292-4988", "url": "https://www.cedaorg.net", "programs": ["LIHEAP", "weatherization", "water assistance"] }
+    ]
+  },
+
+  "officials": {
+    "api": "google_civic",
+    "api_key_env": "GOOGLE_CIVIC_KEY",
+    "manual_fallback": []
+  },
+
+  "crisis": [
+    { "name": "988 Suicide & Crisis Lifeline", "phone": "988", "text": "988" },
+    { "name": "National Domestic Violence Hotline", "phone": "1-800-799-7233" },
+    { "name": "211 (local resources)", "phone": "211" },
+    { "name": "ICIRR Immigration Hotline", "phone": "1-855-435-7693" }
+  ],
+
+  "deploy": {
+    "domain": "comm-unity-os.org",
+    "netlify_site_id": "",
+    "version": "v31",
+    "cost_per_year": "$7",
+    "author": "Prof. Nino — 60608"
+  }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Building Safety — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Building Safety — CommUnity OS">
+<meta property="og:description" content="Look up building code violations for any address in Chicago. Real city data.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Look up building code violations by address in Chicago. See violation history, open cases, and inspector notes. Real data from the City of Chicago.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.bs-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.bs-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:200px}
+.bs-search input:focus{outline:none;border-color:var(--sage)}
+.bs-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.bs-go:hover{background:var(--deep)}
+.bs-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
+.bs-stats{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.bs-stat{background:var(--warm);border-radius:10px;padding:10px 14px;text-align:center;border:1px solid var(--sand);flex:1;min-width:80px}
+.bs-stat .bs-num{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep)}
+.bs-stat .bs-lbl{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.bs-card{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);border-left:4px solid var(--sage)}
+.bs-card.open{border-left-color:var(--coral)}
+.bs-card .bs-type{font-family:var(--display);font-size:.78rem;font-weight:700;color:var(--deep)}
+.bs-card .bs-desc{font-size:.72rem;color:var(--body);line-height:1.6;margin-top:4px}
+.bs-card .bs-meta{font-size:.62rem;color:var(--dim);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.bs-card .bs-status{display:inline-block;font-size:.58rem;font-weight:600;padding:2px 8px;border-radius:6px;margin-top:4px}
+.bs-open{background:rgba(212,112,74,.1);color:var(--coral)}
+.bs-closed{background:rgba(91,140,122,.1);color:var(--forest)}
+.bs-empty{text-align:center;padding:30px;font-size:.85rem;color:var(--dim);line-height:1.6}
+.bs-count{font-size:.72rem;color:var(--dim);margin:8px 0}
+.bs-nbf{background:var(--warm);border-radius:14px;padding:18px;margin:20px 0;border-left:3px solid var(--sage)}
+.bs-nbf h4{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.bs-nbf p{font-size:.78rem;line-height:1.6;color:var(--body);margin-bottom:6px}
+.bs-nbf .n-t{color:var(--forest);font-weight:700}.bs-nbf .b-t{color:var(--coral);font-weight:700}.bs-nbf .f-t{color:var(--sage);font-weight:700}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label">UNDERSTAND</div>
+    <h1 data-t="bs_title">Building Safety</h1>
+    <p class="subtitle" data-t="bs_sub">Look up code violations for any address in Chicago. Real data from the city.</p>
+  </div>
+
+  <div class="bc-privacy" style="border-left-color:var(--gold)"><strong>Note:</strong> This tool uses Chicago open data. If you're outside Chicago, similar data may be available through your city's open data portal. <a href="/neighborhood.html" style="color:var(--forest);font-weight:600">Check your neighborhood →</a></div>
+
+  <div class="bs-search">
+    <input type="text" id="bsQuery" placeholder="Enter Chicago address (e.g. 2111 S Michigan Ave)" onkeydown="if(event.key==='Enter')searchBuilding()">
+    <button class="bs-go" onclick="searchBuilding()">Search</button>
+  </div>
+
+  <div id="bsLoading" class="bs-loading" style="display:none">Searching violation records...</div>
+  <div id="bsCount" class="bs-count" style="display:none"></div>
+  <div id="bsStatsRow" style="display:none"></div>
+  <div id="bsResults"></div>
+
+  <div class="bs-nbf">
+    <h4>How Building Code Enforcement Works</h4>
+    <p><span class="n-t">Normal:</span> The city inspects buildings for safety — structural integrity, fire exits, plumbing, electrical, heating, pest control. When violations are found, the owner gets a notice and a deadline to fix them. Inspections can be triggered by complaints (call 311) or scheduled reviews.</p>
+    <p><span class="b-t">Broken:</span> Some landlords ignore violations for years. Open violations mean the building has known safety problems that haven't been fixed. Tenants may not know about violations affecting their building. The 311 complaint that triggered the inspection is public data, but the follow-through often isn't visible.</p>
+    <p><span class="f-t">Fix:</span> Look up your building here. If there are open violations, your landlord knows about them and has a legal obligation to fix them. In Chicago, tenants can withhold rent for certain unfixed violations under the RLTO. Document everything with photos and dates. Report new problems by calling 311 or online at chicago.gov/311. If your landlord retaliates, call Metropolitan Tenants Organization at 773-292-4988.</p>
+  </div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var SODA = 'https://data.cityofchicago.org/resource/22u3-xenr.json';
+
+function searchBuilding() {
+  var q = document.getElementById('bsQuery').value.trim().toUpperCase();
+  if (!q || q.length < 5) { alert('Enter a Chicago street address.'); return; }
+
+  document.getElementById('bsLoading').style.display = '';
+  document.getElementById('bsResults').innerHTML = '';
+  document.getElementById('bsCount').style.display = 'none';
+  document.getElementById('bsStatsRow').style.display = 'none';
+
+  var addr = q.replace(/'/g, "''");
+  var where = encodeURIComponent("upper(address) like '%" + addr + "%'");
+  var url = SODA + '?$where=' + where + '&$order=violation_date DESC&$limit=30';
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('bsLoading').style.display = 'none';
+      renderBuilding(data, q);
+    })
+    .catch(function(err) {
+      document.getElementById('bsLoading').style.display = 'none';
+      document.getElementById('bsResults').innerHTML = '<div class="bs-empty">Could not reach Chicago open data portal. Try again.</div>';
+    });
+}
+
+function renderBuilding(data, query) {
+  if (!data || data.length === 0) {
+    document.getElementById('bsResults').innerHTML = '<div class="bs-empty">No violation records found for "' + query + '". Try a different address format (e.g. street number and name only, no apartment number).</div>';
+    return;
+  }
+
+  var openCount = 0, closedCount = 0;
+  data.forEach(function(v) {
+    var status = (v.violation_status || '').toLowerCase();
+    if (status.indexOf('open') >= 0 || status.indexOf('comply') < 0) openCount++;
+    else closedCount++;
+  });
+
+  document.getElementById('bsCount').textContent = data.length + ' violation record' + (data.length === 1 ? '' : 's') + ' found';
+  document.getElementById('bsCount').style.display = '';
+
+  document.getElementById('bsStatsRow').innerHTML = '<div class="bs-stats">' +
+    '<div class="bs-stat"><div class="bs-num">' + data.length + '</div><div class="bs-lbl">Total Records</div></div>' +
+    '<div class="bs-stat"><div class="bs-num" style="color:var(--coral)">' + openCount + '</div><div class="bs-lbl">Open/Unresolved</div></div>' +
+    '<div class="bs-stat"><div class="bs-num" style="color:var(--forest)">' + closedCount + '</div><div class="bs-lbl">Closed/Complied</div></div>' +
+    '</div>';
+  document.getElementById('bsStatsRow').style.display = '';
+
+  var html = '';
+  data.forEach(function(v) {
+    var status = (v.violation_status || 'Unknown').toUpperCase();
+    var isOpen = status.indexOf('OPEN') >= 0 || status.indexOf('COMPLY') < 0;
+    var date = v.violation_date ? new Date(v.violation_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    var desc = v.violation_description || '';
+    if (desc.length > 250) desc = desc.substring(0, 250) + '...';
+    var code = v.violation_code || '';
+    var inspector = v.inspector_id || '';
+    var statusBadge = isOpen ? '<span class="bs-status bs-open">OPEN</span>' : '<span class="bs-status bs-closed">RESOLVED</span>';
+
+    html += '<div class="bs-card' + (isOpen ? ' open' : '') + '">' +
+      '<div class="bs-type">' + (v.violation_code ? 'Code ' + v.violation_code : 'Violation') + ' ' + statusBadge + '</div>' +
+      (desc ? '<div class="bs-desc">' + desc + '</div>' : '') +
+      '<div class="bs-meta">' +
+        (date ? '<span>📅 ' + date + '</span>' : '') +
+        (v.violation_status ? '<span>' + v.violation_status + '</span>' : '') +
+        (inspector ? '<span>Inspector #' + inspector + '</span>' : '') +
+      '</div>' +
+      '</div>';
+  });
+
+  document.getElementById('bsResults').innerHTML = html;
+}
+
+EQ.init({
+  bs_title: 'Building Safety',
+  bs_title_es: 'Seguridad de Edificios',
+  bs_sub: 'Look up code violations for any address in Chicago. Real data from the city.',
+  bs_sub_es: 'Busca violaciones de código para cualquier dirección en Chicago. Datos reales de la ciudad.'
+}, { closingKey: 'footer_closing_understand' });
+</script>
+</body>
+</html>

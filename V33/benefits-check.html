@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Benefit Safety Check — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Benefit Safety Check — CommUnity OS">
+<meta property="og:description" content="Find out which benefits are safe to use without affecting your immigration case. Free. Private. Bilingual.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/benefits-check.html">
+<meta name="description" content="Check which government benefits are safe to use without affecting immigration status. Public charge screener. Free, private, bilingual English/Spanish. No data collected.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="canonical" href="https://comm-unity-os.org/benefits-check.html">
+<style>
+.bc-privacy{background:var(--warm);border-radius:12px;padding:14px 16px;margin:0 0 20px;border-left:3px solid var(--sage);font-size:.78rem;color:var(--body);line-height:1.6}
+.bc-privacy strong{color:var(--forest);font-weight:700}
+.bc-card{background:var(--warm);border-radius:14px;padding:18px;margin:14px 0;border:1px solid var(--sand)}
+.bc-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.bc-q{font-size:.85rem;color:var(--body);line-height:1.6;margin-bottom:12px}
+.bc-btns{display:flex;gap:8px;flex-wrap:wrap}
+.bc-btn{font-family:var(--display);font-size:.78rem;font-weight:600;padding:10px 20px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--deep);cursor:pointer;transition:.2s;min-width:80px;text-align:center}
+.bc-btn:hover{border-color:var(--sage)}
+.bc-btn.selected{background:var(--forest);color:#fff;border-color:var(--forest)}
+.bc-result{border-radius:14px;padding:20px;margin:16px 0;display:none}
+.bc-result.active{display:block}
+.bc-result h3{font-family:var(--display);font-size:1rem;font-weight:700;margin-bottom:10px}
+.bc-result p{font-size:.85rem;line-height:1.7;margin-bottom:10px}
+.bc-safe{background:rgba(91,140,122,.08);border:1.5px solid var(--sage)}
+.bc-safe h3{color:var(--forest)}
+.bc-caution{background:rgba(201,168,76,.08);border:1.5px solid var(--gold)}
+.bc-caution h3{color:var(--gold)}
+.bc-exempt{background:rgba(91,140,122,.06);border:1.5px solid rgba(91,140,122,.2)}
+.bc-exempt h3{color:var(--forest)}
+.bc-list{margin:10px 0}
+.bc-list-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:.82rem;line-height:1.5}
+.bc-list-item .bc-icon{flex-shrink:0;font-size:.8rem;margin-top:2px}
+.bc-safe-icon{color:var(--forest)}
+.bc-caution-icon{color:var(--gold)}
+.bc-divider{height:1px;background:var(--sand);margin:20px 0}
+.bc-legal{font-size:.68rem;color:var(--dim);line-height:1.6;margin-top:20px;padding-top:14px;border-top:1px solid var(--sand)}
+.bc-reset{font-family:var(--display);font-size:.72rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.2s;margin-top:10px}
+.bc-reset:hover{border-color:var(--sage);color:var(--forest)}
+.bc-progress{display:flex;gap:4px;margin:14px 0}
+.bc-dot{width:8px;height:8px;border-radius:50%;background:var(--sand);transition:.3s}
+.bc-dot.done{background:var(--sage)}
+.bc-dot.current{background:var(--forest);transform:scale(1.3)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label" data-t="arc_survive">SURVIVE</div>
+    <h1 data-t="bc_title">Benefit Safety Check</h1>
+    <p class="subtitle" data-t="bc_subtitle">Find out which benefits are safe to use — without affecting your immigration case.</p>
+  </div>
+
+  <div class="bc-privacy" data-t="bc_privacy">
+    <strong data-t="bc_privacy_bold">This tool is 100% private.</strong> Nothing you enter is saved, sent, or recorded. Everything runs on your phone. No data leaves this page. No one will ever know you used it.
+  </div>
+
+  <!-- Question flow -->
+  <div id="bcFlow">
+    <!-- Q1: Immigration status category -->
+    <div class="bc-card" id="bcQ1">
+      <h3 data-t="bc_q1_title">Step 1 of 3</h3>
+      <div class="bc-progress"><div class="bc-dot current"></div><div class="bc-dot"></div><div class="bc-dot"></div></div>
+      <p class="bc-q" data-t="bc_q1">Which best describes your immigration situation?</p>
+      <div class="bc-btns">
+        <div class="bc-btn" onclick="answer(1,'citizen')" data-t="bc_q1_a1">US Citizen</div>
+        <div class="bc-btn" onclick="answer(1,'lpr')" data-t="bc_q1_a2">Green Card Holder</div>
+        <div class="bc-btn" onclick="answer(1,'refugee')" data-t="bc_q1_a3">Refugee / Asylee</div>
+        <div class="bc-btn" onclick="answer(1,'visa')" data-t="bc_q1_a4">Visa / Pending</div>
+      </div>
+    </div>
+
+    <!-- Q2: Planning to adjust status? -->
+    <div class="bc-card" id="bcQ2" style="display:none">
+      <h3 data-t="bc_q2_title">Step 2 of 3</h3>
+      <div class="bc-progress"><div class="bc-dot done"></div><div class="bc-dot current"></div><div class="bc-dot"></div></div>
+      <p class="bc-q" data-t="bc_q2">Are you planning to apply for a green card or change your immigration status?</p>
+      <div class="bc-btns">
+        <div class="bc-btn" onclick="answer(2,'yes')" data-t="bc_yes">Yes</div>
+        <div class="bc-btn" onclick="answer(2,'no')" data-t="bc_no">No</div>
+        <div class="bc-btn" onclick="answer(2,'unsure')" data-t="bc_unsure">Not sure</div>
+      </div>
+    </div>
+
+    <!-- Q3: What benefits are you considering? -->
+    <div class="bc-card" id="bcQ3" style="display:none">
+      <h3 data-t="bc_q3_title">Step 3 of 3</h3>
+      <div class="bc-progress"><div class="bc-dot done"></div><div class="bc-dot done"></div><div class="bc-dot current"></div></div>
+      <p class="bc-q" data-t="bc_q3">Which benefits are you thinking about using? (Select all that apply)</p>
+      <div class="bc-btns" id="bcBenefits" style="flex-wrap:wrap">
+        <div class="bc-btn" onclick="toggleBenefit(this,'snap')" data-t="bc_snap">SNAP / Food Stamps</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'wic')" data-t="bc_wic">WIC</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'medicaid')" data-t="bc_medicaid">Medicaid</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'chip')" data-t="bc_chip">CHIP (children)</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'school_lunch')" data-t="bc_lunch">School Lunch</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'housing')" data-t="bc_housing">Housing Help</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'emergency_medicaid')" data-t="bc_emr">Emergency Medicaid</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'ssi')" data-t="bc_ssi">SSI</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'tanf')" data-t="bc_tanf">TANF / Cash Aid</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'eitc')" data-t="bc_eitc">Tax Credits (EITC)</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'health_center')" data-t="bc_fqhc">Community Health Center</div>
+        <div class="bc-btn" onclick="toggleBenefit(this,'disaster')" data-t="bc_disaster">Disaster Help</div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="bc-btn" style="background:var(--forest);color:#fff;border-color:var(--forest)" onclick="showResults()" data-t="bc_show_results">Show My Results</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="bcResults" style="display:none">
+
+    <!-- Citizen/LPR result -->
+    <div class="bc-result bc-safe" id="resultCitizen">
+      <h3 data-t="bc_r_citizen_title">✓ You can use any benefit you qualify for.</h3>
+      <p data-t="bc_r_citizen">As a U.S. citizen, public charge does not apply to you. Use any benefit your family qualifies for — SNAP, Medicaid, housing, WIC, school lunch, SSI, TANF, and all others. These programs exist for you.</p>
+    </div>
+
+    <!-- LPR result -->
+    <div class="bc-result bc-safe" id="resultLPR">
+      <h3 data-t="bc_r_lpr_title">✓ Green card holders are generally safe.</h3>
+      <p data-t="bc_r_lpr">Public charge applies only when you first get your green card or re-enter the US after traveling abroad. Once you are a permanent resident living in the US, using benefits does not put your green card at risk. If you plan to apply for citizenship, benefit use is not part of the naturalization test.</p>
+    </div>
+
+    <!-- Refugee/asylee result -->
+    <div class="bc-result bc-exempt" id="resultRefugee">
+      <h3 data-t="bc_r_refugee_title">✓ Refugees and asylees are exempt from public charge.</h3>
+      <p data-t="bc_r_refugee">Public charge does NOT apply to refugees, asylees, T visa holders (trafficking victims), U visa holders (crime victims), VAWA self-petitioners, or Special Immigrant Juveniles. Use any benefit you qualify for. This exemption is written into federal law.</p>
+    </div>
+
+    <!-- Visa holder / detailed results -->
+    <div class="bc-result" id="resultDetailed">
+      <h3 data-t="bc_r_detail_title">Here's what we found:</h3>
+
+      <div id="safeList"></div>
+      <div id="cautionList"></div>
+
+      <div class="bc-divider"></div>
+
+      <p style="font-size:.82rem;color:var(--body);line-height:1.7" data-t="bc_r_detail_note">
+        <strong>Important:</strong> Under the 2022 public charge rule (8 CFR § 212.22), only these programs count against you: SSI, TANF, state/local cash assistance for income maintenance, and long-term government-funded institutionalization. Everything else — including SNAP, Medicaid, CHIP, WIC, school lunch, housing assistance, disaster relief, community health centers, and tax credits — does NOT count. Benefits used by your U.S. citizen children do not affect your case.
+      </p>
+    </div>
+
+    <button class="bc-reset" onclick="resetAll()" data-t="bc_start_over">↩ Start Over</button>
+
+    <div class="bc-legal" data-t="bc_legal">
+      This tool provides general information based on the 2022 public charge rule (8 CFR § 212.22) currently in effect. It is not legal advice. Immigration law changes. If you have specific concerns, speak with an immigration attorney or call ICIRR at 1-855-435-7693. This tool does not collect, store, or transmit any data. Everything runs locally on your device.
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var answers = {};
+var selectedBenefits = [];
+
+// Benefits classification under 2022 public charge rule
+var BENEFITS = {
+  snap:               { safe: true,  name_en: 'SNAP / Food Stamps',       name_es: 'SNAP / Cupones de Alimentos' },
+  wic:                { safe: true,  name_en: 'WIC',                      name_es: 'WIC' },
+  medicaid:           { safe: true,  name_en: 'Medicaid',                 name_es: 'Medicaid',                    note_en: 'Medicaid does NOT count under current rules. Emergency Medicaid has never counted.', note_es: 'Medicaid NO cuenta bajo las reglas actuales. Medicaid de emergencia nunca ha contado.' },
+  chip:               { safe: true,  name_en: 'CHIP (children\'s health)', name_es: 'CHIP (salud de niños)' },
+  school_lunch:       { safe: true,  name_en: 'School Lunch Program',     name_es: 'Programa de Almuerzo Escolar' },
+  housing:            { safe: true,  name_en: 'Housing Assistance',       name_es: 'Asistencia de Vivienda' },
+  emergency_medicaid: { safe: true,  name_en: 'Emergency Medicaid',       name_es: 'Medicaid de Emergencia',      note_en: 'Emergency Medicaid has NEVER counted under any version of public charge.', note_es: 'Medicaid de emergencia NUNCA ha contado bajo ninguna versión de carga pública.' },
+  eitc:               { safe: true,  name_en: 'Tax Credits (EITC/CTC)',   name_es: 'Créditos de Impuestos (EITC/CTC)' },
+  health_center:      { safe: true,  name_en: 'Community Health Center',  name_es: 'Centro de Salud Comunitario' },
+  disaster:           { safe: true,  name_en: 'Disaster Assistance',      name_es: 'Asistencia por Desastre' },
+  ssi:                { safe: false, name_en: 'SSI (Supplemental Security Income)', name_es: 'SSI (Ingreso Suplementario de Seguridad)', note_en: 'SSI is one of the few programs that CAN count under public charge. Talk to an attorney before declining — you may still qualify safely depending on your situation.', note_es: 'SSI es uno de los pocos programas que PUEDE contar bajo carga pública. Habla con un abogado antes de rechazarlo — aún podrías calificar de forma segura dependiendo de tu situación.' },
+  tanf:               { safe: false, name_en: 'TANF / Cash Assistance',   name_es: 'TANF / Asistencia en Efectivo', note_en: 'TANF cash assistance CAN count under public charge. Talk to an attorney before declining — eligibility depends on your specific immigration category.', note_es: 'La asistencia en efectivo TANF PUEDE contar bajo carga pública. Habla con un abogado antes de rechazarlo — la elegibilidad depende de tu categoría migratoria específica.' }
+};
+
+function answer(q, val) {
+  answers['q' + q] = val;
+  // Highlight selected
+  var card = document.getElementById('bcQ' + q);
+  card.querySelectorAll('.bc-btn').forEach(function(b) { b.classList.remove('selected'); });
+  event.target.classList.add('selected');
+
+  if (q === 1) {
+    if (val === 'citizen') {
+      showResult('resultCitizen');
+    } else if (val === 'lpr') {
+      document.getElementById('bcQ2').style.display = 'block';
+      document.getElementById('bcQ2').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (val === 'refugee') {
+      showResult('resultRefugee');
+    } else {
+      document.getElementById('bcQ2').style.display = 'block';
+      document.getElementById('bcQ2').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  if (q === 2) {
+    if (answers.q1 === 'lpr' && val === 'no') {
+      showResult('resultLPR');
+    } else {
+      document.getElementById('bcQ3').style.display = 'block';
+      document.getElementById('bcQ3').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+
+function toggleBenefit(el, benefit) {
+  el.classList.toggle('selected');
+  var idx = selectedBenefits.indexOf(benefit);
+  if (idx === -1) { selectedBenefits.push(benefit); } else { selectedBenefits.splice(idx, 1); }
+}
+
+function showResult(id) {
+  document.getElementById('bcResults').style.display = 'block';
+  document.getElementById(id).classList.add('active');
+  document.getElementById('bcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showResults() {
+  if (selectedBenefits.length === 0) return;
+
+  var es = (document.documentElement.lang === 'es');
+  var safeItems = [];
+  var cautionItems = [];
+
+  selectedBenefits.forEach(function(b) {
+    var info = BENEFITS[b];
+    if (!info) return;
+    var name = es ? info.name_es : info.name_en;
+    var note = es ? (info.note_es || '') : (info.note_en || '');
+    if (info.safe) {
+      safeItems.push({ name: name, note: note });
+    } else {
+      cautionItems.push({ name: name, note: note });
+    }
+  });
+
+  var safeHtml = '';
+  if (safeItems.length > 0) {
+    safeHtml = '<div style="margin-bottom:14px"><h4 style="font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--forest);margin-bottom:6px">' +
+      (es ? '✓ Estos son SEGUROS de usar:' : '✓ These are SAFE to use:') + '</h4><div class="bc-list">';
+    safeItems.forEach(function(item) {
+      safeHtml += '<div class="bc-list-item"><span class="bc-icon bc-safe-icon">✓</span><div><strong>' + item.name + '</strong>' +
+        (item.note ? '<br><span style="font-size:.75rem;color:var(--dim)">' + item.note + '</span>' : '') +
+        '</div></div>';
+    });
+    safeHtml += '</div></div>';
+  }
+
+  var cautionHtml = '';
+  if (cautionItems.length > 0) {
+    cautionHtml = '<div style="margin-bottom:14px"><h4 style="font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">' +
+      (es ? '⚠ Estos PUEDEN contar — habla con un abogado:' : '⚠ These MAY count — talk to an attorney:') + '</h4><div class="bc-list">';
+    cautionItems.forEach(function(item) {
+      cautionHtml += '<div class="bc-list-item"><span class="bc-icon bc-caution-icon">⚠</span><div><strong>' + item.name + '</strong>' +
+        (item.note ? '<br><span style="font-size:.75rem;color:var(--dim)">' + item.note + '</span>' : '') +
+        '</div></div>';
+    });
+    cautionHtml += '</div>';
+  }
+
+  document.getElementById('safeList').innerHTML = safeHtml;
+  document.getElementById('cautionList').innerHTML = cautionHtml;
+
+  // Style the container based on results
+  var detail = document.getElementById('resultDetailed');
+  if (cautionItems.length > 0) {
+    detail.className = 'bc-result bc-caution active';
+  } else {
+    detail.className = 'bc-result bc-safe active';
+  }
+
+  document.getElementById('bcResults').style.display = 'block';
+  document.getElementById('bcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  answers = {};
+  selectedBenefits = [];
+  document.getElementById('bcResults').style.display = 'none';
+  document.querySelectorAll('.bc-result').forEach(function(r) { r.classList.remove('active'); });
+  document.getElementById('bcQ2').style.display = 'none';
+  document.getElementById('bcQ3').style.display = 'none';
+  document.querySelectorAll('.bc-btn').forEach(function(b) { b.classList.remove('selected'); });
+  document.getElementById('safeList').innerHTML = '';
+  document.getElementById('cautionList').innerHTML = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+EQ.init({
+  bc_title: 'Benefit Safety Check',
+  bc_title_es: 'Verificación de Seguridad de Beneficios',
+  bc_subtitle: 'Find out which benefits are safe to use — without affecting your immigration case.',
+  bc_subtitle_es: 'Averigua qué beneficios son seguros de usar — sin afectar tu caso de inmigración.',
+  bc_privacy: '<strong>This tool is 100% private.</strong> Nothing you enter is saved, sent, or recorded. Everything runs on your phone. No data leaves this page. No one will ever know you used it.',
+  bc_privacy_es: '<strong>Esta herramienta es 100% privada.</strong> Nada de lo que ingreses se guarda, envía o registra. Todo se ejecuta en tu teléfono. Ningún dato sale de esta página. Nadie sabrá que la usaste.',
+  bc_privacy_bold: 'This tool is 100% private.',
+  bc_privacy_bold_es: 'Esta herramienta es 100% privada.',
+  bc_q1_title: 'Step 1 of 3',
+  bc_q1_title_es: 'Paso 1 de 3',
+  bc_q1: 'Which best describes your immigration situation?',
+  bc_q1_es: '¿Cuál describe mejor tu situación migratoria?',
+  bc_q1_a1: 'US Citizen',
+  bc_q1_a1_es: 'Ciudadano de EEUU',
+  bc_q1_a2: 'Green Card Holder',
+  bc_q1_a2_es: 'Residente Permanente',
+  bc_q1_a3: 'Refugee / Asylee',
+  bc_q1_a3_es: 'Refugiado / Asilado',
+  bc_q1_a4: 'Visa / Pending',
+  bc_q1_a4_es: 'Visa / En Trámite',
+  bc_q2_title: 'Step 2 of 3',
+  bc_q2_title_es: 'Paso 2 de 3',
+  bc_q2: 'Are you planning to apply for a green card or change your immigration status?',
+  bc_q2_es: '¿Estás planeando solicitar una tarjeta verde o cambiar tu estatus migratorio?',
+  bc_q3_title: 'Step 3 of 3',
+  bc_q3_title_es: 'Paso 3 de 3',
+  bc_q3: 'Which benefits are you thinking about using? (Select all that apply)',
+  bc_q3_es: '¿Qué beneficios estás pensando en usar? (Selecciona todos los que apliquen)',
+  bc_yes: 'Yes',
+  bc_yes_es: 'Sí',
+  bc_no: 'No',
+  bc_no_es: 'No',
+  bc_unsure: 'Not sure',
+  bc_unsure_es: 'No estoy seguro',
+  bc_snap: 'SNAP / Food Stamps',
+  bc_snap_es: 'SNAP / Cupones',
+  bc_wic: 'WIC',
+  bc_wic_es: 'WIC',
+  bc_medicaid: 'Medicaid',
+  bc_medicaid_es: 'Medicaid',
+  bc_chip: 'CHIP (children)',
+  bc_chip_es: 'CHIP (niños)',
+  bc_lunch: 'School Lunch',
+  bc_lunch_es: 'Almuerzo Escolar',
+  bc_housing: 'Housing Help',
+  bc_housing_es: 'Ayuda de Vivienda',
+  bc_emr: 'Emergency Medicaid',
+  bc_emr_es: 'Medicaid de Emergencia',
+  bc_ssi: 'SSI',
+  bc_ssi_es: 'SSI',
+  bc_tanf: 'TANF / Cash Aid',
+  bc_tanf_es: 'TANF / Ayuda en Efectivo',
+  bc_eitc: 'Tax Credits (EITC)',
+  bc_eitc_es: 'Créditos de Impuestos',
+  bc_fqhc: 'Health Center',
+  bc_fqhc_es: 'Centro de Salud',
+  bc_disaster: 'Disaster Help',
+  bc_disaster_es: 'Ayuda por Desastre',
+  bc_show_results: 'Show My Results',
+  bc_show_results_es: 'Mostrar Mis Resultados',
+  bc_start_over: '↩ Start Over',
+  bc_start_over_es: '↩ Empezar de Nuevo',
+  bc_r_citizen_title: '✓ You can use any benefit you qualify for.',
+  bc_r_citizen_title_es: '✓ Puedes usar cualquier beneficio para el que califiques.',
+  bc_r_citizen: 'As a U.S. citizen, public charge does not apply to you. Use any benefit your family qualifies for — SNAP, Medicaid, housing, WIC, school lunch, SSI, TANF, and all others. These programs exist for you.',
+  bc_r_citizen_es: 'Como ciudadano de EEUU, la carga pública no te aplica. Usa cualquier beneficio para el que tu familia califique — SNAP, Medicaid, vivienda, WIC, almuerzo escolar, SSI, TANF y todos los demás. Estos programas existen para ti.',
+  bc_r_lpr_title: '✓ Green card holders are generally safe.',
+  bc_r_lpr_title_es: '✓ Los residentes permanentes generalmente están seguros.',
+  bc_r_lpr: 'Public charge applies only when you first get your green card or re-enter the US after traveling abroad. Once you are a permanent resident living in the US, using benefits does not put your green card at risk. If you plan to apply for citizenship, benefit use is not part of the naturalization test.',
+  bc_r_lpr_es: 'La carga pública se aplica solo cuando obtienes tu tarjeta verde por primera vez o re-ingresas a EEUU después de viajar. Una vez que eres residente permanente viviendo en EEUU, usar beneficios no pone en riesgo tu tarjeta verde. Si planeas solicitar la ciudadanía, el uso de beneficios no es parte del examen de naturalización.',
+  bc_r_refugee_title: '✓ Refugees and asylees are exempt from public charge.',
+  bc_r_refugee_title_es: '✓ Los refugiados y asilados están exentos de carga pública.',
+  bc_r_refugee: 'Public charge does NOT apply to refugees, asylees, T visa holders (trafficking victims), U visa holders (crime victims), VAWA self-petitioners, or Special Immigrant Juveniles. Use any benefit you qualify for. This exemption is written into federal law.',
+  bc_r_refugee_es: 'La carga pública NO aplica a refugiados, asilados, titulares de visa T (víctimas de tráfico), titulares de visa U (víctimas de crimen), auto-peticionarios VAWA, o Jóvenes Inmigrantes Especiales. Usa cualquier beneficio para el que califiques. Esta exención está escrita en la ley federal.',
+  bc_r_detail_title: 'Here\'s what we found:',
+  bc_r_detail_title_es: 'Esto es lo que encontramos:',
+  bc_r_detail_note: '<strong>Important:</strong> Under the 2022 public charge rule (8 CFR § 212.22), only these programs count against you: SSI, TANF, state/local cash assistance for income maintenance, and long-term government-funded institutionalization. Everything else — including SNAP, Medicaid, CHIP, WIC, school lunch, housing assistance, disaster relief, community health centers, and tax credits — does NOT count. Benefits used by your U.S. citizen children do not affect your case.',
+  bc_r_detail_note_es: '<strong>Importante:</strong> Bajo la regla de carga pública de 2022 (8 CFR § 212.22), solo estos programas cuentan en tu contra: SSI, TANF, asistencia en efectivo estatal/local para mantenimiento de ingresos, e institucionalización a largo plazo financiada por el gobierno. Todo lo demás — incluyendo SNAP, Medicaid, CHIP, WIC, almuerzo escolar, asistencia de vivienda, ayuda por desastre, centros de salud comunitarios y créditos de impuestos — NO cuenta. Los beneficios usados por tus hijos ciudadanos de EEUU no afectan tu caso.',
+  bc_legal: 'This tool provides general information based on the 2022 public charge rule (8 CFR § 212.22) currently in effect. It is not legal advice. Immigration law changes. If you have specific concerns, speak with an immigration attorney or call ICIRR at 1-855-435-7693. This tool does not collect, store, or transmit any data. Everything runs locally on your device.',
+  bc_legal_es: 'Esta herramienta proporciona información general basada en la regla de carga pública de 2022 (8 CFR § 212.22) actualmente vigente. No es asesoramiento legal. La ley de inmigración cambia. Si tienes preocupaciones específicas, habla con un abogado de inmigración o llama a ICIRR al 1-855-435-7693. Esta herramienta no recopila ni almacena datos identificativos. Todo se ejecuta localmente en tu dispositivo.',
+  nav_defend: 'Defend Yourself',
+  nav_defend_es: 'Defiéndete'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Evaluate Leaders — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.ev-hero{text-align:center;padding:28px 16px 16px}
+.ev-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.ev-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:460px;margin:0 auto 16px}
+.ev-card{background:var(--warm);border-radius:12px;padding:16px;margin:10px 0;border:1px solid var(--sand)}
+.ev-card .ec-name{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep)}
+.ev-card .ec-role{font-size:.68rem;color:var(--dim)}
+.ev-card .ec-scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin:10px 0}
+.ev-card .ec-score{text-align:center;padding:8px 4px;background:#fff;border-radius:8px;border:1px solid var(--sand)}
+.ev-card .ec-score .es-val{font-family:var(--display);font-size:1rem;font-weight:800}
+.ev-card .ec-score .es-label{font-size:.5rem;color:var(--dim);text-transform:uppercase}
+.es-val.good{color:var(--forest)}.es-val.mid{color:var(--gold)}.es-val.bad{color:var(--coral)}
+.ev-card .ec-comment{font-size:.75rem;color:var(--body);margin-top:6px;padding-top:6px;border-top:1px solid var(--sand);line-height:1.5;font-style:italic}
+.ev-form{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.ev-form h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.ev-form input,.ev-form textarea,.ev-form select{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.ev-form textarea{min-height:60px;resize:vertical}
+.ev-form label{font-size:.72rem;font-weight:600;color:var(--deep);display:block;margin:6px 0 2px}
+.ev-form .ef-range{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ev-form .ef-range input[type=range]{flex:1}
+.ev-form .ef-range span{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--forest);min-width:24px}
+.ev-form button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="ev-hero">
+    <h1 data-t="e_title">Evaluate Your Leaders</h1>
+    <p data-t="e_sub">Rate elected officials, service providers, landlords, and programs on the metrics that matter. Community-generated accountability data that no one else collects.</p>
+  </div>
+  <div class="ev-form">
+    <h3 data-t="e_submit">Submit an Evaluation</h3>
+    <input type="text" id="eName" placeholder="Your name (optional)">
+    <input type="text" id="eLeader" placeholder="Who are you evaluating? (name or organization)">
+    <input type="text" id="eRole" placeholder="Their role (e.g., Alderman Ward 12, Property Manager)">
+    <label>Responsiveness (do they answer when you call?)</label>
+    <div class="ef-range"><input type="range" id="eRespond" min="1" max="5" value="3"><span id="eRespondVal">3</span></div>
+    <label>Transparency (do they explain their decisions?)</label>
+    <div class="ef-range"><input type="range" id="eTransp" min="1" max="5" value="3"><span id="eTranspVal">3</span></div>
+    <label>Follow-through (do they do what they said?)</label>
+    <div class="ef-range"><input type="range" id="eFollow" min="1" max="5" value="3"><span id="eFollowVal">3</span></div>
+    <label>Community impact (are things better?)</label>
+    <div class="ef-range"><input type="range" id="eImpact" min="1" max="5" value="3"><span id="eImpactVal">3</span></div>
+    <textarea id="eComment" placeholder="What should people know about this person or organization?"></textarea>
+    <button onclick="submitEval()">Submit Evaluation</button>
+  </div>
+  <div id="tokenArea"></div>
+  <div id="evalList"></div>
+</div>
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+['eRespond','eTransp','eFollow','eImpact'].forEach(function(id){
+  document.getElementById(id).oninput=function(){document.getElementById(id+'Val').textContent=this.value};
+});
+var evals=[];
+function scoreClass(v){return v>=4?'good':v>=3?'mid':'bad'}
+function render(){
+  if(!evals.length){document.getElementById('evalList').innerHTML='<div style="text-align:center;padding:30px;color:var(--dim);font-size:.82rem"><div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-title">No evaluations yet</div><div class="empty-state-desc">How is your alderman doing? Your school board? Rate your officials and hold them accountable.</div></div>. Be the first to hold someone accountable.</div>';return}
+  var h='';
+  evals.forEach(function(e){
+    var scores=e.metadata&&e.metadata.scores?e.metadata.scores:(e.scores||{});
+    var avg=0,cnt=0;
+    ['respond','transp','follow','impact'].forEach(function(k){if(scores[k]){avg+=+scores[k];cnt++}});
+    avg=cnt>0?(avg/cnt).toFixed(1):0;
+    h+='<div class="ev-card"><div class="ec-name">'+(e.title||e.leader||'Unknown')+'</div>';
+    h+='<div class="ec-role">'+(e.category||e.role||'')+'</div>';
+    h+='<div class="ec-scores">';
+    h+='<div class="ec-score"><div class="es-val '+scoreClass(scores.respond||0)+'">'+(scores.respond||'—')+'</div><div class="es-label">Responsive</div></div>';
+    h+='<div class="ec-score"><div class="es-val '+scoreClass(scores.transp||0)+'">'+(scores.transp||'—')+'</div><div class="es-label">Transparent</div></div>';
+    h+='<div class="ec-score"><div class="es-val '+scoreClass(scores.follow||0)+'">'+(scores.follow||'—')+'</div><div class="es-label">Follow-through</div></div>';
+    h+='<div class="ec-score"><div class="es-val '+scoreClass(scores.impact||0)+'">'+(scores.impact||'—')+'</div><div class="es-label">Impact</div></div>';
+    h+='<div class="ec-score"><div class="es-val '+scoreClass(avg)+'" style="font-size:1.2rem">'+avg+'</div><div class="es-label">Overall</div></div>';
+    h+='</div>';
+    if(e.body||e.comment)h+='<div class="ec-comment">"'+(e.body||e.comment)+'"</div>';
+    h+='</div>';
+  });
+  document.getElementById('evalList').innerHTML=h;
+}
+function load(){
+  if(typeof CommunityAPI==='undefined'||!CommunityAPI.isConfigured()){
+    evals=[
+      {id:'e1',title:'Ald. Johnson — Ward 25',category:'Alderman',body:'Takes weeks to respond to calls. After the water main break on 21st St, no communication for 5 days. But did eventually get the pothole program funded.',metadata:{scores:{respond:2,transp:2,follow:3,impact:3}}},
+      {id:'e2',title:'CPS Local School Council',category:'School Board',body:'Monthly meetings are open but not publicized. Budget decisions happen before public comment. The new principal hire was good.',metadata:{scores:{respond:3,transp:2,follow:4,impact:4}}}
+    ];render();return;
+  }
+  CommunityAPI.smartFetch(CommunityAPI.endpoint()+'?action=get_evaluations&leader=all')
+    .then(function(r){return r.json()}).then(function(d){evals=Array.isArray(d)?d:(d.posts||[]);render()}).catch(function(){evals=[];render()});
+}
+function submitEval(){ CivicTokens.requireToken('evaluate', function(tokenResult) {
+  var leader=document.getElementById('eLeader').value.trim();
+  if(!leader){alert('Who are you evaluating?');return}
+  var data={action:'submit_evaluation',name:document.getElementById('eName').value.trim()||'Anonymous',leader:leader,role:document.getElementById('eRole').value.trim(),scores:{respond:+document.getElementById('eRespond').value,transp:+document.getElementById('eTransp').value,follow:+document.getElementById('eFollow').value,impact:+document.getElementById('eImpact').value},comment:document.getElementById('eComment').value.trim(),zip:typeof CommunityAPI!=='undefined'?CommunityAPI.getCommunity():'60608'};
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)}).then(function(){load()}).catch(function(){alert('Backend unavailable.')});
+  } else { evals.unshift({id:'le-'+Date.now(),title:data.leader,category:data.role,body:data.comment,metadata:{scores:data.scores}});render(); }
+  });
+}
+CivicTokens.renderInviteForm('tokenArea');
+load();
+EQ.init({e_title:'Evaluate Your Leaders',e_title_es:'Evalúa a Tus Líderes',e_sub:'Rate elected officials, service providers, landlords, and programs on the metrics that matter.',e_sub_es:'Califica a funcionarios electos, proveedores de servicios, propietarios y programas en las métricas que importan.',e_submit:'Submit an Evaluation',e_submit_es:'Enviar una Evaluación'});
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>School Rights — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="School Rights — CommUnity OS">
+<meta property="og:description" content="Know your child's rights at school. IEPs, 504 plans, discipline, bilingual education. Free. Bilingual.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Navigate school systems. IEP and 504 plan rights, discipline procedures, bilingual education, free lunch. Know what the school must do. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.sr-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.sr-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.sr-tab:hover{border-color:var(--sage);color:var(--deep)}
+.sr-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.sr-panel{display:none}.sr-panel.active{display:block}
+.sr-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.sr-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.sr-card p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
+.sr-nbf{margin-top:14px;padding-top:12px;border-top:1px solid var(--sand)}
+.sr-nbf h5{font-size:.7rem;font-weight:700;margin-bottom:3px}
+.sr-nbf p{font-size:.75rem;line-height:1.6;margin-bottom:6px}
+.sr-nbf .n-t{color:var(--forest)}.sr-nbf .b-t{color:var(--coral)}.sr-nbf .f-t{color:var(--sage)}
+.sr-right{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand)}
+.sr-right:last-child{border-bottom:none}
+.sr-right .sr-icon{font-size:.85rem;flex-shrink:0;margin-top:2px}
+.sr-right .sr-text{flex:1}
+.sr-right .sr-text strong{font-size:.78rem;color:var(--deep);display:block;margin-bottom:2px}
+.sr-right .sr-text p{font-size:.75rem;color:var(--body);line-height:1.6;margin:0}
+.sr-action{text-align:center;margin:16px 0}
+.sr-action a{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block;transition:.2s;margin:4px}
+.sr-action a:hover{background:var(--deep);color:#fff}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">RIGHTS</div>
+    <h1 data-t="sr_title">School Rights</h1>
+    <p class="subtitle" data-t="sr_sub">Your child has rights at school. Here's what the school must do — and what you can demand.</p>
+  </div>
+
+  <div class="sr-tabs">
+    <div class="sr-tab active" onclick="showSR('iep')">📋 IEP / Special Ed</div>
+    <div class="sr-tab" onclick="showSR('504')">🔑 504 Plan</div>
+    <div class="sr-tab" onclick="showSR('discipline')">⚖️ Discipline</div>
+    <div class="sr-tab" onclick="showSR('language')">🌎 Language Rights</div>
+    <div class="sr-tab" onclick="showSR('meals')">🍽️ Free Meals</div>
+  </div>
+
+  <!-- IEP -->
+  <div class="sr-panel active" id="sr-iep">
+    <div class="sr-card">
+      <h3>Individualized Education Program (IEP)</h3>
+      <p>If your child has a disability that affects their learning, the school must evaluate them for free and create a plan with specific services — speech therapy, extra time, a classroom aide, modified assignments. This is federal law (IDEA). The school cannot refuse.</p>
+
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Free evaluation</strong><p>You can request an evaluation in writing at any time. The school has 60 days to complete it. If you disagree with the results, you can get an Independent Educational Evaluation at the school's expense.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>You're on the team</strong><p>The IEP is written by a team that MUST include you. You have the right to attend every meeting, bring someone with you, and disagree. The school cannot change the IEP without your written consent.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>The plan must be followed</strong><p>Once signed, the IEP is a legal document. Every teacher who works with your child must follow it. If the school isn't providing the services listed, that's a violation.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>You can dispute</strong><p>If you disagree with the school's decisions — evaluation results, services offered, placement — you can file a due process complaint or request mediation. Both are free.</p></div></div>
+
+      <div class="sr-nbf">
+        <h5 class="n-t">Normal:</h5><p>The school identifies children who need extra support, evaluates them, creates a plan with specific measurable goals, and provides the services.</p>
+        <h5 class="b-t">Broken:</h5><p>Schools delay evaluations, write vague goals, don't provide the services listed, pressure parents into signing, don't tell parents about their rights, or claim they don't have funding. All of these are violations.</p>
+        <h5 class="f-t">Fix:</h5><p>Put everything in writing. Request the evaluation in a letter (email works). Attend every meeting. Bring someone you trust. If the school isn't following the IEP, put that in writing too. Contact your state's Parent Training and Information Center (PTI) for free help. In Illinois, call Family Matters at 866-436-7842.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 504 -->
+  <div class="sr-panel" id="sr-504">
+    <div class="sr-card">
+      <h3>504 Plan</h3>
+      <p>If your child has a disability that affects any major life activity — learning, breathing, seeing, walking, concentrating — but doesn't need special education, they may qualify for a 504 plan. This provides accommodations: preferential seating, extra test time, breaks, modified homework. Under Section 504 of the Rehabilitation Act.</p>
+
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Broader than IEP</strong><p>504 covers any disability that affects a "major life activity." ADHD, anxiety, diabetes, asthma, food allergies, chronic illness — all can qualify. You don't need a medical diagnosis to request an evaluation.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>The school must evaluate</strong><p>If you request a 504 evaluation, the school must do it. They cannot say "we don't do 504 plans" or "your child isn't disabled enough."</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>You can file a complaint</strong><p>If the school refuses to evaluate or doesn't follow the plan, file a complaint with the U.S. Department of Education Office for Civil Rights (OCR). It's free. The school takes it seriously.</p></div></div>
+
+      <div class="sr-nbf">
+        <h5 class="n-t">Normal:</h5><p>Schools identify students who need accommodations, create plans with the family, and follow them in every classroom.</p>
+        <h5 class="b-t">Broken:</h5><p>Schools tell parents their child "doesn't qualify," refuse to evaluate, write 504 plans but don't share them with teachers, or remove accommodations without notice.</p>
+        <h5 class="f-t">Fix:</h5><p>Request in writing. If denied, ask for the written reason. File an OCR complaint at ed.gov/ocr — response is typically within 60 days. Contact Equip for Equality (800-537-2632) in Illinois for free advocacy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discipline -->
+  <div class="sr-panel" id="sr-discipline">
+    <div class="sr-card">
+      <h3>Discipline and Suspension Rights</h3>
+      <p>Schools have rules. But your child also has rights when disciplined — especially for suspensions longer than 3 days and any expulsion.</p>
+
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Due process</strong><p>Before any suspension over 3 days, your child has the right to a hearing. You must be notified in writing. You can present your side. For expulsions, the school must hold a formal hearing with evidence.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>IEP/504 protections</strong><p>If your child has an IEP or 504 plan, the school MUST determine whether the behavior was caused by or related to their disability before suspending for more than 10 days. This is called a Manifestation Determination Review. If the behavior was related to the disability, the school cannot expel.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Education continues</strong><p>Even during suspension or expulsion, the school must continue providing educational services. Your child does not lose the right to learn.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Disproportionate discipline</strong><p>Black students are suspended at 3x the rate of white students. If you believe discipline was biased, file an OCR complaint citing Title VI. The school must respond.</p></div></div>
+
+      <div class="sr-nbf">
+        <h5 class="n-t">Normal:</h5><p>Schools enforce rules consistently and proportionally. Discipline teaches behavior, not just punishes. Due process is followed.</p>
+        <h5 class="b-t">Broken:</h5><p>Zero-tolerance policies, racial bias in suspensions, skipping due process, suspending children with disabilities without a manifestation review, not notifying parents, no alternative education during suspension.</p>
+        <h5 class="f-t">Fix:</h5><p>Ask for everything in writing. Request the specific policy your child violated. For suspensions over 3 days, demand a hearing. If your child has an IEP/504, demand the Manifestation Determination Review. File OCR complaints at ed.gov/ocr. In Chicago, contact Chicago Lawyers' Committee for Civil Rights (312-888-4193).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language Rights -->
+  <div class="sr-panel" id="sr-language">
+    <div class="sr-card">
+      <h3>Language and Bilingual Education Rights</h3>
+      <p>If your child is learning English, the school must provide language support services — and must communicate with you in a language you understand.</p>
+
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Language services are mandatory</strong><p>Under Title III and Lau v. Nichols, schools must identify English Learners (ELs) and provide language instruction — ESL, bilingual education, or sheltered instruction. They cannot just put your child in a regular classroom with no support.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Communication in your language</strong><p>Schools must communicate with parents in a language they understand — report cards, IEP meetings, disciplinary notices, registration forms. If the school only sends materials in English and you've told them you need Spanish, that's a violation.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Immigration status is irrelevant</strong><p>Under Plyler v. Doe (1982), every child has the right to attend public school regardless of immigration status. Schools cannot ask about status, require Social Security numbers, or report families to immigration. Period.</p></div></div>
+
+      <div class="sr-nbf">
+        <h5 class="n-t">Normal:</h5><p>Schools test language proficiency at enrollment, provide appropriate language services, and communicate with families in their language.</p>
+        <h5 class="b-t">Broken:</h5><p>Schools don't identify ELs, provide inadequate support, skip translations, pressure families into waiving bilingual services, or discourage enrollment based on language or immigration status.</p>
+        <h5 class="f-t">Fix:</h5><p>You have the right to bilingual services and translated materials. If denied, file an OCR complaint (ed.gov/ocr) citing Title VI. In Chicago, contact MALDEF (312-427-0701) or ICIRR (855-435-7693). You can also contact the Illinois State Board of Education Bilingual/ESL Division.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Free Meals -->
+  <div class="sr-panel" id="sr-meals">
+    <div class="sr-card">
+      <h3>Free and Reduced Meals</h3>
+      <p>If your family's income is below a certain level, your children qualify for free or reduced-price meals at school. Many schools now provide free meals to ALL students — no application needed.</p>
+
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Community Eligibility Provision (CEP)</strong><p>Schools where 40%+ of students qualify for free meals can serve breakfast and lunch free to ALL students — no forms, no income verification. Many Chicago Public Schools participate. Ask your school.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>No stigma</strong><p>Schools cannot identify or segregate students receiving free meals. The lunch line must look the same for everyone. If your child is being treated differently, that's a violation.</p></div></div>
+      <div class="sr-right"><span class="sr-icon">✓</span><div class="sr-text"><strong>Summer and after-school meals</strong><p>Free meal programs continue during summer through community sites. Text "FOOD" to 304-304 or call 1-866-348-6479 to find the nearest summer meals site.</p></div></div>
+
+      <div class="sr-nbf">
+        <h5 class="n-t">Normal:</h5><p>Schools provide nutritious meals to children who need them, funded by federal programs. No child goes hungry at school.</p>
+        <h5 class="b-t">Broken:</h5><p>"Lunch debt" shaming, taking away hot meals and giving alternatives, requiring paperwork that eligible families can't complete, not telling families about CEP availability, and benefit confusion keeping immigrant families from applying.</p>
+        <h5 class="f-t">Fix:</h5><p>Ask your school if they participate in CEP (free meals for all). If not, apply — immigration status does NOT affect your child's eligibility. School meals do NOT count under public charge. In Chicago, call CPS Nutrition Services at 773-553-4688.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sr-action">
+    <a href="https://www.ed.gov/ocr/complaintintro.html" target="_blank" rel="noopener">File an OCR Complaint →</a>
+    <a href="https://www.equipforequality.org/" target="_blank" rel="noopener">Equip for Equality (IL) →</a>
+    <a href="/benefits-check.html">Check Benefit Safety →</a>
+  </div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool collects, stores, and transmits zero data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila, almacena ni transmite ningún dato.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function showSR(id) {
+  document.querySelectorAll('.sr-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.sr-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('sr-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+EQ.init({
+  sr_title: 'School Rights',
+  sr_title_es: 'Derechos Escolares',
+  sr_sub: 'Your child has rights at school. Here\'s what the school must do — and what you can demand.',
+  sr_sub_es: 'Tu hijo tiene derechos en la escuela. Esto es lo que la escuela debe hacer — y lo que puedes exigir.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

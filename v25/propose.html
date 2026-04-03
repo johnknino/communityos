@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Proposals — CommUnity OS</title>
+<meta name="description" content="Propose ideas, vote directly, or delegate your voice to a neighbor you trust. Fluid democracy for neighborhoods.">
+<link rel="canonical" href="https://comm-unity-os.org/propose.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Community Proposals — CommUnity OS","url":"https://comm-unity-os.org/propose.html","description":"Fluid democracy for neighborhoods. Propose, vote, or delegate. Every vote is hash-verified and immutable.","inLanguage":["en","es"],"applicationCategory":"Civic Technology","isAccessibleForFree":true}
+</script>
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="icon" href="/favicon.png" type="image/png">
+<style>
+.prop-hero{text-align:center;padding:30px 0 16px}
+.prop-hero h1{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--deep)}
+.prop-hero p{font-size:.85rem;color:var(--dim);margin-top:6px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+.how-it-works{background:var(--warm);border-radius:14px;padding:20px;margin:16px 0;border-left:4px solid var(--sage)}
+.how-it-works h3{font-size:.9rem;font-weight:600;color:var(--deep);margin-bottom:8px}
+.how-it-works p{font-size:.82rem;color:var(--ink);line-height:1.7;margin-bottom:6px}
+
+.gate{text-align:center;padding:20px 0}
+.gate input{font-family:var(--sans);font-size:1.1rem;padding:10px 14px;border:2px solid var(--sage);border-radius:12px;text-align:center;width:110px;background:var(--warm)}
+.gate button{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:10px 24px;border:none;border-radius:12px;background:var(--forest);color:var(--cream);cursor:pointer;margin-left:8px}
+.gate .name-input{font-size:.9rem;padding:10px 14px;border:1.5px solid var(--sand);border-radius:12px;width:180px;margin-left:8px;background:var(--warm)}
+
+.tabs-row{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border-radius:10px;border:1.5px solid var(--sand);background:transparent;color:var(--dim);font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer}
+.tab-btn.active{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+
+.proposal-card{background:var(--warm);border-radius:14px;padding:18px;margin-bottom:12px;border-left:4px solid var(--sage)}
+.proposal-card.urgent{border-left-color:var(--coral)}
+.proposal-card h3{font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.proposal-meta{font-size:.7rem;color:var(--light);margin-bottom:8px}
+.proposal-body{font-size:.85rem;color:var(--ink);line-height:1.7;margin-bottom:12px}
+.vote-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.vote-btn{padding:6px 16px;border-radius:8px;border:1.5px solid var(--sand);background:var(--cream);font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer;transition:.15s}
+.vote-btn:hover{border-color:var(--forest)}
+.vote-btn.yes{border-color:var(--forest);color:var(--forest)}
+.vote-btn.no{border-color:var(--coral);color:var(--coral)}
+.vote-btn.delegate{border-color:var(--gold);color:var(--gold)}
+.vote-btn.voted{opacity:.5;cursor:default}
+.vote-count{font-size:.72rem;color:var(--dim)}
+.vote-hash{font-size:.6rem;color:var(--light);font-family:monospace;margin-top:6px}
+
+.progress-vote{height:8px;background:var(--sand);border-radius:4px;overflow:hidden;margin:8px 0 4px}
+.progress-vote .yes-fill{height:100%;background:var(--forest);float:left;transition:width .3s}
+.progress-vote .no-fill{height:100%;background:var(--coral);float:left;transition:width .3s}
+
+.delegate-panel{background:var(--cream);border:1px solid var(--sand);border-radius:10px;padding:14px;margin-top:8px;display:none}
+.delegate-panel input{width:100%;padding:8px 12px;border:1.5px solid var(--sand);border-radius:8px;font-family:var(--sans);font-size:.82rem;margin-bottom:8px}
+.delegate-panel .note{font-size:.72rem;color:var(--dim);margin-bottom:8px;line-height:1.5}
+.delegate-panel button{padding:6px 14px;border-radius:8px;border:none;background:var(--gold);color:var(--cream);font-size:.78rem;cursor:pointer}
+
+.create-form{background:var(--warm);border-radius:14px;padding:20px;margin:16px 0;display:none}
+.create-form h3{font-size:.95rem;font-weight:600;color:var(--deep);margin-bottom:12px}
+.create-form label{display:block;font-size:.72rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin:10px 0 3px}
+.create-form input,.create-form textarea,.create-form select{width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;font-family:var(--sans);font-size:.85rem;background:var(--cream)}
+.create-form textarea{min-height:80px;resize:vertical}
+.create-form .btn-row{display:flex;gap:8px;margin-top:14px}
+.create-form button{padding:10px 20px;border-radius:10px;border:none;font-family:var(--sans);font-size:.82rem;font-weight:500;cursor:pointer}
+.create-form .submit-btn{background:var(--forest);color:var(--cream)}
+.create-form .cancel-btn{background:var(--sand);color:var(--dim)}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="page" role="main">
+
+  <div class="prop-hero">
+    <h1 data-t="prop_title">Your Neighborhood, Your Decision</h1>
+    <p data-t="prop_desc">Propose an idea. Vote on what matters. Or delegate your voice to a neighbor you trust — on any topic, revocable anytime. Every vote is recorded with an integrity hash that nobody can alter.</p>
+  </div>
+
+  <div class="how-it-works">
+    <h3 data-t="how_title">How fluid democracy works here</h3>
+    <p data-t="how_1"><strong style="color:var(--forest)">Vote directly</strong> — you read the proposal, you vote yes or no. Your voice counts as one vote.</p>
+    <p data-t="how_2"><strong style="color:var(--gold)">Delegate</strong> — you trust someone on this topic more than yourself. Give them your vote. If 5 people delegate to Ana on housing, Ana's vote counts as 6 (hers + 5). You can take it back anytime.</p>
+    <p data-t="how_3"><strong style="color:var(--coral)">Propose</strong> — anyone can put an idea forward. It needs a clear title, a description, and a deadline. The neighborhood decides.</p>
+  </div>
+
+  <!-- ZIP + NAME GATE -->
+  <div class="gate" id="gate">
+    <input type="text" id="gateZip" maxlength="5" inputmode="numeric" placeholder="Zip code">
+    <input type="text" class="name-input" id="gateName" placeholder="Your name">
+    <button onclick="enterProposals()">Enter</button>
+  </div>
+
+  <!-- MAIN CONTENT (hidden until gate) -->
+  <div id="mainContent" class="hidden">
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="showTab('active',this)" data-t="tab_active">Active Proposals</button>
+      <button class="tab-btn" onclick="showTab('completed',this)" data-t="tab_completed">Completed</button>
+      <button class="tab-btn" onclick="showTab('my',this)" data-t="tab_my">My Votes</button>
+      <button class="tab-btn" onclick="createProposal()" style="margin-left:auto;background:var(--forest);color:var(--cream);border-color:var(--forest)" data-t="btn_propose">+ Propose</button>
+    </div>
+
+    <!-- CREATE FORM -->
+    <div class="create-form" id="createForm">
+      <h3 data-t="create_title">Propose Something</h3>
+      <label data-t="lbl_prop_title">What's your proposal?</label>
+      <input type="text" id="propTitle" placeholder="Clear, specific title">
+      <label data-t="lbl_prop_body">Explain it</label>
+      <textarea id="propBody" placeholder="What's the idea? Why does it matter? What would change?"></textarea>
+      <label data-t="lbl_prop_topic">Topic</label>
+      <select id="propTopic">
+        <option value="survive">Survive — food, health, safety</option>
+        <option value="understand">Understand — money, rights, systems</option>
+        <option value="connect">Connect — neighbors, spaces, resources</option>
+        <option value="govern">Govern — leaders, programs, accountability</option>
+      </select>
+      <label data-t="lbl_prop_deadline">Deadline (days from now)</label>
+      <select id="propDeadline">
+        <option value="7">7 days</option>
+        <option value="14" selected>14 days</option>
+        <option value="30">30 days</option>
+      </select>
+      <div class="btn-row">
+        <button class="cancel-btn" onclick="hideCreate()">Cancel</button>
+        <button class="submit-btn" onclick="submitProposal()">Submit Proposal</button>
+      </div>
+    </div>
+
+    <div id="proposalList"></div>
+  </div>
+
+  <div id="alertsContainer"></div>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+var currentZip = '', currentName = '';
+var proposals = [];
+var myVotes = JSON.parse(localStorage.getItem('eqos-votes') || '{}');
+
+EQ.init({
+  en: {
+    prop_title: "Your Neighborhood, Your Decision",
+    prop_desc: "Propose an idea. Vote on what matters. Or delegate your voice to a neighbor you trust — on any topic, revocable anytime. Every vote is recorded with an integrity hash that nobody can alter."
+  },
+  es: {
+    prop_title: "Tu Vecindario, Tu Decisión",
+    prop_desc: "Propón una idea. Vota lo que importa. O delega tu voz a un vecino de confianza — en cualquier tema, revocable en cualquier momento. Cada voto se registra con un hash de integridad que nadie puede alterar."
+  }
+}, { footer: true, alertPage: 'propose' });
+
+function enterProposals() {
+  var zip = document.getElementById('gateZip').value.trim();
+  var name = document.getElementById('gateName').value.trim();
+  if (!/^\d{5}$/.test(zip) || !name) return;
+  currentZip = zip; currentName = name;
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+  loadProposals();
+}
+
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderProposals(tab);
+}
+
+function createProposal() {
+  document.getElementById('createForm').style.display = '';
+  document.getElementById('propTitle').focus();
+}
+function hideCreate() { document.getElementById('createForm').style.display = 'none'; }
+
+async function submitProposal() {
+  var title = document.getElementById('propTitle').value.trim();
+  var body = document.getElementById('propBody').value.trim();
+  var topic = document.getElementById('propTopic').value;
+  var days = parseInt(document.getElementById('propDeadline').value);
+  if (!title || !body) return;
+
+  var deadline = new Date(Date.now() + days * 86400000).toISOString();
+
+  var payload = {
+    action: 'submit_proposal',
+    zip: currentZip, proposer: currentName,
+    title: title, body: body, topic: topic,
+    deadline: deadline, timestamp: new Date().toISOString()
+  };
+
+  await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+  hideCreate();
+  document.getElementById('propTitle').value = '';
+  document.getElementById('propBody').value = '';
+  loadProposals();
+}
+
+async function loadProposals() {
+  try {
+    var resp = await fetch(API + '?action=get_proposals&zip=' + currentZip);
+    var data = await resp.json();
+    proposals = data.proposals || [];
+  } catch (e) { proposals = []; }
+  renderProposals('active');
+}
+
+function renderProposals(tab) {
+  var now = new Date().toISOString();
+  var list = proposals.filter(function(p) {
+    if (tab === 'completed') return p.deadline < now || p.status === 'closed';
+    if (tab === 'my') return myVotes[p.proposal_id];
+    return p.deadline >= now && p.status !== 'closed';
+  });
+
+  if (list.length === 0) {
+    document.getElementById('proposalList').innerHTML = '<div style="text-align:center;padding:30px;color:var(--dim);font-size:.85rem">' +
+      (tab === 'active' ? 'No active proposals yet. Be the first.' : tab === 'my' ? 'You haven\'t voted on anything yet.' : 'No completed proposals.') + '</div>';
+    return;
+  }
+
+  var html = '';
+  list.forEach(function(p) {
+    var totalVotes = (p.yes || 0) + (p.no || 0);
+    var yesPct = totalVotes > 0 ? Math.round(p.yes / totalVotes * 100) : 0;
+    var noPct = totalVotes > 0 ? 100 - yesPct : 0;
+    var voted = myVotes[p.proposal_id];
+    var daysLeft = Math.max(0, Math.ceil((new Date(p.deadline) - new Date()) / 86400000));
+
+    html += '<div class="proposal-card' + (daysLeft <= 2 ? ' urgent' : '') + '">' +
+      '<h3>' + esc(p.title) + '</h3>' +
+      '<div class="proposal-meta">' + esc(p.proposer) + ' · ' + p.topic + ' · ' +
+        (daysLeft > 0 ? daysLeft + ' days left' : 'Voting closed') +
+        ' · ' + totalVotes + ' vote' + (totalVotes !== 1 ? 's' : '') + '</div>' +
+      '<div class="proposal-body">' + esc(p.body) + '</div>' +
+      '<div class="progress-vote"><div class="yes-fill" style="width:' + yesPct + '%"></div><div class="no-fill" style="width:' + noPct + '%"></div></div>' +
+      '<div class="vote-count">Yes: ' + (p.yes || 0) + ' (' + yesPct + '%) · No: ' + (p.no || 0) + ' (' + noPct + '%)</div>';
+
+    if (!voted && daysLeft > 0) {
+      html += '<div class="vote-bar">' +
+        '<button class="vote-btn yes" onclick="vote(\'' + p.proposal_id + '\',\'yes\')">✓ Yes</button>' +
+        '<button class="vote-btn no" onclick="vote(\'' + p.proposal_id + '\',\'no\')">✗ No</button>' +
+        '<button class="vote-btn delegate" onclick="toggleDelegate(\'' + p.proposal_id + '\')">⟳ Delegate</button>' +
+      '</div>' +
+      '<div class="delegate-panel" id="del-' + p.proposal_id + '">' +
+        '<div class="note">Delegate your vote to a neighbor you trust on this topic. They vote, and your voice counts with theirs. You can revoke anytime.</div>' +
+        '<input type="text" placeholder="Name of the person you trust" id="del-name-' + p.proposal_id + '">' +
+        '<button onclick="delegateVote(\'' + p.proposal_id + '\')">Delegate My Vote</button>' +
+      '</div>';
+    } else if (voted) {
+      html += '<div class="vote-hash">Your vote: ' + voted.vote + (voted.hash ? ' · Receipt: ' + voted.hash.substring(0, 16) + '...' : '') + '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  document.getElementById('proposalList').innerHTML = html;
+}
+
+async function vote(proposalId, choice) {
+  var hashInput = proposalId + '|' + currentZip + '|' + currentName + '|' + choice + '|' + new Date().toISOString();
+  var hashBytes = new TextEncoder().encode(hashInput);
+  var hashBuffer = await crypto.subtle.digest('SHA-256', hashBytes);
+  var hashArray = Array.from(new Uint8Array(hashBuffer));
+  var hash = hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+
+  var payload = {
+    action: 'submit_vote',
+    proposal_id: proposalId, zip: currentZip, voter: currentName,
+    vote: choice, hash: hash, timestamp: new Date().toISOString()
+  };
+
+  await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+
+  myVotes[proposalId] = { vote: choice, hash: hash };
+  localStorage.setItem('eqos-votes', JSON.stringify(myVotes));
+  loadProposals();
+}
+
+function toggleDelegate(proposalId) {
+  var panel = document.getElementById('del-' + proposalId);
+  panel.style.display = panel.style.display === 'none' || !panel.style.display ? '' : 'none';
+}
+
+async function delegateVote(proposalId) {
+  var delegateTo = document.getElementById('del-name-' + proposalId).value.trim();
+  if (!delegateTo) return;
+
+  var hashInput = proposalId + '|' + currentZip + '|' + currentName + '|delegate:' + delegateTo + '|' + new Date().toISOString();
+  var hashBytes = new TextEncoder().encode(hashInput);
+  var hashBuffer = await crypto.subtle.digest('SHA-256', hashBytes);
+  var hashArray = Array.from(new Uint8Array(hashBuffer));
+  var hash = hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+
+  var payload = {
+    action: 'submit_vote',
+    proposal_id: proposalId, zip: currentZip, voter: currentName,
+    vote: 'delegate', delegate_to: delegateTo, hash: hash, timestamp: new Date().toISOString()
+  };
+
+  await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+
+  myVotes[proposalId] = { vote: 'delegated to ' + delegateTo, hash: hash };
+  localStorage.setItem('eqos-votes', JSON.stringify(myVotes));
+  loadProposals();
+}
+
+function esc(s) { return s ? String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''; }
+</script>
+</body>
+</html>

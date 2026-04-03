@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Worker Rights — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Worker Rights — CommUnity OS">
+<meta property="og:description" content="Know your rights at work. Minimum wage, overtime, tips, retaliation. Free. Bilingual.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Know your workplace rights. Minimum wage by state, overtime rules, tip protections, retaliation laws, and how to file a wage theft complaint. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.wr-calc{background:var(--warm);border-radius:14px;padding:20px;margin:16px 0;border:1px solid var(--sand)}
+.wr-calc h3{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:10px}
+.wr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:400px){.wr-row{grid-template-columns:1fr}}
+.wr-field{margin-bottom:8px}
+.wr-field label{display:block;font-size:.7rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.wr-field input,.wr-field select{width:100%;font-family:var(--sans);font-size:.85rem;padding:9px 12px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--ink)}
+.wr-field input:focus,.wr-field select:focus{outline:none;border-color:var(--sage)}
+.wr-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 24px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s;margin-top:6px}
+.wr-go:hover{background:var(--deep)}
+.wr-result{border-radius:14px;padding:20px;margin:14px 0;display:none;background:rgba(91,140,122,.06);border:1.5px solid var(--sage)}
+.wr-result.show{display:block}
+.wr-result h4{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--forest);margin-bottom:8px}
+.wr-result p{font-size:.82rem;line-height:1.7;margin-bottom:8px}
+.wr-result .wr-wage{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--forest)}
+.wr-result .wr-sub{font-size:.68rem;color:var(--dim)}
+.wr-rights{margin:16px 0}
+.wr-right{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);border-left:3px solid var(--sage)}
+.wr-right h4{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:4px}
+.wr-right p{font-size:.78rem;line-height:1.6;color:var(--body)}
+.wr-nbf{background:var(--warm);border-radius:14px;padding:18px;margin:20px 0;border-left:3px solid var(--sage)}
+.wr-nbf h4{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.wr-nbf p{font-size:.78rem;line-height:1.6;color:var(--body);margin-bottom:6px}
+.wr-nbf .n-t{color:var(--forest);font-weight:700}.wr-nbf .b-t{color:var(--coral);font-weight:700}.wr-nbf .f-t{color:var(--sage);font-weight:700}
+.wr-action{text-align:center;margin:20px 0}
+.wr-action a{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 24px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block;transition:.2s;margin:4px}
+.wr-action a:hover{background:var(--deep);color:#fff}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">RIGHTS</div>
+    <h1 data-t="wr_title">Worker Rights</h1>
+    <p class="subtitle" data-t="wr_sub">Know what you're owed. Know what's illegal. Know where to report it.</p>
+  </div>
+
+  <!-- Wage Calculator -->
+  <div class="wr-calc">
+    <h3 data-t="wr_calc_title">What's the Minimum Wage Where I Work?</h3>
+    <div class="wr-row">
+      <div class="wr-field">
+        <label>State</label>
+        <select id="wrState" onchange="calcWage()">
+          <option value="">Select your state</option>
+        </select>
+      </div>
+      <div class="wr-field">
+        <label>City (if applicable)</label>
+        <select id="wrCity" onchange="calcWage()">
+          <option value="">—</option>
+        </select>
+      </div>
+    </div>
+    <div class="wr-row">
+      <div class="wr-field">
+        <label>Hours worked this week</label>
+        <input type="number" id="wrHours" placeholder="e.g. 45" oninput="calcWage()">
+      </div>
+      <div class="wr-field">
+        <label>Hourly rate you're being paid</label>
+        <input type="number" id="wrRate" step="0.01" placeholder="e.g. 12.50" oninput="calcWage()">
+      </div>
+    </div>
+  </div>
+
+  <div class="wr-result" id="wrResult">
+    <h4 id="wrResultTitle"></h4>
+    <div class="wr-wage" id="wrMinWage"></div>
+    <div class="wr-sub" id="wrMinSub"></div>
+    <p id="wrResultText"></p>
+    <p id="wrOvertimeText" style="display:none"></p>
+    <p id="wrShortText" style="display:none;color:var(--coral);font-weight:600"></p>
+  </div>
+
+  <!-- Core Rights -->
+  <div class="wr-rights">
+    <div class="wr-right">
+      <h4>⏰ Overtime</h4>
+      <p data-t="wr_overtime">If you work more than 40 hours in a week, your employer must pay 1.5x your regular rate for every extra hour. This is federal law (FLSA). Some states require daily overtime after 8 hours. Salaried employees earning under $58,656/year are entitled to overtime as of 2025.</p>
+    </div>
+    <div class="wr-right">
+      <h4>💰 Tips</h4>
+      <p data-t="wr_tips">Your tips are yours. Employers cannot take them. If you earn tips, your employer can pay a lower base wage but your total (base + tips) must equal or exceed the full minimum wage every pay period. If it doesn't, your employer must make up the difference. Tip pooling among servers is legal; sharing tips with managers or owners is not.</p>
+    </div>
+    <div class="wr-right">
+      <h4>🛡️ Retaliation</h4>
+      <p data-t="wr_retaliation">It is illegal for your employer to fire you, cut your hours, change your schedule, or threaten you for asking about your pay, reporting a safety problem, filing a wage claim, or talking to coworkers about wages. If they do, that's a separate violation you can report.</p>
+    </div>
+    <div class="wr-right">
+      <h4>📋 Pay Stubs</h4>
+      <p data-t="wr_paystubs">Most states require employers to give you a detailed pay stub showing hours, rate, overtime, deductions, and net pay. If you're not getting one, that's a red flag. In Illinois, employers must provide an itemized statement every pay period.</p>
+    </div>
+    <div class="wr-right">
+      <h4>🚫 Misclassification</h4>
+      <p data-t="wr_misclass">If your employer calls you an "independent contractor" but controls your schedule, tells you how to do the work, and provides tools — you may legally be an employee entitled to minimum wage, overtime, and benefits. This is one of the most common forms of wage theft.</p>
+    </div>
+  </div>
+
+  <!-- N→B→F -->
+  <div class="wr-nbf">
+    <h4>How Wage Theft Works</h4>
+    <p><span class="n-t">Normal:</span> You work. Your employer pays you at least the legal minimum for every hour, including overtime at 1.5x after 40 hours. Your tips are yours. You get a pay stub.</p>
+    <p><span class="b-t">Broken:</span> Wage theft costs workers an estimated $50 billion per year — more than all robberies, burglaries, and auto thefts combined. Common forms: not paying overtime, paying below minimum wage, stealing tips, misclassifying employees as contractors, making you work off the clock, illegal deductions. Low-wage workers, immigrants, and workers of color are targeted most.</p>
+    <p><span class="f-t">Fix:</span> Document everything — photos of your schedule, pay stubs, hours worked. File a complaint with the DOL Wage and Hour Division (free, regardless of immigration status) or your state labor department. In Illinois, call the Illinois Department of Labor at 312-793-2800. The DOL investigates and can recover back wages. Retaliation for filing is a separate federal violation.</p>
+  </div>
+
+  <div class="wr-action">
+    <a href="https://www.dol.gov/agencies/whd/contact/complaints" target="_blank" rel="noopener">File a Federal Wage Complaint →</a>
+    <a href="https://labor.illinois.gov/laws-rules/conmed/complaints.html" target="_blank" rel="noopener">File an Illinois Complaint →</a>
+    <a href="/defend.html" data-t="wr_defend_link">Write a Dispute Letter →</a>
+  </div>
+
+  <p style="font-size:.62rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5">Information based on the Fair Labor Standards Act (FLSA), Illinois Minimum Wage Law (820 ILCS 105), and Chicago Minimum Wage Ordinance. This is general information, not legal advice. The DOL investigates wage complaints regardless of immigration status.</p>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+// Minimum wage data — federal, state, and select cities (2025-2026)
+var WAGES = {
+  'AL': {wage:7.25,name:'Alabama',note:'No state minimum — federal applies'},
+  'AK': {wage:11.73,name:'Alaska'},
+  'AZ': {wage:14.70,name:'Arizona',cities:{'Flagstaff':17.40}},
+  'AR': {wage:11.00,name:'Arkansas'},
+  'CA': {wage:16.50,name:'California',cities:{'San Francisco':18.67,'Los Angeles':17.28,'San Jose':17.55,'Berkeley':19.35,'Oakland':16.50,'Seattle':0}},
+  'CO': {wage:14.81,name:'Colorado',cities:{'Denver':18.29}},
+  'CT': {wage:16.35,name:'Connecticut'},
+  'DE': {wage:13.25,name:'Delaware'},
+  'FL': {wage:14.00,name:'Florida'},
+  'GA': {wage:7.25,name:'Georgia',note:'State minimum is $5.15 — federal $7.25 applies'},
+  'HI': {wage:14.00,name:'Hawaii'},
+  'ID': {wage:7.25,name:'Idaho'},
+  'IL': {wage:15.00,name:'Illinois',cities:{'Chicago':16.20}},
+  'IN': {wage:7.25,name:'Indiana'},
+  'IA': {wage:7.25,name:'Iowa'},
+  'KS': {wage:7.25,name:'Kansas'},
+  'KY': {wage:7.25,name:'Kentucky'},
+  'LA': {wage:7.25,name:'Louisiana',note:'No state minimum — federal applies'},
+  'ME': {wage:14.65,name:'Maine'},
+  'MD': {wage:15.00,name:'Maryland',cities:{'Montgomery County':17.15}},
+  'MA': {wage:15.00,name:'Massachusetts'},
+  'MI': {wage:12.48,name:'Michigan'},
+  'MN': {wage:11.13,name:'Minnesota',cities:{'Minneapolis':15.57,'Saint Paul':15.57}},
+  'MS': {wage:7.25,name:'Mississippi',note:'No state minimum — federal applies'},
+  'MO': {wage:13.75,name:'Missouri'},
+  'MT': {wage:10.55,name:'Montana'},
+  'NE': {wage:13.50,name:'Nebraska'},
+  'NV': {wage:12.00,name:'Nevada'},
+  'NH': {wage:7.25,name:'New Hampshire'},
+  'NJ': {wage:15.49,name:'New Jersey'},
+  'NM': {wage:12.00,name:'New Mexico',cities:{'Santa Fe':14.60,'Albuquerque':12.00,'Las Cruces':12.36}},
+  'NY': {wage:15.50,name:'New York',cities:{'New York City':16.50}},
+  'NC': {wage:7.25,name:'North Carolina'},
+  'ND': {wage:7.25,name:'North Dakota'},
+  'OH': {wage:10.70,name:'Ohio'},
+  'OK': {wage:7.25,name:'Oklahoma'},
+  'OR': {wage:14.70,name:'Oregon',cities:{'Portland Metro':15.95}},
+  'PA': {wage:7.25,name:'Pennsylvania'},
+  'RI': {wage:15.00,name:'Rhode Island'},
+  'SC': {wage:7.25,name:'South Carolina',note:'No state minimum — federal applies'},
+  'SD': {wage:11.50,name:'South Dakota'},
+  'TN': {wage:7.25,name:'Tennessee',note:'No state minimum — federal applies'},
+  'TX': {wage:7.25,name:'Texas'},
+  'UT': {wage:7.25,name:'Utah'},
+  'VT': {wage:14.01,name:'Vermont'},
+  'VA': {wage:12.41,name:'Virginia'},
+  'WA': {wage:16.66,name:'Washington',cities:{'Seattle':20.76,'Tukwila':21.10}},
+  'WV': {wage:8.75,name:'West Virginia'},
+  'WI': {wage:7.25,name:'Wisconsin'},
+  'WY': {wage:7.25,name:'Wyoming'},
+  'DC': {wage:17.50,name:'Washington DC'}
+};
+
+// Populate state dropdown
+var sel = document.getElementById('wrState');
+Object.keys(WAGES).sort(function(a,b){return WAGES[a].name.localeCompare(WAGES[b].name)}).forEach(function(st) {
+  var opt = document.createElement('option');
+  opt.value = st; opt.textContent = WAGES[st].name;
+  sel.appendChild(opt);
+});
+
+function calcWage() {
+  var st = document.getElementById('wrState').value;
+  if (!st) return;
+
+  var data = WAGES[st];
+  var city = document.getElementById('wrCity').value;
+  var hours = +document.getElementById('wrHours').value;
+  var rate = +document.getElementById('wrRate').value;
+
+  // Update city dropdown
+  var citySel = document.getElementById('wrCity');
+  var currentCity = citySel.value;
+  citySel.innerHTML = '<option value="">State rate</option>';
+  if (data.cities) {
+    Object.keys(data.cities).forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c; opt.textContent = c + ' ($' + data.cities[c].toFixed(2) + '/hr)';
+      if (c === currentCity) opt.selected = true;
+      citySel.appendChild(opt);
+    });
+  }
+
+  var minWage = (city && data.cities && data.cities[city]) ? data.cities[city] : data.wage;
+  var el = document.getElementById('wrResult');
+  el.classList.add('show');
+
+  document.getElementById('wrResultTitle').textContent = 'Minimum Wage in ' + (city || data.name);
+  document.getElementById('wrMinWage').textContent = '$' + minWage.toFixed(2) + '/hr';
+  document.getElementById('wrMinSub').textContent = (data.note || ('State: $' + data.wage.toFixed(2) + ' · Federal: $7.25')) + (city ? ' · ' + city + ': $' + data.cities[city].toFixed(2) : '');
+
+  var resultText = '';
+  var overtimeEl = document.getElementById('wrOvertimeText');
+  var shortEl = document.getElementById('wrShortText');
+  overtimeEl.style.display = 'none';
+  shortEl.style.display = 'none';
+
+  if (hours > 0) {
+    var regularHours = Math.min(hours, 40);
+    var overtimeHours = Math.max(0, hours - 40);
+    var minOwed = (regularHours * minWage) + (overtimeHours * minWage * 1.5);
+
+    resultText = 'For ' + hours + ' hours, you should earn at least $' + minOwed.toFixed(2) + ' this week.';
+    if (overtimeHours > 0) {
+      overtimeEl.textContent = '⏰ That includes ' + overtimeHours + ' overtime hours at $' + (minWage * 1.5).toFixed(2) + '/hr.';
+      overtimeEl.style.display = '';
+    }
+
+    if (rate > 0) {
+      var actualPay = (regularHours * rate) + (overtimeHours * rate * 1.5);
+      if (rate < minWage) {
+        var shortfall = minOwed - actualPay;
+        shortEl.textContent = '⚠️ At $' + rate.toFixed(2) + '/hr, you\'re being underpaid by $' + shortfall.toFixed(2) + ' this week. That\'s below minimum wage. You can file a complaint — it\'s free and confidential.';
+        shortEl.style.display = '';
+      } else if (hours > 40 && rate >= minWage) {
+        resultText += ' At your rate of $' + rate.toFixed(2) + '/hr, you should receive at least $' + ((regularHours * rate) + (overtimeHours * rate * 1.5)).toFixed(2) + '.';
+      }
+    }
+  }
+
+  document.getElementById('wrResultText').textContent = resultText;
+}
+
+EQ.init({
+  wr_title: 'Worker Rights',
+  wr_title_es: 'Derechos del Trabajador',
+  wr_sub: 'Know what you\'re owed. Know what\'s illegal. Know where to report it.',
+  wr_sub_es: 'Sabe lo que te deben. Sabe lo que es ilegal. Sabe dónde reportarlo.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

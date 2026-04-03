@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Leadership Evaluation — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Score leaders on 5 plain-language criteria. Composite grading. Printable scorecards.">
+<meta property="og:title" content="Leadership Evaluation — CommUnity OS">
+<meta property="og:description" content="Score leaders on 5 plain-language criteria. Composite grading. Printable scorecards.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/evaluate.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+@media(max-width:500px){.role-grid{grid-template-columns:1fr}}
+.role-btn{background:var(--warm);border:1.5px solid var(--sand);border-radius:12px;padding:16px;cursor:pointer;transition:.25s;text-align:left}
+.role-btn:hover{border-color:var(--sage);transform:translateY(-1px)}
+.role-btn.selected{border-color:var(--forest);background:rgba(45,90,78,.04);box-shadow:inset 0 0 0 1px var(--forest)}
+.role-btn h4{font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.role-btn p{font-size:.72rem;color:var(--dim);line-height:1.4}
+
+.eval-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+@media(max-width:500px){.eval-info{grid-template-columns:1fr}}
+.eval-info label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.eval-info input{font-family:var(--sans);font-size:.9rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink)}
+.eval-info input:focus{outline:none;border-color:var(--sage)}
+
+.score-bar{position:sticky;top:56px;z-index:50;background:var(--deep);color:var(--cream);padding:12px 20px;border-radius:12px;margin:16px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;box-shadow:0 4px 16px rgba(26,60,52,.15)}
+.score-bar .score-num{font-size:1.5rem;font-weight:700}
+.score-bar .score-num span{color:var(--mint)}
+.score-bar .grade{padding:4px 14px;border-radius:8px;font-weight:700;font-size:.85rem;letter-spacing:.04em}
+.grade-a{background:#2d7a4e;color:#fff}
+.grade-b{background:#5a8a78;color:#fff}
+.grade-c{background:#b8963e;color:#fff}
+.grade-d{background:#c4654a;color:#fff}
+.grade-f{background:#8b3a3a;color:#fff}
+
+.domain{margin-bottom:16px;border-radius:12px;overflow:hidden;border:1px solid var(--sand)}
+.domain-header{padding:14px 20px;color:var(--cream);font-size:.88rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:.15s}
+.domain-header:hover{filter:brightness(1.1)}
+.domain-header .chevron{font-size:.8rem;transition:transform .3s}
+.domain-header.collapsed .chevron{transform:rotate(-90deg)}
+.domain-content{max-height:2000px;overflow:hidden;transition:max-height .35s ease-out;background:var(--cream)}
+.domain-content.collapsed{max-height:0}
+
+.criterion-row{display:grid;grid-template-columns:160px repeat(4,1fr);border-bottom:1px solid var(--sand)}
+@media(max-width:700px){.criterion-row{grid-template-columns:1fr}.level-cell{border-top:1px solid var(--sand)}}
+.criterion-label{padding:14px 16px;background:var(--warm);font-weight:600;font-size:.75rem;color:var(--deep);display:flex;align-items:center;line-height:1.4;border-right:1px solid var(--sand)}
+.level-cell{padding:10px 12px;cursor:pointer;transition:.2s;font-size:.72rem;line-height:1.5;color:var(--body)}
+.level-cell:hover{background:rgba(90,138,120,.06)}
+.level-cell.selected{background:rgba(45,90,78,.08);box-shadow:inset 0 0 0 2px var(--forest)}
+.level-label{font-weight:700;font-size:.6rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.level-label .chip{padding:1px 6px;border-radius:4px;font-size:.55rem}
+.lv0 .level-label{color:var(--coral)}.lv0 .chip{background:var(--coral-soft);color:var(--coral)}
+.lv1 .level-label{color:var(--gold)}.lv1 .chip{background:var(--gold-soft);color:var(--gold)}
+.lv2 .level-label{color:var(--sage)}.lv2 .chip{background:rgba(90,138,120,.1);color:var(--sage)}
+.lv3 .level-label{color:var(--forest)}.lv3 .chip{background:rgba(45,90,78,.1);color:var(--forest)}
+
+.notes-box{margin:20px 0}
+.notes-box label{display:block;font-size:.75rem;font-weight:600;color:var(--dim);margin-bottom:6px}
+.notes-box textarea{font-family:var(--sans);font-size:.88rem;width:100%;padding:12px;border:1.5px solid var(--sand);border-radius:10px;background:var(--warm);resize:vertical;min-height:80px;color:var(--ink)}
+.notes-box textarea:focus{outline:none;border-color:var(--sage)}
+
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.action-row button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border-radius:10px;border:1.5px solid var(--sand);background:var(--warm);color:var(--body);cursor:pointer;transition:.2s}
+.action-row button:hover{border-color:var(--sage);color:var(--forest)}
+.action-row button.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.action-row button.primary:hover{background:var(--deep)}
+
+.hidden{display:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+
+@media print{.site-nav,.action-row,.notes-box textarea{display:none}.score-bar{position:relative}.domain-content.collapsed{max-height:none!important}.domain-header .chevron{display:none}}
+
+.hm-table{width:100%;border-collapse:collapse;font-size:.7rem}
+.hm-table th{font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);padding:6px 8px;text-align:center;border-bottom:2px solid var(--sand)}
+.hm-table td{padding:6px 8px;text-align:center;border-bottom:1px solid var(--sand);font-weight:600;font-size:.75rem}
+.hm-table tr td:first-child{text-align:left;font-weight:500;color:var(--dim);font-size:.7rem}
+.hm-0{background:rgba(196,101,74,.15);color:var(--coral)}
+.hm-1{background:rgba(184,150,62,.12);color:var(--gold-d)}
+.hm-2{background:rgba(90,138,120,.12);color:var(--sage)}
+.hm-3{background:rgba(26,60,52,.12);color:var(--forest)}
+.hm-avg{font-weight:700;color:var(--deep)}
+.consensus-bar{height:6px;border-radius:3px;margin:2px 0}
+.consensus-high{background:var(--sage)}
+.consensus-mid{background:var(--gold)}
+.consensus-low{background:var(--coral)}
+
+.track-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--sand)}
+.track-date{font-size:.7rem;color:var(--dim);min-width:80px}
+.track-score{font-family:var(--display);font-size:1rem;font-weight:600;min-width:50px;text-align:center}
+.track-bar{flex:1;height:8px;background:var(--sand);border-radius:4px;overflow:hidden}
+.track-fill{height:100%;border-radius:4px;transition:width .5s}
+.track-grade{font-size:.68rem;font-weight:600;min-width:60px;text-align:right}
+.track-delta{font-size:.7rem;min-width:50px;text-align:center}
+.track-delta.up{color:var(--sage)}
+.track-delta.down{color:var(--coral)}
+.track-delta.same{color:var(--dim)}
+
+/* Domain colors */
+.bg-d1{background:#2d5a4e}.bg-d2{background:#5a7a48}.bg-d3{background:#4a6a7a}.bg-d4{background:#6a5a7a}.bg-d5{background:#7a6a4a}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/evaluate.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Leadership Evaluation — CommUnity OS", "url": "https://comm-unity-os.org/evaluate.html", "description": "Score any leader on 5 criteria with behavioral anchors. Composite scoring, heatmap, longitudinal tracking. Printable scorecard.", "inLanguage": ["en", "es"], "applicationCategory": "Civic Technology", "isAccessibleForFree": true}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Govern</div>
+    <h1 data-t="title">Are Your Leaders Doing What They Said?</h1>
+    <div class="subtitle" data-t="subtitle">Clear criteria. Real evidence. Scores from every member — no one person dominates. Printable scorecard you can bring to a meeting.</div>
+  </div>
+
+  <!-- STEP 1: Choose role -->
+  <div class="section fade-in fade-in-1" id="step1">
+    <div class="section-head"><h2 data-t="step1_title">Who are you evaluating?</h2></div>
+    <div class="role-grid" id="roleGrid"></div>
+  </div>
+
+  <!-- STEP 2: Evaluation (hidden until role selected) -->
+  <div class="hidden" id="step2">
+
+    <div class="eval-info">
+      <div><label data-t="leader_label">Leader's Name</label><input type="text" id="leaderName" placeholder="Name of the person being evaluated"></div>
+      <div><label data-t="evaluator_label">Your Name or Zip</label><input type="text" id="evaluatorId" placeholder="Your name or zip code"></div>
+    </div>
+
+    <div class="score-bar" id="scoreBar">
+      <div><span style="font-size:.7rem;opacity:.7" data-t="score_label">SCORE</span><br><span class="score-num"><span id="scoreNum">0</span> / <span id="maxScore">15</span></span></div>
+      <div class="grade grade-f" id="gradeLabel">Not Yet Scored</div>
+    </div>
+
+    <div id="criteriaContainer"></div>
+
+    <div class="notes-box">
+      <label data-t="notes_label">Additional notes or evidence</label>
+      <textarea id="evalNotes" rows="4" placeholder="What else should be on the record?"></textarea>
+    </div>
+
+    <div class="action-row">
+      <button onclick="window.print()" data-t="print_btn">🖨 Print Scorecard</button>
+      <button onclick="resetEval()" data-t="reset_btn">Reset</button>
+      <button class="primary" onclick="submitEval()" data-t="submit_btn">Submit Evaluation</button>
+    </div>
+
+    <!-- COMMUNITY HEATMAP — the machine from the presidential framework -->
+    <div id="heatmapSection" class="hidden" style="margin-top:24px">
+      <div class="section-head"><h2 data-t="heatmap_title">📊 Community Scores — How Others Rated This Leader</h2></div>
+      <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px" data-t="heatmap_desc">Every row is a community member's evaluation. Colors show where the community agrees and where it splits. Dark green = strong evidence. Red = no evidence.</p>
+      <div id="heatmapGrid" style="overflow-x:auto"></div>
+      <div id="heatmapSummary" style="margin-top:12px"></div>
+    </div>
+
+    <!-- LONGITUDINAL TRACKING — score the same leader over time -->
+    <div id="longitudinalSection" class="hidden" style="margin-top:24px">
+      <div class="section-head"><h2 data-t="track_title">📈 Over Time — Is Anything Changing?</h2></div>
+      <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px" data-t="track_desc">Previous evaluations of this leader. Compare scores to see whether promises turned into results.</p>
+      <div id="longitudinalGrid"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+// ── ROLE TEMPLATES ──
+var ROLES = [
+  { id:'alderman', title:'Alderperson / Council Member', desc:'City council, ward representative, county board' },
+  { id:'block-captain', title:'Block Captain / Neighborhood Lead', desc:'Block club, tenant association, neighborhood watch' },
+  { id:'board-member', title:'Board Member', desc:'School board, nonprofit board, HOA board' },
+  { id:'program-director', title:'Program Director', desc:'Nonprofit program, community center, social service' },
+  { id:'principal', title:'Principal / School Leader', desc:'K-12 school, charter, community school' },
+  { id:'executive', title:'Executive Director / CEO', desc:'Nonprofit, community organization, co-op' }
+];
+
+// ── EVALUATION CRITERIA (plain language) ──
+var CRITERIA = [
+  {
+    id:'promises', name:'Kept Promises', bg:'bg-d1',
+    question:'Did they do what they said they would do?',
+    levels: {
+      0:'No evidence of following through on commitments. Promises made, not kept.',
+      1:'Some follow-through, but major commitments unfulfilled. Partial effort.',
+      2:'Most commitments fulfilled. Explained when something changed. Visible effort.',
+      3:'Consistently delivered on promises. When plans changed, explained why and adjusted with the community.'
+    }
+  },
+  {
+    id:'listening', name:'Listened', bg:'bg-d2',
+    question:'Did they actually listen to the people they serve?',
+    levels: {
+      0:'No evidence of listening. Decisions made without community input.',
+      1:'Held meetings but didn\'t change course based on what people said. Listening as performance.',
+      2:'Sought input through multiple channels. Evidence that community feedback shaped decisions.',
+      3:'Created ongoing ways for people to be heard. Changed direction when the community showed them something they missed.'
+    }
+  },
+  {
+    id:'transparency', name:'Explained', bg:'bg-d3',
+    question:'Did they explain what they were doing and why?',
+    levels: {
+      0:'No explanation of decisions. Community learns after the fact or from others.',
+      1:'Some communication, but unclear or inconsistent. Jargon-heavy or hard to access.',
+      2:'Regular, clear communication. Explained reasoning. Accessible in format and language.',
+      3:'Proactive transparency. Shared data, reasoning, and tradeoffs. Made the complex understandable. Bilingual when needed.'
+    }
+  },
+  {
+    id:'results', name:'Results', bg:'bg-d4',
+    question:'Did things actually get better?',
+    levels: {
+      0:'No measurable improvement. Things stayed the same or got worse.',
+      1:'Some activity, but unclear whether it made a difference. Effort without evidence.',
+      2:'Measurable improvement in at least one area the community cares about. Can point to specific outcomes.',
+      3:'Clear, documented improvement across multiple areas. Community can see and feel the difference.'
+    }
+  },
+  {
+    id:'fairness', name:'Fairness', bg:'bg-d5',
+    question:'Did the benefits reach the people who needed them most?',
+    levels: {
+      0:'Benefits concentrated among those already advantaged. Disparities ignored or worsened.',
+      1:'Fairness mentioned but not measured. Good intentions without targeted action.',
+      2:'Intentional effort to reach underserved community members. Some evidence of closing gaps.',
+      3:'Demonstrated that resources and attention reached those who needed them most. Disparities narrowed with evidence.'
+    }
+  }
+];
+
+var currentRole = null;
+
+// ── BUILD ROLE GRID ──
+(function(){
+  var grid = document.getElementById('roleGrid');
+  grid.innerHTML = ROLES.map(function(r){
+    return '<div class="role-btn" onclick="selectRole(\''+r.id+'\')" data-role="'+r.id+'">' +
+      '<h4>'+r.title+'</h4><p>'+r.desc+'</p></div>';
+  }).join('');
+})();
+
+function selectRole(roleId) {
+  currentRole = ROLES.find(function(r){return r.id===roleId;});
+  if (!currentRole) return;
+  document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('selected');});
+  document.querySelector('[data-role="'+roleId+'"]').classList.add('selected');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('maxScore').textContent = CRITERIA.length * 3;
+  buildCriteria();
+  updateScore();
+}
+
+function buildCriteria() {
+  var container = document.getElementById('criteriaContainer');
+  var html = '';
+  CRITERIA.forEach(function(c,idx){
+    html += '<div class="domain"><div class="domain-header '+c.bg+'" onclick="toggleDomain(this)">' +
+      '<span>'+(idx+1)+'. '+c.name+' — '+c.question+'</span><span class="chevron">▼</span></div>' +
+      '<div class="domain-content"><div class="criterion-row" data-key="'+c.id+'">' +
+      '<div class="criterion-label">'+c.question+'</div>';
+    var labels = ["Didn't happen",'Somewhat','Mostly','Clearly — with evidence'];
+    [0,1,2,3].forEach(function(lv){
+      html += '<div class="level-cell lv'+lv+'" data-value="'+lv+'" onclick="pickLevel(this)">' +
+        '<div class="level-label"><span class="chip">'+lv+'</span> '+labels[lv]+'</div>' +
+        c.levels[lv] + '</div>';
+    });
+    html += '</div></div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function toggleDomain(header) {
+  header.classList.toggle('collapsed');
+  header.nextElementSibling.classList.toggle('collapsed');
+}
+
+function pickLevel(cell) {
+  var row = cell.parentElement;
+  row.querySelectorAll('.level-cell').forEach(function(c){c.classList.remove('selected');});
+  cell.classList.add('selected');
+  updateScore();
+}
+
+function updateScore() {
+  var total = 0;
+  var count = 0;
+  document.querySelectorAll('.level-cell.selected').forEach(function(c){
+    total += parseInt(c.dataset.value);
+    count++;
+  });
+  var max = CRITERIA.length * 3;
+  document.getElementById('scoreNum').textContent = total;
+
+  var gradeEl = document.getElementById('gradeLabel');
+  gradeEl.className = 'grade';
+  var pct = max > 0 ? total / max : 0;
+
+  if (count === 0) { gradeEl.textContent = 'Not Yet Scored'; gradeEl.classList.add('grade-f'); }
+  else if (pct >= 0.87) { gradeEl.textContent = 'A — Excellent'; gradeEl.classList.add('grade-a'); }
+  else if (pct >= 0.73) { gradeEl.textContent = 'B — Good'; gradeEl.classList.add('grade-b'); }
+  else if (pct >= 0.60) { gradeEl.textContent = 'C — Fair'; gradeEl.classList.add('grade-c'); }
+  else if (pct >= 0.47) { gradeEl.textContent = 'D — Poor'; gradeEl.classList.add('grade-d'); }
+  else { gradeEl.textContent = 'F — Failing'; gradeEl.classList.add('grade-f'); }
+}
+
+function resetEval() {
+  document.querySelectorAll('.level-cell.selected').forEach(function(c){c.classList.remove('selected');});
+  document.getElementById('leaderName').value = '';
+  document.getElementById('evaluatorId').value = '';
+  document.getElementById('evalNotes').value = '';
+  updateScore();
+}
+
+async function submitEval() {
+  var leader = document.getElementById('leaderName').value.trim();
+  var evaluator = document.getElementById('evaluatorId').value.trim();
+  var selected = document.querySelectorAll('.level-cell.selected');
+
+  if (!leader) { showToast('Enter the leader\'s name'); return; }
+  if (selected.length < CRITERIA.length) { showToast('Score all ' + CRITERIA.length + ' criteria before submitting'); return; }
+
+  var scores = {};
+  selected.forEach(function(c){
+    var key = c.parentElement.dataset.key;
+    scores[key] = parseInt(c.dataset.value);
+  });
+
+  var total = 0;
+  Object.keys(scores).forEach(function(k){ total += scores[k]; });
+
+  if (!API) {
+    showToast('Evaluation recorded (demo mode). Score: ' + total + '/' + (CRITERIA.length*3));
+    renderDemoHeatmap();
+    return;
+  }
+
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action:'submit_evaluation',
+        role: currentRole.id,
+        leader_name: leader,
+        evaluator: evaluator,
+        scores: scores,
+        total: total,
+        max: CRITERIA.length * 3,
+        notes: document.getElementById('evalNotes').value.trim(),
+        timestamp: new Date().toISOString()
+      })
+    });
+    showToast('Evaluation submitted! Score: ' + total + '/' + (CRITERIA.length*3));
+    loadCommunityData(leader);
+  } catch(e) { showToast('Error submitting — try again'); }
+}
+
+// ── COMMUNITY HEATMAP — the machine ──
+async function loadCommunityData(leaderName) {
+  if (!API) { renderDemoHeatmap(); return; }
+  try {
+    var url = API + '?action=get_evaluations&leader=' + encodeURIComponent(leaderName);
+    var res = await fetch(url, { redirect:'follow' });
+    var data = await res.json();
+    if (data.status === 'ok' && data.evaluations && data.evaluations.length > 0) {
+      renderHeatmap(data.evaluations);
+      renderLongitudinal(data.evaluations);
+    }
+  } catch(e) { renderDemoHeatmap(); }
+}
+
+function renderHeatmap(evals) {
+  document.getElementById('heatmapSection').classList.remove('hidden');
+  var grid = document.getElementById('heatmapGrid');
+  var criteriaIds = CRITERIA.map(function(c) { return c.id; });
+  var criteriaNames = CRITERIA.map(function(c) { return c.name; });
+
+  var html = '<table class="hm-table"><thead><tr><th>Evaluator</th>';
+  criteriaNames.forEach(function(n) { html += '<th>' + n + '</th>'; });
+  html += '<th>Total</th></tr></thead><tbody>';
+
+  var sums = {};
+  criteriaIds.forEach(function(id) { sums[id] = []; });
+  var totalScores = [];
+
+  evals.forEach(function(ev) {
+    var scores = typeof ev.scores === 'string' ? JSON.parse(ev.scores) : ev.scores;
+    var rowTotal = 0;
+    html += '<tr><td>' + (ev.evaluator || ev.zip || 'Anonymous') + '</td>';
+    criteriaIds.forEach(function(id) {
+      var val = scores[id] !== undefined ? parseInt(scores[id]) : -1;
+      if (val >= 0) { sums[id].push(val); rowTotal += val; }
+      html += '<td class="hm-' + (val >= 0 ? val : '') + '">' + (val >= 0 ? val : '—') + '</td>';
+    });
+    totalScores.push(rowTotal);
+    html += '<td class="hm-avg">' + rowTotal + '/' + (CRITERIA.length*3) + '</td></tr>';
+  });
+
+  // Averages row
+  html += '<tr style="border-top:2px solid var(--forest)"><td style="font-weight:700;color:var(--forest)">Average</td>';
+  var grandTotal = 0;
+  criteriaIds.forEach(function(id) {
+    var arr = sums[id];
+    var avg = arr.length > 0 ? (arr.reduce(function(a,b){return a+b;},0) / arr.length).toFixed(1) : '—';
+    if (avg !== '—') grandTotal += parseFloat(avg);
+    html += '<td class="hm-avg">' + avg + '</td>';
+  });
+  html += '<td class="hm-avg" style="color:var(--forest)">' + grandTotal.toFixed(1) + '/' + (CRITERIA.length*3) + '</td></tr>';
+  html += '</tbody></table>';
+  grid.innerHTML = html;
+
+  // Consensus summary
+  var summary = document.getElementById('heatmapSummary');
+  var consensusHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px">';
+  criteriaIds.forEach(function(id, i) {
+    var arr = sums[id];
+    if (arr.length < 2) return;
+    var mean = arr.reduce(function(a,b){return a+b;},0) / arr.length;
+    var variance = arr.reduce(function(a,b){return a + Math.pow(b-mean,2);},0) / arr.length;
+    var sd = Math.sqrt(variance);
+    var level = sd <= 0.5 ? 'high' : sd <= 1.0 ? 'mid' : 'low';
+    var label = sd <= 0.5 ? 'Strong agreement' : sd <= 1.0 ? 'Some disagreement' : 'Split';
+    consensusHTML += '<div style="padding:8px;background:var(--warm);border-radius:8px;font-size:.7rem">' +
+      '<div style="font-weight:600;color:var(--deep);margin-bottom:4px">' + criteriaNames[i] + '</div>' +
+      '<div class="consensus-bar consensus-' + level + '" style="width:' + Math.max(20, 100-sd*30) + '%"></div>' +
+      '<div style="color:var(--dim);margin-top:2px">' + label + ' (avg ' + mean.toFixed(1) + ')</div></div>';
+  });
+  consensusHTML += '</div>';
+  summary.innerHTML = consensusHTML;
+}
+
+function renderLongitudinal(evals) {
+  if (evals.length < 2) return;
+  document.getElementById('longitudinalSection').classList.remove('hidden');
+  var grid = document.getElementById('longitudinalGrid');
+  var max = CRITERIA.length * 3;
+
+  // Sort by timestamp
+  evals.sort(function(a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+
+  var html = '';
+  var prev = null;
+  evals.forEach(function(ev) {
+    var total = parseInt(ev.total) || 0;
+    var pct = max > 0 ? (total / max * 100) : 0;
+    var grade = pct >= 87 ? 'A' : pct >= 73 ? 'B' : pct >= 60 ? 'C' : pct >= 47 ? 'D' : 'F';
+    var color = pct >= 73 ? 'var(--sage)' : pct >= 47 ? 'var(--gold)' : 'var(--coral)';
+    var date = ev.timestamp ? new Date(ev.timestamp).toLocaleDateString() : '—';
+    var delta = '';
+    if (prev !== null) {
+      var diff = total - prev;
+      if (diff > 0) delta = '<span class="track-delta up">+' + diff + ' ▲</span>';
+      else if (diff < 0) delta = '<span class="track-delta down">' + diff + ' ▼</span>';
+      else delta = '<span class="track-delta same">= 0</span>';
+    }
+    prev = total;
+
+    html += '<div class="track-row">' +
+      '<span class="track-date">' + date + '</span>' +
+      '<span class="track-score" style="color:' + color + '">' + total + '/' + max + '</span>' +
+      '<div class="track-bar"><div class="track-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+      '<span class="track-grade" style="color:' + color + '">' + grade + '</span>' +
+      delta + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+function renderDemoHeatmap() {
+  var demoEvals = [
+    { evaluator:'Maria R.', scores:{promises:2,listening:1,transparency:2,results:1,fairness:2}, total:8, timestamp:'2026-01-15T12:00:00Z' },
+    { evaluator:'Carlos G.', scores:{promises:1,listening:2,transparency:1,results:1,fairness:1}, total:6, timestamp:'2026-01-20T12:00:00Z' },
+    { evaluator:'Doris T.', scores:{promises:2,listening:1,transparency:2,results:2,fairness:1}, total:8, timestamp:'2026-02-10T12:00:00Z' },
+    { evaluator:'Ana P.', scores:{promises:1,listening:1,transparency:1,results:0,fairness:2}, total:5, timestamp:'2026-03-15T12:00:00Z' }
+  ];
+  renderHeatmap(demoEvals);
+  renderLongitudinal(demoEvals);
+}
+
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+
+EQ.init({
+  en:{
+    arc_label:'Govern',title:'Are Your Leaders Doing What They Said?',
+    subtitle:'Clear criteria. Real evidence. Scores from every member — no one person dominates. Printable scorecard you can bring to a meeting.',
+    step1_title:'Who are you evaluating?',leader_label:"Leader's Name",evaluator_label:'Your Name or Zip',
+    score_label:'SCORE',notes_label:'Additional notes or evidence',
+    print_btn:'🖨 Print Scorecard',reset_btn:'Reset',submit_btn:'Submit Evaluation'
+  },
+  es:{
+    arc_label:'Gobernar',title:'¿Tus Líderes Están Cumpliendo Lo Que Prometieron?',
+    subtitle:'Criterios claros. Evidencia real. Puntajes de cada miembro — nadie domina. Tarjeta de puntaje imprimible para llevar a una reunión.',
+    step1_title:'¿A quién estás evaluando?',leader_label:'Nombre del Líder',evaluator_label:'Tu Nombre o Código Postal',
+    score_label:'PUNTAJE',notes_label:'Notas adicionales o evidencia',
+    print_btn:'🖨 Imprimir Tarjeta',reset_btn:'Reiniciar',submit_btn:'Enviar Evaluación'
+  }
+}, { footer: true, alertPage: 'evaluate' });
+</script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Things Your Neighbors Figured Out — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Community-authored guides using the Normal → Broken → Fix framework. Health, money, rights, power — built by neighbors for neighbors.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.domain-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.dtab{padding:8px 18px;border-radius:10px;border:1.5px solid var(--sand);background:var(--cream);color:var(--dim);font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s}
+.dtab:hover{border-color:var(--sage)}.dtab.active{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:16px 0}
+.mod-card{background:var(--warm);border-radius:14px;padding:20px;border:1px solid var(--sand);cursor:pointer;transition:.25s}
+.mod-card:hover{border-color:var(--sage);transform:translateY(-2px);box-shadow:0 4px 16px rgba(26,60,52,.08)}
+.mod-card .mc-domain{font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.mod-card .mc-domain.health{color:var(--coral)}.mod-card .mc-domain.money{color:var(--gold)}
+.mod-card .mc-domain.rights{color:var(--sage)}.mod-card .mc-domain.power{color:var(--forest)}
+.mod-card h3{font-family:var(--sans);font-size:.92rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.mod-card .mc-noun{font-size:.78rem;color:var(--dim);font-style:italic;margin-bottom:8px}
+.mod-card .mc-author{font-size:.65rem;color:var(--light)}
+
+.nbf-view{display:none;margin:20px 0}
+.nbf-view.active{display:block}
+.nbf-title{font-family:var(--display);font-size:1.2rem;font-weight:600;color:var(--deep);text-align:center;margin-bottom:4px}
+.nbf-noun{font-size:.88rem;color:var(--dim);text-align:center;font-style:italic;margin-bottom:20px}
+.nbf-card{border-radius:14px;padding:20px;margin-bottom:10px;border:1px solid var(--sand)}
+.nbf-card h4{font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.nbf-card p{font-size:.85rem;color:var(--body);line-height:1.8}
+.nbf-card.normal{background:rgba(45,90,78,.04);border-left:4px solid var(--forest)}
+.nbf-card.normal h4{color:var(--forest)}
+.nbf-card.broken{background:rgba(196,101,74,.04);border-left:4px solid var(--coral)}
+.nbf-card.broken h4{color:var(--coral)}
+.nbf-card.fix{background:rgba(90,138,120,.04);border-left:4px solid var(--sage)}
+.nbf-card.fix h4{color:var(--sage)}
+.nbf-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0}
+.nbf-card.normal .nbf-icon{background:var(--forest)}
+.nbf-card.broken .nbf-icon{background:var(--coral)}
+.nbf-card.fix .nbf-icon{background:var(--sage)}
+.nbf-action{background:var(--warm);border-radius:10px;padding:14px;margin-top:12px;border:1px solid var(--sand)}
+.nbf-action h5{font-size:.75rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.nbf-action p{font-size:.78rem;color:var(--dim);line-height:1.6}
+.nbf-meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--sand)}
+.nbf-meta .author{font-size:.72rem;color:var(--dim)}
+.nbf-back{font-family:var(--sans);font-size:.82rem;color:var(--forest);cursor:pointer;font-weight:500}
+.nbf-back:hover{text-decoration:underline}
+
+.create-panel{background:var(--warm);border-radius:14px;padding:24px;margin:20px 0;border:1px solid var(--sand)}
+.create-panel h3{font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--deep);margin-bottom:16px}
+.create-panel label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin:14px 0 4px}
+.create-panel label:first-of-type{margin-top:0}
+.create-panel input,.create-panel select,.create-panel textarea{font-family:var(--sans);font-size:.88rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);resize:vertical}
+.create-panel input:focus,.create-panel select:focus,.create-panel textarea:focus{outline:none;border-color:var(--sage)}
+.create-panel .hint{font-size:.68rem;color:var(--light);margin-top:2px;font-style:italic}
+.field-group{background:rgba(0,0,0,.02);border-radius:10px;padding:16px;margin:12px 0;border-left:4px solid var(--sand)}
+.field-group.fg-n{border-left-color:var(--forest)}.field-group.fg-b{border-left-color:var(--coral)}.field-group.fg-f{border-left-color:var(--sage)}
+.field-group h4{font-size:.78rem;font-weight:700;margin-bottom:8px}
+.field-group.fg-n h4{color:var(--forest)}.field-group.fg-b h4{color:var(--coral)}.field-group.fg-f h4{color:var(--sage)}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn-row button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border-radius:10px;border:1.5px solid var(--sand);background:var(--cream);color:var(--body);cursor:pointer;transition:.2s}
+.btn-row button:hover{border-color:var(--sage);color:var(--forest)}
+.btn-row button.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.btn-row button.primary:hover{background:var(--deep)}
+
+.empty{text-align:center;padding:40px;color:var(--dim);font-size:.85rem}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/knowledge.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Things Your Neighbors Figured Out — CommUnity OS", "url": "https://comm-unity-os.org/knowledge.html", "description": "Community-authored guides: prescription access, overdraft protection, rent increases, immigration rights, tax withholding. How it works, where it breaks, what to do.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Learn</div>
+    <h1 data-t="title">Community Knowledge</h1>
+    <div class="subtitle" data-t="subtitle">Guides written by neighbors for neighbors. Each one follows the same structure: how something is supposed to work, where it breaks down, and what you can do about it. Read what others have shared or contribute your own.</div>
+  </div>
+
+  <div style="background:var(--warm);border-radius:12px;padding:18px;margin-bottom:20px;border-left:4px solid var(--sage)" class="fade-in fade-in-1">
+    <p style="font-size:.85rem;color:var(--body);line-height:1.7" data-t="scaffold_explain">Every guide on this page uses the same framework: <strong style="color:var(--forest)">Normal</strong> — how the system is supposed to work. <strong style="color:var(--coral)">Broken</strong> — where it fails. <strong style="color:var(--sage)">Fix</strong> — what you can do. This isn't a metaphor. It's how doctors diagnose, how engineers troubleshoot, and how communities can think about the systems that affect their lives.</p>
+  </div>
+
+  <!-- DOMAIN FILTER -->
+  <div class="domain-tabs fade-in fade-in-1" id="domainTabs">
+    <button class="dtab active" onclick="filterDomain('all',this)" data-t="tab_all">All</button>
+    <button class="dtab" onclick="filterDomain('health',this)">🏥 <span data-t="tab_health">Health</span></button>
+    <button class="dtab" onclick="filterDomain('money',this)">💰 <span data-t="tab_money">Money</span></button>
+    <button class="dtab" onclick="filterDomain('rights',this)">⚖️ <span data-t="tab_rights">Rights</span></button>
+    <button class="dtab" onclick="filterDomain('power',this)">🏛️ <span data-t="tab_power">Power</span></button>
+  </div>
+
+  <!-- MODULE GRID -->
+  <div id="browseView">
+    <div class="module-grid" id="moduleGrid"></div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="dtab" style="background:var(--forest);color:var(--cream);border-color:var(--forest);padding:12px 28px" onclick="showCreatePanel()" data-t="create_btn">+ Contribute a Guide</button>
+    </div>
+  </div>
+
+  <!-- SINGLE MODULE VIEW -->
+  <div class="nbf-view" id="nbfView">
+    <div class="nbf-title" id="viewTitle"></div>
+    <div class="nbf-noun" id="viewNoun"></div>
+    <div class="nbf-card normal"><h4><span class="nbf-icon">N</span> <span data-t="lbl_normal">Normal — How It's Supposed to Work</span></h4><p id="viewNormal"></p></div>
+    <div class="nbf-card broken"><h4><span class="nbf-icon">B</span> <span data-t="lbl_broken">Broken — Where It Fails</span></h4><p id="viewBroken"></p></div>
+    <div class="nbf-card fix"><h4><span class="nbf-icon">F</span> <span data-t="lbl_fix">Fix — What You Can Do</span></h4><p id="viewFix"></p></div>
+    <div class="nbf-action" id="viewAction" style="display:none"><h5 data-t="lbl_action">Take Action</h5><p id="viewActionText"></p></div>
+    <div class="nbf-meta"><div class="author" id="viewAuthor"></div><div class="nbf-back" onclick="showBrowse()" data-t="back_btn">← All Guides</div></div>
+  </div>
+
+  <!-- CREATE PANEL -->
+  <div class="create-panel fade-in" id="createPanel" style="display:none">
+    <h3 data-t="create_title">Share What You Know</h3>
+    <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;line-height:1.6" data-t="create_desc">Think of a system you understand — healthcare, banking, renting, immigration, school enrollment, insurance claims, anything. Explain how it's supposed to work, where people get stuck, and what they can actually do about it.</p>
+
+    <label data-t="lbl_domain">Domain</label>
+    <select id="cDomain">
+      <option value="health">🏥 Health</option>
+      <option value="money">💰 Money</option>
+      <option value="rights">⚖️ Rights</option>
+      <option value="power">🏛️ Power</option>
+    </select>
+
+    <label data-t="lbl_title_field">Title</label>
+    <input type="text" id="cTitle" placeholder="e.g., Understanding Your Insurance Deductible">
+    <div class="hint" data-t="hint_title">What system are you explaining?</div>
+
+    <label data-t="lbl_noun_field">The Noun — What Fails?</label>
+    <input type="text" id="cNoun" placeholder="e.g., Insurance Coverage, Lease Protections, Prescription Access">
+    <div class="hint" data-t="hint_noun">Complete the sentence: "When the _____ Fails"</div>
+
+    <div class="field-group fg-n">
+      <h4>Normal — How It's Supposed to Work</h4>
+      <label data-t="lbl_normal_field">Explain how this system works when it's functioning correctly.</label>
+      <textarea id="cNormal" rows="4" placeholder="When everything works right, this is what happens..."></textarea>
+    </div>
+
+    <div class="field-group fg-b">
+      <h4>Broken — Where It Fails</h4>
+      <label data-t="lbl_broken_field">What goes wrong? Where do people get stuck, denied, or left out?</label>
+      <textarea id="cBroken" rows="4" placeholder="Here's where it breaks down..."></textarea>
+    </div>
+
+    <div class="field-group fg-f">
+      <h4>Fix — What You Can Do</h4>
+      <label data-t="lbl_fix_field">What can someone actually do? Be specific — phone numbers, websites, exact steps.</label>
+      <textarea id="cFix" rows="4" placeholder="Here's what you can do about it..."></textarea>
+    </div>
+
+    <label data-t="lbl_action_field">Take Action (optional)</label>
+    <textarea id="cAction" rows="2" placeholder="One specific step someone can take right now — a phone number, a website, a place to go"></textarea>
+
+    <label data-t="lbl_author">Your name and zip code</label>
+    <input type="text" id="cAuthor" placeholder="e.g., Ana, 60608">
+
+    <div class="btn-row">
+      <button onclick="hideCreatePanel()" data-t="cancel_btn">Cancel</button>
+      <button class="primary" onclick="submitModule()" data-t="submit_btn">Submit Guide</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+var modules = [];
+var currentFilter = 'all';
+
+// Seed modules — these ship with the platform
+var SEED = [
+  { domain:'health', title:'Understanding Your Prescription Copay', noun:'Prescription Access',
+    normal:'When you have insurance, your plan has a formulary — a list of drugs it covers. Tier 1 (generics) costs $5-15. Tier 2 (preferred brand) costs $25-50. Your doctor writes a prescription, your pharmacy runs it through insurance, and you pay the copay.',
+    broken:'The drug your doctor prescribed isn\'t on the formulary. The pharmacy says it\'ll cost $300 instead of $15. Or insurance requires "prior authorization" — your doctor has to call and justify the prescription, which takes days while you go without medication.',
+    fix:'Ask your doctor for the generic equivalent. If no generic exists, ask them to submit a prior authorization (they do this routinely). Use a prescription price comparison tool to check cash prices at multiple pharmacies — sometimes paying cash is cheaper than your copay. Some warehouse and online pharmacies sell generics at steep discounts without requiring membership. If denied, you have the right to appeal.',
+    action:'Before filling any prescription, compare cash prices at 3+ pharmacies using a free price comparison tool. Ask your pharmacist: is there a cheaper generic?',
+    author:'Prof. Nino, 60608' },
+  { domain:'money', title:'What Overdraft Protection Actually Does', noun:'Account Balance Protection',
+    normal:'Your checking account has a balance. When you swipe your debit card or write a check, the bank subtracts the amount. If you have enough money, the transaction goes through.',
+    broken:'You go below zero. The bank pays the transaction anyway — then charges you $35 per overdraft. Three transactions in one day can cost $105 in fees. The bank reorders transactions to process the largest first, maximizing the number of overdrafts. "Overdraft protection" actually means the bank is lending you money at effectively 3,500% APR.',
+    fix:'Opt OUT of overdraft protection at your bank (you have this right under Regulation E). Transactions will simply be declined instead of approved + fined. Link a savings account as backup. Set up low-balance alerts at $100 and $50. Consider a credit union — most cap overdraft fees at $5 or don\'t charge them at all.',
+    action:'Call your bank today and say: "I want to opt out of overdraft protection under Regulation E." They must comply.',
+    author:'Community contributor, 60609' },
+  { domain:'rights', title:'Your Rights When Your Landlord Raises Rent', noun:'Lease Protections',
+    normal:'In Chicago, your lease is a contract. During the lease term, rent cannot change. When the lease expires, the landlord must give written notice before raising rent: 30 days for month-to-month, 60 days for annual leases (under RLTO). You can negotiate.',
+    broken:'The landlord raises rent mid-lease or gives verbal-only notice. They say "take it or leave it" without the required written notice period. They retaliate with a rent increase after you reported a code violation. Some landlords count on tenants not knowing the RLTO.',
+    fix:'Document everything in writing. If you\'re mid-lease, the increase isn\'t legal — cite your lease dates. If your lease expired, check that written notice was given within the required timeline. File a complaint with the City of Chicago 311 or Metropolitan Tenants Organization (773-292-4988). Under RLTO, retaliatory rent increases are illegal for 12 months after a complaint.',
+    action:'Call the Metropolitan Tenants Organization hotline at 773-292-4988. Free. Bilingual. They\'ve handled this exact situation thousands of times.',
+    author:'Ana, 60632' },
+  { domain:'power', title:'How to Speak at a City Council Meeting', noun:'Public Comment Access',
+    normal:'Every Chicago City Council meeting includes a public comment period. Any resident can sign up to speak for 3 minutes. The schedule is posted on the City Clerk\'s website. Committee meetings also have public comment. Aldermanic ward meetings are required to be open.',
+    broken:'The sign-up process isn\'t clear. Comment periods get moved to inconvenient times. Meetings run long and public comment is pushed to the end when cameras are off. Some alderpersons skip their own ward meetings. Translation is not always available.',
+    fix:'Check chicago.gov/city-clerk for the schedule. Sign up online or arrive 30 minutes early to sign up in person. Prepare your 3 minutes — write it down. Bring neighbors (numbers matter). Record yourself speaking and share it. If your alderperson skips meetings, that\'s an accountability item for the Community Audit tool.',
+    action:'Find your next City Council or ward meeting at chicago.gov/city-clerk. Sign up. Bring one neighbor.',
+    author:'Community contributor, 60608' },
+  { domain:'health', title:'What Happens When You Go to the ER Without Insurance', noun:'Emergency Care Access',
+    normal:'Under EMTALA (federal law since 1986), every hospital emergency room must treat you regardless of insurance status or ability to pay. They must stabilize your condition before discussing payment. This is federal law — no hospital can refuse.',
+    broken:'The hospital treats you, then sends a bill for $3,000-$15,000. Collections calls start. You avoid going back even when you need to because of the debt. The bill goes to a collection agency and damages your credit score.',
+    fix:'Ask the hospital for an itemized bill (errors are common). Ask for the charity care application — every nonprofit hospital is required to have one. Apply for Medicaid retroactively (Illinois allows 3 months retroactive coverage). Negotiate — hospitals routinely accept 20-40% of the billed amount for uninsured patients. Medical debt under $500 no longer affects your credit score (2023 rule).',
+    action:'If you have an ER bill, call the hospital billing department and say: "I\'d like to apply for your financial assistance program." They must provide the application.',
+    author:'Prof. Nino, 60608' },
+  { domain:'money', title:'Why Your Tax Refund Is Smaller Than Expected', noun:'Tax Withholding Accuracy',
+    normal:'Your employer withholds federal and state taxes from each paycheck based on your W-4 form. If withholding matches what you owe, you break even at tax time. A refund means you overpaid (gave the government an interest-free loan).',
+    broken:'Your W-4 is wrong — you claimed too many allowances, so too little was withheld. Now you owe. Or you had multiple jobs and each one withheld as if it were your only income. Gig work (rideshare, delivery apps) withholds nothing — you owe self-employment tax (15.3%) plus income tax. A "smaller refund" often means your withholding got more accurate, not that you lost money.',
+    fix:'Use the IRS Tax Withholding Estimator (irs.gov/W4app) to check. Submit a new W-4 to your employer if needed. If you do gig work, make quarterly estimated payments (Form 1040-ES) to avoid penalties. File for free using IRS Free File (income under $84,000) or VITA sites (Volunteer Income Tax Assistance — free in-person help).',
+    action:'Visit irs.gov/W4app with your most recent pay stub. Takes 10 minutes. Could save you hundreds.',
+    author:'Community contributor, 60617' },
+  { domain:'rights', title:'What to Do If ICE Comes to Your Door', noun:'Immigration Enforcement Boundaries',
+    normal:'ICE agents need a judicial warrant (signed by a judge) to enter your home. A judicial warrant has a court name and judge\'s signature. An administrative warrant (Form I-200) is NOT a judicial warrant — it does not authorize entry into your home.',
+    broken:'ICE agents knock and say "open the door." They may say they are police. They may show a document that looks official but is an administrative warrant, not a judicial warrant. Fear and confusion lead people to open the door or consent to entry.',
+    fix:'You do not have to open the door. Ask them to slide the warrant under the door. Look for a judge\'s signature and a court name. If it\'s a Form I-200 (administrative), you can say: "I do not consent to entry." Call the National Immigration Law Center (213-639-3900) or RAICES (800-390-5281). Know your rights card: "I am exercising my right to remain silent."',
+    action:'Save this number in your phone now: National Immigrant Justice Center — 312-660-1370. Free legal help in Chicago.',
+    author:'Community contributor, 60623' },
+
+  // ── NEW: Course-derived health guides (226/227/Micro/NR507) ──
+
+  { domain:'health', title:'How Blood Pressure Works — and Why It Matters When You Feel Fine', noun:'Blood Pressure Regulation',
+    normal:'Your heart pumps blood through arteries. The walls of those arteries push back — that resistance is blood pressure. Systolic (top number) is the pressure when the heart squeezes. Diastolic (bottom number) is the pressure when it relaxes. Normal is around 120/80. Your body adjusts blood pressure constantly — narrowing arteries to raise it, widening them to lower it.',
+    broken:'The arteries stay narrow. Blood pressure stays high — 140/90 or above. You feel nothing. No headache, no dizziness, no warning. That\'s why it\'s called the silent killer. Over months and years, the high pressure damages artery walls, thickens the heart muscle, scars the kidneys, and weakens blood vessels in the brain. By the time you feel something, the damage is done. A stroke or heart attack is often the first symptom.',
+    fix:'Get checked. A blood pressure reading takes 30 seconds and costs nothing at any pharmacy. If it\'s high, your doctor may start with lifestyle changes — less sodium, more movement, stress reduction. If medication is prescribed, take it every day even when you feel fine. The medication isn\'t treating a symptom. It\'s preventing the damage you can\'t feel. Do not stop taking it because you feel okay — that\'s the trap.',
+    action:'Walk into any pharmacy with a free blood pressure machine. Sit for 5 minutes first. Check both arms. Write down the numbers. If either number is above 130/80 on two separate days, call your doctor.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'How Diabetes Develops — From Insulin Resistance to Type 2', noun:'Blood Sugar Regulation',
+    normal:'When you eat, your body breaks food into glucose (sugar) that enters your blood. Your pancreas releases insulin — a hormone that acts like a key, unlocking your cells so glucose can enter and be used for energy. Blood sugar rises after eating, insulin brings it back down. The system balances itself.',
+    broken:'Your cells start ignoring the key. The lock still works, but it takes more and more insulin to open it. This is insulin resistance — your pancreas works harder, producing extra insulin to compensate. For years, blood sugar stays normal because the pancreas keeps up. Then it can\'t. Blood sugar rises. That\'s prediabetes. If nothing changes, the pancreas burns out. Now you have Type 2 diabetes. The damage happens slowly — to your eyes, kidneys, nerves, and blood vessels — often before you know you have it.',
+    fix:'The earlier you catch it, the more reversible it is. Insulin resistance responds to three things: movement (muscle cells become more sensitive to insulin after exercise), diet (fewer processed carbs means less glucose flooding the blood), and weight loss (even 5-7% of body weight significantly improves insulin sensitivity). Your doctor checks with a fasting blood sugar or A1C test. Prediabetes is not a death sentence — it\'s a warning with a clear fix.',
+    action:'Ask your doctor for a fasting blood sugar or A1C test at your next visit. If you haven\'t been to a doctor in over a year, call today. The test takes one tube of blood and can change the trajectory of your life.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'Why Antibiotics Stop Working', noun:'Antibiotic Effectiveness',
+    normal:'Antibiotics kill bacteria. They work by targeting something bacteria need to survive — their cell wall, their protein-making machinery, or their DNA replication. When you have a bacterial infection, the antibiotic kills the bacteria and you recover. The key word is bacterial. Antibiotics do not work against viruses — not colds, not flu, not COVID.',
+    broken:'You take antibiotics for a cold (virus — they do nothing). You feel better in a few days (because colds resolve on their own) and believe the antibiotic worked. Next time, you ask for one again. Or you start a course of antibiotics for a real bacterial infection but stop after 3 days because you feel better. The weakest bacteria died first — the strongest survived. Those survivors multiply. Now the infection is harder to treat. This happens millions of times across the community and the result is antibiotic-resistant bacteria that don\'t respond to standard drugs. MRSA, C. diff, drug-resistant TB — these exist because antibiotics were used when they shouldn\'t have been, or stopped before the job was done.',
+    fix:'Never take antibiotics for a cold, flu, or sore throat unless your doctor confirms it\'s bacterial (a strep test takes 5 minutes). If prescribed antibiotics, finish the entire course — even when you feel better. Don\'t share antibiotics. Don\'t save leftovers. Ask your doctor: "Is this definitely bacterial? Do I really need an antibiotic?" A good doctor will respect the question.',
+    action:'Next time you\'re sick and thinking about antibiotics, ask one question: "Is this a virus or bacteria?" If your doctor can\'t tell, they can test. If they prescribe without testing, ask why.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'What a Failed Food Inspection Actually Means', noun:'Food Safety Oversight',
+    normal:'The Chicago Department of Public Health inspects every food establishment — restaurants, grocery stores, food trucks, school cafeterias. Inspectors check temperature control, cross-contamination risks, handwashing compliance, pest evidence, and equipment cleanliness. A passing score means critical violations were absent or corrected on the spot. Results are public record.',
+    broken:'A failed inspection means critical violations were found — food stored at unsafe temperatures (bacteria doubles every 20 minutes between 40-140°F), raw meat stored above ready-to-eat food, no hot water for handwashing, rodent droppings in food prep areas. One failed inspection might be a bad day. Two in a row is a pattern. The establishment stays open during the re-inspection window. The data on this platform shows you which places in your zip code failed and how recently.',
+    fix:'Check the data on the Neighborhood Intelligence page for your zip code. Look at the food safety section — it shows pass/fail/conditional counts. For specific restaurants, search the Chicago Food Inspection portal (data.cityofchicago.org). If you see a violation happening in real time — food sitting out, no gloves, pest evidence — call 311 or report online. Your complaint triggers an inspection.',
+    action:'Before eating somewhere new, search the restaurant name on the Chicago food inspection portal. It takes 10 seconds. If they failed their last inspection, you deserve to know.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'When to Go to the ER — and When Not To', noun:'Emergency Decision-Making',
+    normal:'Emergency rooms treat life-threatening conditions — heart attacks, strokes, severe bleeding, difficulty breathing, loss of consciousness, anaphylaxis. Urgent care handles things that need attention today but aren\'t life-threatening — sprains, minor cuts needing stitches, ear infections, UTIs. Your primary care doctor handles everything else — chronic conditions, medication management, preventive care, referrals.',
+    broken:'You go to the ER for a sore throat because it\'s 9pm and nothing else is open. Wait time: 4 hours. Bill: $2,000. Or worse — you have chest pain and wait it out because the last ER visit was $5,000 and you\'re still paying it off. The system broke twice: once by making the ER the default for non-emergencies, and again by making the cost so high that people avoid it during real emergencies.',
+    fix:'Learn the signs that mean GO NOW: sudden weakness on one side (stroke — remember FAST: Face drooping, Arm weakness, Speech difficulty, Time to call 911), chest pain or pressure that doesn\'t stop (heart attack), difficulty breathing that\'s getting worse (not just congestion), severe allergic reaction (throat closing, hives spreading, dizziness), uncontrollable bleeding, head injury with confusion or vomiting. For everything else, call your doctor\'s after-hours line first or go to urgent care. If you don\'t have a doctor, Federally Qualified Health Centers see patients on a sliding fee scale regardless of insurance.',
+    action:'Save these three numbers in your phone right now: 911 (life-threatening), your doctor\'s after-hours line (check your insurance card), and the nearest FQHC. Know which one to call before you need to.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'How Your Kidneys Work — and Why Ibuprofen Is More Dangerous Than You Think', noun:'Kidney Function',
+    normal:'Your kidneys filter about 50 gallons of blood every day. They remove waste, balance electrolytes, control blood pressure, and regulate fluid. Each kidney contains about a million tiny filters called nephrons. Blood flows in, waste and excess water go to the bladder, clean blood goes back to the body. The system runs silently — you never feel your kidneys working.',
+    broken:'NSAIDs — ibuprofen (Advil/Motrin), naproxen (Aleve) — reduce blood flow to the kidneys. Take them occasionally for a headache, no problem. Take them daily for chronic pain — back pain, arthritis, menstrual cramps — and the nephrons start dying. Kidneys don\'t regenerate. Once a nephron is gone, it\'s gone. By the time a blood test shows kidney damage, you\'ve already lost 50% of function. Diabetes and high blood pressure also destroy nephrons over time. All three together — which is common — accelerate the damage.',
+    fix:'Use acetaminophen (Tylenol) instead of NSAIDs for routine pain — it doesn\'t affect the kidneys. If you take ibuprofen regularly, talk to your doctor about alternatives. Stay hydrated — your kidneys need water to filter. If you have diabetes or high blood pressure, your doctor should check kidney function (a simple blood test called creatinine/GFR) at least once a year. Catching chronic kidney disease early is the difference between managing it and needing dialysis.',
+    action:'If you take ibuprofen more than 3 times a week, talk to your doctor at your next visit. Ask: "Should we check my kidney function?" One blood test. One conversation. Could save your kidneys.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'Why Your Relative Takes 5 Heart Medications', noun:'Heart Failure Management',
+    normal:'Your heart is a pump. It squeezes blood out to the body, then relaxes and refills. Blood pressure, heart rate, and fluid balance are all regulated automatically. Your kidneys help by adjusting how much water and salt you retain. A system called RAAS (renin-angiotensin-aldosterone) connects the heart and kidneys — when the heart pumps less, the kidneys retain more fluid to compensate.',
+    broken:'The heart weakens — from a heart attack, from years of high blood pressure, from valve disease. It can\'t pump enough blood. The RAAS system kicks in and tells the kidneys to hold onto fluid (trying to help). But the extra fluid backs up into the lungs — that\'s why your relative is short of breath. The heart beats faster to compensate — that wears it out faster. The body is trying to fix the problem but making it worse. This is heart failure.',
+    fix:'Each medication targets a different link in the chain. ACE inhibitors or ARBs block the RAAS system — stop the kidneys from retaining too much fluid. Diuretics (water pills) flush the excess fluid that already built up. Beta-blockers slow the heart rate — stop it from exhausting itself. Aldosterone antagonists block the last step of RAAS. Digoxin helps the heart squeeze stronger. Five medications sounds like a lot. But each one is blocking a different part of the same broken chain. Missing any one of them lets that link take over again.',
+    action:'If your relative takes heart medications, ask their doctor (or help them ask): "Can you show us which medication does what?" Understanding why they take each pill makes it less likely they\'ll skip one because they feel fine.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'What Alcohol Does to Your Liver', noun:'Liver Function',
+    normal:'Your liver processes everything you eat, drink, and absorb. It filters toxins, makes bile for digestion, stores energy, builds proteins for blood clotting, and breaks down medications. It\'s the only organ that can regenerate — if you cut away 75% of a healthy liver, it grows back within weeks. Alcohol is a toxin. The liver breaks it down into acetaldehyde (more toxic), then into acetate (harmless). One or two drinks, the liver handles it.',
+    broken:'Regular heavy drinking overwhelms the cycle. Acetaldehyde builds up and damages liver cells. First stage: fatty liver — fat accumulates in liver cells. Reversible if you stop. Second stage: alcoholic hepatitis — inflammation and cell death. Partially reversible. Third stage: cirrhosis — scar tissue replaces functioning liver. Not reversible. The liver that could regenerate from 25% can\'t regenerate from scar tissue. And here\'s what most people don\'t know: non-alcoholic fatty liver disease (NAFLD) follows the same progression without alcohol — caused by obesity, diabetes, and high-sugar diets. One in four American adults has it.',
+    fix:'Fatty liver (both types) reverses with lifestyle changes — reduce alcohol, reduce sugar, lose weight, exercise. There is no medication that fixes fatty liver faster than the body fixes itself when you remove the cause. If you drink regularly, ask your doctor for a liver function test (a simple blood panel). If you have diabetes or obesity, ask for the same test — NAFLD is underdiagnosed because nobody thinks to check. The earlier you catch it, the more reversible it is.',
+    action:'If you drink more than 7 drinks per week (women) or 14 per week (men), ask your doctor for a liver function panel at your next visit. If you have diabetes, ask even if you don\'t drink.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'How Vaccines Actually Work', noun:'Immune Protection',
+    normal:'Your immune system learns. When a pathogen (virus or bacteria) enters your body, your immune cells identify it, fight it, and then remember it. The next time that same pathogen shows up, your body responds faster — often before you feel sick. That\'s immunity. A vaccine introduces a harmless piece of the pathogen (a protein, a weakened version, or instructions to make one protein) so your immune system can learn without you getting sick. Your body builds memory cells. When the real pathogen arrives, those memory cells activate immediately.',
+    broken:'Misinformation says vaccines "give you the disease." They don\'t — most modern vaccines contain no live pathogen at all. The soreness and mild fever after a shot? That\'s your immune system responding — building the memory cells that will protect you. That\'s the vaccine working, not hurting you. The real danger is what happens without vaccination: measles kills 1-2 per 1,000 infected children. Whooping cough kills infants. Flu kills 30,000-60,000 Americans per year. The diseases are the danger — not the defense against them.',
+    fix:'Ask your doctor what vaccines you and your family are due for. Adults need boosters too — Tdap, flu, pneumonia (over 65), shingles (over 50). Children follow the CDC schedule. If you have questions, ask your doctor — not social media. Vaccines are available free at Federally Qualified Health Centers, most pharmacies (covered by insurance or free through Vaccines for Children program), and Chicago Department of Public Health clinics.',
+    action:'Call your doctor or pharmacist and ask: "Am I up to date on my vaccines?" They can check in 2 minutes. If your children need vaccines for school, CDPH clinics provide them free.',
+    author:'Prof. Nino, MD — 60608' },
+
+  { domain:'health', title:'Why Washing Your Hands Is the Best Medicine You Have', noun:'Infection Prevention',
+    normal:'Pathogens — bacteria, viruses, parasites — spread through contact. You touch a surface (doorknob, phone, shopping cart, handshake), the pathogen transfers to your hand, then you touch your face (which you do 16-23 times per hour without realizing it). The pathogen enters through your eyes, nose, or mouth. This is the most common route of infection for colds, flu, COVID, norovirus, and most foodborne illness. Soap doesn\'t kill pathogens — it lifts them off your skin so water can wash them away. Twenty seconds of scrubbing is the threshold.',
+    broken:'You rinse for 5 seconds without soap. You use hand sanitizer without rubbing all surfaces. You wash after using the bathroom but not before eating, not after touching public surfaces, not after handling raw meat. You prepare food for your family with hands that touched the subway pole 30 minutes ago. The infection route stayed open the entire time. In households, one sick family member infects others not through air but through shared surfaces — the bathroom faucet, the refrigerator handle, the phone.',
+    fix:'Wash with soap and water for 20 seconds — front and back of hands, between fingers, under nails. The friction matters more than the soap brand. When soap isn\'t available, hand sanitizer (60%+ alcohol) works on most pathogens but not all (norovirus and C. diff resist it). Wash before eating or preparing food, after using the bathroom, after blowing your nose, after touching public surfaces, after handling raw meat. Teach children by singing — 20 seconds is the chorus of most songs.',
+    action:'Count how many times you touch your face in the next hour. Then wash your hands. The gap between those two numbers is your infection risk.',
+    author:'Prof. Nino, MD — 60608' },
+
+  // ── NEW: Financial literacy guides (CEE Standards II, III, IV, V, VI) ──
+
+  { domain:'money', title:'Why You Need an Emergency Fund Before Anything Else', noun:'Emergency Savings',
+    normal:'An emergency fund is money set aside for unexpected expenses — a car repair, a medical bill, a job loss, a broken appliance. Financial planners recommend 3-6 months of essential expenses (rent, food, utilities, transportation, medication). The money sits in a savings account where you can access it within 1-2 business days. It\'s not invested. It\'s not earning much interest. Its job is to be there when you need it.',
+    broken:'You don\'t have one. Most Americans don\'t — 56% can\'t cover a $1,000 emergency with savings. So when the car breaks down, you put it on a credit card at 24% interest. Or you take a payday loan at 400% APR. Or you skip rent and start a debt spiral. The emergency didn\'t cause the crisis. The absence of a buffer did. And here\'s the trap: people say "I\'ll start saving when I make more money." But expenses rise with income. The habit matters more than the amount. $25 per paycheck into a separate account is $650 in a year. That covers most single emergencies.',
+    fix:'Open a separate savings account — not connected to your debit card. Set up automatic transfer of any amount you can sustain ($10, $25, $50 per paycheck). Don\'t touch it for non-emergencies. Target $1,000 first (covers most single emergencies), then build toward one month of expenses, then three months. If you have debt, build $1,000 emergency fund first, then attack the debt. Without the buffer, every unexpected expense becomes new debt.',
+    action:'Open a free savings account at a credit union or online bank today. Set up a $25 automatic transfer from each paycheck. In 6 months you\'ll have $325. In a year, $650. That\'s the difference between a problem and a crisis.',
+    author:'Prof. Nino — 60608' },
+
+  { domain:'money', title:'How Your Credit Score Actually Works', noun:'Credit Score Mechanics',
+    normal:'Your credit score is a number (300-850) that predicts how likely you are to repay borrowed money. Five factors determine it: payment history (35% — did you pay on time?), amounts owed (30% — how much of your available credit are you using?), length of history (15% — how long have your accounts been open?), new credit (10% — how many recent applications?), and credit mix (10% — do you have different types of credit?). Lenders, landlords, employers, and insurance companies use it to make decisions about you.',
+    broken:'Most people think checking your own score hurts it. It doesn\'t — that\'s a soft inquiry. What hurts it: a hard inquiry (when you apply for new credit), late payments (even one 30-day late payment can drop your score 50-100 points), high utilization (using more than 30% of your available credit), and closing old accounts (which shortens your history). The biggest misconception: carrying a balance builds credit. It doesn\'t. It just costs you interest. Paying in full every month builds the same payment history without the cost.',
+    fix:'Check your score for free at annualcreditreport.com — one free report from each bureau per year. Look for errors (they\'re common — 1 in 5 reports has one). Dispute errors online. Keep utilization below 30% (if your limit is $1,000, keep the balance below $300). Pay on time every time — set up autopay for at least the minimum. Don\'t close old accounts even if you don\'t use them. Don\'t apply for new credit unless you need it. If you have no credit history, a secured credit card (you deposit $200-500 as collateral) builds history in 6 months.',
+    action:'Go to annualcreditreport.com right now and pull your free report. Look for accounts you don\'t recognize and balances that seem wrong. If you find errors, dispute them — the bureau has 30 days to investigate.',
+    author:'Prof. Nino — 60608' },
+
+  { domain:'money', title:'How to Compare Prices Without Getting Tricked', noun:'Consumer Decision-Making',
+    normal:'When you buy something, you\'re making a trade — giving up money you could have spent on something else. Economists call that the opportunity cost. Comparison shopping means checking the same product or service across multiple sellers to find the best value. "Best value" isn\'t always the lowest price — it\'s the lowest total cost for the quality you need. Total cost includes the sticker price, taxes, fees, shipping, maintenance, and how long the product lasts.',
+    broken:'Stores use psychological tricks to make comparison harder. "Sale" prices that are higher than the regular price at another store. Unit prices hidden or in tiny print (a 24-oz bottle at $3.99 looks cheaper than a 12-oz at $2.49, but the unit price tells the real story: $0.17/oz vs $0.21/oz). "Buy 2 get 1 free" that makes you spend more than you planned. Subscription traps that are easy to start and hard to cancel. Financing offers ("$0 down, $50/month for 24 months") that hide the total price ($1,200 for something worth $800). The entire retail environment is designed to prevent you from doing the math.',
+    fix:'Always check the unit price (price per ounce, per count, per serving) — it\'s on the shelf tag at every grocery store. For big purchases, get quotes from at least three sources. For subscriptions, calculate the annual cost and ask: "Would I pay $120 right now for this?" before signing up for $10/month. For financing, multiply the payment by the number of months to see the real price. Use your phone\'s calculator in the store — no one will judge you, and the 30 seconds of math can save you hundreds.',
+    action:'Next time you\'re at the grocery store, look at the shelf tag under one product you buy every week. Find the unit price. Then check the unit price of the store brand next to it. The difference per ounce, multiplied by 52 weeks, is what that brand loyalty costs you per year.',
+    author:'Community contributor — 60632' },
+
+  { domain:'money', title:'How to Start Investing When You Have Almost Nothing', noun:'Basic Investment Principles',
+    normal:'Investing means putting money into something that you expect will grow over time. The stock market has returned an average of about 10% per year over the last 100 years (about 7% after inflation). That means $100 invested today could be worth roughly $200 in 10 years and $400 in 20 years — without adding a penny. That\'s compound growth: your returns earn their own returns. The earlier you start, the more time does the work for you. You don\'t need to pick individual stocks. An index fund buys a tiny piece of hundreds of companies at once, spreading the risk.',
+    broken:'People think you need thousands of dollars to invest. You don\'t — many apps let you start with $1. People think investing is gambling. It\'s not — gambling has a negative expected return (the house wins over time), while diversified investing has a historically positive return over long periods. People think they need to watch the market daily. They don\'t — the more you check, the more likely you are to panic-sell during a dip and lock in losses. The biggest risk isn\'t losing money in the market. It\'s never investing at all and losing to inflation — your savings account earning 0.5% while prices rise 3% means you\'re losing purchasing power every year.',
+    fix:'If your employer offers a 401(k) or 403(b) with a match, contribute at least enough to get the full match — that\'s a 50-100% instant return on your money. If you don\'t have an employer plan, open a Roth IRA (your contributions can be withdrawn penalty-free if you need them). Choose a target-date fund or a total market index fund — one fund, automatic diversification, low fees. Set up automatic contributions of whatever you can afford ($25/month = $300/year, which could be worth $1,500+ in 15 years). Don\'t check it more than once a quarter.',
+    action:'If you have a 401(k) or 403(b) at work, check if your employer matches contributions. If they do and you\'re not contributing enough to get the full match, you\'re leaving free money on the table. Call HR today and increase your contribution to at least the match level.',
+    author:'Prof. Nino — 60608' },
+
+  { domain:'money', title:'What Insurance Actually Does — and What It Doesn\'t', noun:'Risk Protection',
+    normal:'Insurance is a bet. You pay a small, predictable amount (the premium) so that if something expensive and unpredictable happens, the insurance company pays most of the cost. Health insurance, car insurance, renter\'s insurance, life insurance — they all work the same way. You\'re trading a guaranteed small loss (the premium) for protection against a catastrophic large loss. The deductible is what you pay before insurance kicks in. The copay is your share after insurance kicks in. The premium is what you pay every month whether you use it or not.',
+    broken:'People skip renter\'s insurance because "I don\'t own much." Then a pipe bursts and destroys $5,000 worth of belongings. Renter\'s insurance costs $15-25/month. People keep only the minimum car insurance required by law — then cause an accident with $50,000 in damage and owe the difference. People don\'t understand that health insurance isn\'t just for emergencies — preventive care (checkups, screenings, vaccines) is covered at 100% with no copay under the ACA. And the biggest misconception: "I\'m young and healthy, I don\'t need insurance." That\'s exactly when insurance is cheapest. You\'re not insuring today\'s health — you\'re insuring against tomorrow\'s accident.',
+    fix:'Renter\'s insurance: get it. $15-25/month covers theft, fire, water damage, and liability if someone is injured in your home. Health insurance: use your preventive benefits — annual checkup, screenings, vaccines are free under ACA plans. If you\'re uninsured, check healthcare.gov or your state marketplace during open enrollment. Car insurance: review your coverage annually. If your car is worth less than $5,000, you may not need comprehensive/collision. Life insurance: if anyone depends on your income, term life insurance ($500K for a healthy 30-year-old costs about $25/month) protects them if something happens to you.',
+    action:'If you rent, call any insurance company and ask for a renter\'s insurance quote. It takes 5 minutes and the answer will probably be under $20/month. If you already have health insurance, schedule your free annual preventive visit — it\'s covered at 100%.',
+    author:'Prof. Nino — 60608' }
+];
+
+async function loadModules() {
+  modules = SEED.slice(); // Start with seed content
+
+  if (API) {
+    try {
+      var res = await fetch(API + '?action=get_community_modules');
+      var data = await res.json();
+      if (data.status === 'ok' && data.modules) {
+        data.modules.forEach(function(m) {
+          if (m.approved !== false) modules.push(m);
+        });
+      }
+    } catch(e) { /* use seed only */ }
+  }
+
+  renderGrid();
+}
+
+function renderGrid() {
+  var isEs = EQ && EQ.lang === 'es';
+  var filtered = currentFilter === 'all' ? modules : modules.filter(function(m) { return m.domain === currentFilter; });
+
+  if (filtered.length === 0) {
+    document.getElementById('moduleGrid').innerHTML = '<div class="empty">' + (isEs ? 'No hay guías en esta categoría todavía. ¡Sé el primero!' : 'No guides in this category yet. Be the first!') + '</div>';
+    return;
+  }
+
+  var html = '';
+  filtered.forEach(function(m, idx) {
+    var realIdx = modules.indexOf(m);
+    html += '<div class="mod-card" onclick="showModule(' + realIdx + ')">' +
+      '<div class="mc-domain ' + m.domain + '">' + domainLabel(m.domain, isEs) + '</div>' +
+      '<h3>' + esc(m.title) + '</h3>' +
+      '<div class="mc-noun">' + (isEs ? 'Cuando ' : 'When the ') + esc(m.noun) + (isEs ? ' Falla' : ' Fails') + '</div>' +
+      '<div class="mc-author">' + esc(m.author || 'Community contributor') + '</div></div>';
+  });
+  document.getElementById('moduleGrid').innerHTML = html;
+}
+
+function domainLabel(d, isEs) {
+  var labels = {
+    health: isEs ? '🏥 Salud' : '🏥 Health',
+    money: isEs ? '💰 Dinero' : '💰 Money',
+    rights: isEs ? '⚖️ Derechos' : '⚖️ Rights',
+    power: isEs ? '🏛️ Poder' : '🏛️ Power'
+  };
+  return labels[d] || d;
+}
+
+function filterDomain(d, btn) {
+  currentFilter = d;
+  document.querySelectorAll('.dtab').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderGrid();
+}
+
+function showModule(idx) {
+  var m = modules[idx]; if (!m) return;
+  var isEs = EQ && EQ.lang === 'es';
+  document.getElementById('viewTitle').textContent = m.title;
+  document.getElementById('viewNoun').textContent = (isEs ? 'Cuando ' : 'When the ') + m.noun + (isEs ? ' Falla' : ' Fails');
+  document.getElementById('viewNormal').textContent = m.normal;
+  document.getElementById('viewBroken').textContent = m.broken;
+  document.getElementById('viewFix').textContent = m.fix;
+
+  var actionEl = document.getElementById('viewAction');
+  if (m.action) {
+    document.getElementById('viewActionText').textContent = m.action;
+    actionEl.style.display = '';
+  } else { actionEl.style.display = 'none'; }
+
+  document.getElementById('viewAuthor').textContent = (isEs ? 'Contribuido por ' : 'Contributed by ') + (m.author || 'Community');
+
+  document.getElementById('browseView').style.display = 'none';
+  document.getElementById('nbfView').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showBrowse() {
+  document.getElementById('nbfView').classList.remove('active');
+  document.getElementById('browseView').style.display = '';
+}
+
+function showCreatePanel() {
+  document.getElementById('createPanel').style.display = '';
+  document.getElementById('createPanel').scrollIntoView({ behavior: 'smooth' });
+}
+function hideCreatePanel() {
+  document.getElementById('createPanel').style.display = 'none';
+}
+
+async function submitModule() {
+  var title = document.getElementById('cTitle').value.trim();
+  var noun = document.getElementById('cNoun').value.trim();
+  var normal = document.getElementById('cNormal').value.trim();
+  var broken = document.getElementById('cBroken').value.trim();
+  var fix = document.getElementById('cFix').value.trim();
+
+  if (!title || !noun || !normal || !broken || !fix) {
+    showToast('Fill in all required fields'); return;
+  }
+
+  var mod = {
+    domain: document.getElementById('cDomain').value,
+    title: title, noun: noun,
+    normal: normal, broken: broken, fix: fix,
+    action: document.getElementById('cAction').value.trim(),
+    author: document.getElementById('cAuthor').value.trim() || 'Community contributor'
+  };
+
+  if (API) {
+    try {
+      await fetch(API, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'submit_community_module', module: mod, timestamp: new Date().toISOString() })
+      });
+    } catch(e) { /* save locally */ }
+  }
+
+  modules.push(mod);
+  renderGrid();
+  hideCreatePanel();
+  showToast('Guide submitted! Thank you for contributing.');
+
+  // Clear form
+  ['cTitle','cNoun','cNormal','cBroken','cFix','cAction','cAuthor'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+}
+
+function esc(s) { return (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function showToast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 3000); }
+
+loadModules();
+
+EQ.init({
+  en: {
+    arc_label:'Learn', title:'Things Your Neighbors Figured Out',
+    subtitle:'Guides written by people who\'ve been through it. Each one answers three questions: how is this supposed to work, where does it break down, and what can you actually do? Read what\'s here or write one yourself.',
+    scaffold_explain:'Every guide follows the same three questions: <strong style="color:var(--forest)">How does this work?</strong> — when everything goes right. <strong style="color:var(--coral)">Where does it break?</strong> — where people get stuck. <strong style="color:var(--sage)">What can you do?</strong> — specific steps, phone numbers, exact words to say. This is how people already solve problems. We just wrote it down.',
+    tab_all:'All', tab_health:'Health', tab_money:'Money', tab_rights:'Rights', tab_power:'Power',
+    create_btn:'+ Write a Guide',
+    lbl_normal:'How It Works — When Everything Goes Right', lbl_broken:'Where It Breaks — Where People Get Stuck', lbl_fix:'What To Do — Steps You Can Take', lbl_action:'One Thing You Can Do Right Now',
+    back_btn:'← All Guides',
+    create_title:'Share What You Know',
+    create_desc:'Think of something you figured out the hard way — navigating insurance, fighting an eviction, getting benefits, dealing with a bill. Explain it so the next person doesn\'t have to figure it out alone.',
+    lbl_domain:'Topic', lbl_title_field:'Title', hint_title:'What did you figure out?',
+    lbl_noun_field:'What breaks down?', hint_noun:'What stops working when things go wrong?',
+    lbl_normal_field:'How is this supposed to work when everything goes right?',
+    lbl_broken_field:'Where do people get stuck, denied, or left out?',
+    lbl_fix_field:'What can someone actually do? Phone numbers, websites, exact steps.',
+    lbl_action_field:'One thing someone can do right now (optional)', lbl_author:'Your name and zip code',
+    cancel_btn:'Cancel', submit_btn:'Share This'
+  },
+  es: {
+    arc_label:'Aprender', title:'Cosas Que Tus Vecinos Descubrieron',
+    subtitle:'Guías escritas por personas que ya pasaron por eso. Cada una responde tres preguntas: cómo se supone que funcione, dónde falla, y qué puedes hacer realmente. Lee lo que hay o escribe una tú.',
+    scaffold_explain:'Cada guía sigue las mismas tres preguntas: <strong style="color:var(--forest)">¿Cómo funciona?</strong> — cuando todo va bien. <strong style="color:var(--coral)">¿Dónde falla?</strong> — donde la gente se queda atascada. <strong style="color:var(--sage)">¿Qué puedes hacer?</strong> — pasos específicos, números de teléfono, palabras exactas. Así es como la gente ya resuelve problemas. Solo lo escribimos.',
+    tab_all:'Todos', tab_health:'Salud', tab_money:'Dinero', tab_rights:'Derechos', tab_power:'Poder',
+    create_btn:'+ Escribe una Guía',
+    lbl_normal:'Cómo Funciona — Cuando Todo Va Bien', lbl_broken:'Dónde Falla — Donde la Gente Se Queda Atascada', lbl_fix:'Qué Hacer — Pasos Que Puedes Tomar', lbl_action:'Una Cosa Que Puedes Hacer Ahora Mismo',
+    back_btn:'← Todas las Guías',
+    create_title:'Comparte Lo Que Sabes',
+    create_desc:'Piensa en algo que descubriste por las malas — navegando el seguro, peleando un desalojo, obteniendo beneficios, lidiando con una factura. Explícalo para que la próxima persona no tenga que descubrirlo sola.',
+    lbl_domain:'Tema', lbl_title_field:'Título', hint_title:'¿Qué descubriste?',
+    lbl_noun_field:'¿Qué deja de funcionar?', hint_noun:'¿Qué se descompone cuando las cosas salen mal?',
+    lbl_normal_field:'¿Cómo se supone que funcione cuando todo va bien?',
+    lbl_broken_field:'¿Dónde se queda la gente atascada, negada o excluida?',
+    lbl_fix_field:'¿Qué puede hacer alguien realmente? Números de teléfono, sitios web, pasos exactos.',
+    lbl_action_field:'Una cosa que alguien puede hacer ahora mismo (opcional)', lbl_author:'Tu nombre y código postal',
+    cancel_btn:'Cancelar', submit_btn:'Compartir Esto'
+  }
+}, { footer: true, alertPage: 'knowledge' });
+</script>
+</body>
+</html>

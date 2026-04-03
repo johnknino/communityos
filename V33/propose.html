@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Proposals — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.pr-hero{text-align:center;padding:28px 16px 16px}
+.pr-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.pr-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:440px;margin:0 auto 16px}
+.pr-card{background:var(--warm);border-radius:12px;padding:16px;margin:10px 0;border:1px solid var(--sand)}
+.pr-card .pc-status{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;text-transform:uppercase;letter-spacing:.04em}
+.pc-status.active{background:rgba(91,140,122,.1);color:var(--forest)}
+.pc-status.passed{background:rgba(34,197,94,.1);color:#16a34a}
+.pr-card .pc-title{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin:6px 0 4px}
+.pr-card .pc-body{font-size:.78rem;color:var(--body);line-height:1.6}
+.pr-card .pc-meta{font-size:.62rem;color:var(--dim);margin-top:4px}
+.pr-card .pc-vote{display:flex;gap:8px;margin-top:10px;align-items:center}
+.pr-card .pc-vote button{font-family:var(--display);font-size:.72rem;font-weight:700;padding:8px 16px;border-radius:8px;border:1.5px solid var(--sand);background:#fff;cursor:pointer;transition:.15s}
+.pr-card .pc-vote button:hover{border-color:var(--sage)}
+.pr-card .pc-vote .pv-count{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--forest)}
+.pr-compose{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.pr-compose h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.pr-compose input,.pr-compose textarea,.pr-compose select{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.pr-compose textarea{min-height:80px;resize:vertical}
+.pr-compose button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="pr-hero">
+    <h1 data-t="p_title">Community Proposals</h1>
+    <p data-t="p_sub">Propose a project. Vote on what matters. This is participatory democracy — the community decides what gets done.</p>
+  </div>
+  <div class="pr-compose">
+    <h3 data-t="p_new">Submit a Proposal</h3>
+    <input type="text" id="pName" placeholder="Your name">
+    <input type="text" id="pTitle" placeholder="Proposal title">
+    <select id="pCat"><option value="infrastructure">🏗️ Infrastructure</option><option value="safety">🔒 Safety</option><option value="education">📖 Education</option><option value="health">❤️ Health</option><option value="environment">🌳 Environment</option><option value="food">🍎 Food Access</option><option value="other">Other</option></select>
+    <textarea id="pBody" placeholder="Describe the proposal. What's the problem? What's the solution? Who benefits?"></textarea>
+    <button onclick="submitProposal()">Submit Proposal</button>
+  </div>
+  <div id="tokenArea"></div>
+  <div id="proposalList"></div>
+</div>
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var proposals=[];
+function render(){
+  if(!proposals.length){document.getElementById('proposalList').innerHTML='<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">No proposals yet</div><div class="empty-state-desc">What does your neighborhood need? A community garden, better street lighting, an after-school program? Propose it and let your neighbors vote.</div><button class="empty-state-cta" onclick="document.getElementById(\'pTitle\').focus()">Write a Proposal</button></div>';return}
+  var h='<div class="temporal-badge live" style="margin-bottom:12px">'+proposals.length+' active proposal'+(proposals.length!==1?'s':'')+'</div>';
+  proposals.sort(function(a,b){return(b.votes||0)-(a.votes||0)});
+  proposals.forEach(function(p,i){
+    var v=p.votes||0;
+    var goal=v<10?10:v<25?25:v<50?50:v<100?100:Math.ceil(v/50)*50+50;
+    var pct=Math.min(Math.round(v/goal*100),100);
+    h+='<div class="pr-card"><span class="pc-status active">Active</span>';
+    if(p.author&&p.author!=='Anonymous')h+=' <span class="verified-badge">Verified Neighbor</span>';
+    h+='<div class="pc-title">'+(p.title||'')+'</div>';
+    h+='<div class="pc-body">'+(p.body||p.description||'')+'</div>';
+    h+='<div class="pc-meta">'+(p.author||p.name||'Anonymous')+' · '+(p.category||'')+'</div>';
+    h+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+    h+='<div class="progress-meta"><span class="progress-count">'+v+' / '+goal+' votes</span><span class="progress-goal">'+pct+'% to threshold</span></div>';
+    h+='<div class="pc-vote"><button onclick="vote(\''+p.id+'\')">👍 Support</button></div></div>';
+  });
+  document.getElementById('proposalList').innerHTML=h;
+}
+function load(){
+  if(typeof CommunityAPI==='undefined'||!CommunityAPI.isConfigured()){
+    proposals=[
+      {id:'p1',author:'Community Garden Coalition',category:'food',title:'Convert vacant lot at 19th & Loomis to community garden',body:'There\'s a vacant lot that\'s been empty for 3 years collecting trash. We propose converting it to a community garden with 20 raised beds, a tool shed, and a rainwater collection system. Cost estimate: $8,000 from participatory budget funds.',votes:34},
+      {id:'p2',author:'Parents United',category:'education',title:'After-school tutoring program at Orozco Elementary',body:'Our kids are falling behind in math and reading. We propose a free after-school tutoring program 3 days/week, staffed by community college students earning service hours. Need: space, supplies, and a coordinator. Cost: $3,000/semester.',votes:28},
+      {id:'p3',author:'Block Club 18th St',category:'safety',title:'Better lighting on 18th Street underpass',body:'The underpass between Paulina and Wood is dangerously dark. Three people have been mugged there this year. We need the city to install proper LED lighting. We\'ve collected 200 signatures.',votes:45}
+    ];render();return;
+  }
+  CommunityAPI.smartFetch(CommunityAPI.endpoint()+'?action=get_proposals&zip='+(CommunityAPI.getCommunity()||'60608'))
+    .then(function(r){return r.json()}).then(function(d){proposals=Array.isArray(d)?d:(d.posts||[]);render()}).catch(function(){proposals=[];render()});
+}
+function submitProposal(){
+  var name=document.getElementById('pName').value.trim()||'Anonymous';
+  var title=document.getElementById('pTitle').value.trim();
+  var cat=document.getElementById('pCat').value;
+  var body=document.getElementById('pBody').value.trim();
+  if(!title||!body){alert('Title and description required.');return}
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'submit_proposal',name:name,title:title,category:cat,description:body,zip:CommunityAPI.getCommunity()||'60608'})}).then(function(){document.getElementById('pTitle').value='';document.getElementById('pBody').value='';load()}).catch(function(){alert('Backend unavailable.')});
+  } else {proposals.unshift({id:'lp-'+Date.now(),author:name,category:cat,title:title,body:body,votes:0});document.getElementById('pTitle').value='';document.getElementById('pBody').value='';render()}
+}
+function vote(id){ CivicTokens.requireToken('vote', function(tokenResult) {
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'vote_proposal',id:id,vote:'up'})}).then(function(){load()}).catch(function(){});
+  } else {var p=proposals.find(function(x){return x.id===id});if(p){p.votes=(p.votes||0)+1;render()}}
+  });
+}
+CivicTokens.renderInviteForm('tokenArea');
+load();
+EQ.init({p_title:'Community Proposals',p_title_es:'Propuestas Comunitarias',p_sub:'Propose a project. Vote on what matters. This is participatory democracy — the community decides what gets done.',p_sub_es:'Propón un proyecto. Vota por lo que importa. Democracia participativa — la comunidad decide.',p_new:'Submit a Proposal',p_new_es:'Enviar una Propuesta'});
+</script>
+</body>
+</html>

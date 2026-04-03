@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Court Navigator — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Court Navigator — CommUnity OS">
+<meta property="og:description" content="Going to court? Know what to expect, what to bring, and what your rights are. Free. Bilingual.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Navigate eviction court, small claims, traffic court, and family court. What to expect, what to bring, your rights, deadlines. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.ct-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.ct-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.ct-tab:hover{border-color:var(--sage);color:var(--deep)}
+.ct-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.ct-panel{display:none}.ct-panel.active{display:block}
+.ct-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.ct-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.ct-card p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
+.ct-step{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand)}
+.ct-step:last-child{border-bottom:none}
+.ct-num{width:24px;height:24px;border-radius:50%;background:var(--forest);color:#fff;font-family:var(--display);font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.ct-step .ct-text{flex:1}
+.ct-step .ct-text strong{font-size:.78rem;color:var(--deep);display:block;margin-bottom:2px}
+.ct-step .ct-text p{font-size:.75rem;color:var(--body);line-height:1.6;margin:0}
+.ct-bring{background:#fff;border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid var(--sand)}
+.ct-bring h4{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.ct-bring-item{font-size:.75rem;color:var(--body);padding:3px 0;display:flex;gap:6px;align-items:flex-start}
+.ct-bring-item span{color:var(--sage);flex-shrink:0}
+.ct-nbf{margin-top:14px;padding-top:12px;border-top:1px solid var(--sand)}
+.ct-nbf h5{font-size:.7rem;font-weight:700;margin-bottom:3px}
+.ct-nbf p{font-size:.75rem;line-height:1.6;margin-bottom:6px}
+.ct-nbf .n-t{color:var(--forest)}.ct-nbf .b-t{color:var(--coral)}.ct-nbf .f-t{color:var(--sage)}
+.ct-action{text-align:center;margin:16px 0}
+.ct-action a{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block;transition:.2s;margin:4px}
+.ct-action a:hover{background:var(--deep);color:#fff}
+.ct-warning{background:rgba(212,112,74,.06);border:1px solid rgba(212,112,74,.15);border-radius:12px;padding:14px;margin:12px 0;font-size:.78rem;color:var(--body);line-height:1.6}
+.ct-warning strong{color:var(--coral)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label">RIGHTS</div>
+    <h1 data-t="ct_title">Court Navigator</h1>
+    <p class="subtitle" data-t="ct_sub">Going to court? Know what to expect, what to bring, and what your rights are.</p>
+  </div>
+
+  <div class="ct-warning">
+    <strong>Important:</strong> This is general information about how courts work — not legal advice for your case. If you can, speak with an attorney. If you can't afford one, call Legal Aid Chicago at 312-341-1070 or CARPLS at 312-738-9200.
+  </div>
+
+  <div class="ct-tabs">
+    <div class="ct-tab active" onclick="showCT('eviction')">🏠 Eviction Court</div>
+    <div class="ct-tab" onclick="showCT('small')">💰 Small Claims</div>
+    <div class="ct-tab" onclick="showCT('traffic')">🚗 Traffic Court</div>
+    <div class="ct-tab" onclick="showCT('family')">👨‍👩‍👧 Family Court</div>
+  </div>
+
+  <!-- EVICTION COURT -->
+  <div class="ct-panel active" id="ct-eviction">
+    <div class="ct-card">
+      <h3>Eviction Court — What to Expect</h3>
+      <p>In Illinois, a landlord cannot evict you without going through court. They must file a case, serve you papers, and get a judge's order. You have the right to show up and tell your side.</p>
+
+      <div class="ct-step"><div class="ct-num">1</div><div class="ct-text"><strong>You get a summons</strong><p>The landlord files a case and you receive papers with a court date. Do NOT ignore this. If you don't show up, the judge will likely rule against you automatically (default judgment).</p></div></div>
+      <div class="ct-step"><div class="ct-num">2</div><div class="ct-text"><strong>Show up on your date</strong><p>Arrive early. Dress respectfully. You'll check in with the clerk. The courtroom handles many cases at once — expect to wait.</p></div></div>
+      <div class="ct-step"><div class="ct-num">3</div><div class="ct-text"><strong>You may get a chance to negotiate</strong><p>Before seeing the judge, many courts offer mediation. You and the landlord can try to agree — more time to move, a payment plan, case dismissal. You do NOT have to agree to anything.</p></div></div>
+      <div class="ct-step"><div class="ct-num">4</div><div class="ct-text"><strong>The hearing</strong><p>If you can't agree, the judge hears both sides. Tell the truth. Be brief. Bring your evidence. The judge decides: dismiss the case, give you time, or order eviction. You can appeal.</p></div></div>
+
+      <div class="ct-bring">
+        <h4>📎 What to Bring</h4>
+        <div class="ct-bring-item"><span>✓</span> Your lease (if you have one)</div>
+        <div class="ct-bring-item"><span>✓</span> Proof of rent payments (receipts, bank statements, money order stubs)</div>
+        <div class="ct-bring-item"><span>✓</span> Photos of any housing problems (mold, no heat, broken locks)</div>
+        <div class="ct-bring-item"><span>✓</span> Written communications with your landlord (texts, emails, letters)</div>
+        <div class="ct-bring-item"><span>✓</span> The summons/court papers you received</div>
+        <div class="ct-bring-item"><span>✓</span> A photo ID</div>
+      </div>
+
+      <div class="ct-nbf">
+        <h5 class="n-t">Normal:</h5><p>Eviction is a last resort after proper notice and due process. The court verifies the landlord followed the law. The tenant has the right to respond, present evidence, and negotiate.</p>
+        <h5 class="b-t">Broken:</h5><p>Landlords file eviction for retaliation, skip required notices, lock tenants out illegally, or file cases they know will be dismissed just to create an eviction record. Most tenants don't show up — and lose by default. An eviction filing follows you for 7 years even if the case was dismissed.</p>
+        <h5 class="f-t">Fix:</h5><p>Show up. That alone changes the outcome. Bring evidence. Ask for mediation. If the landlord didn't follow proper notice, tell the judge. If you have an eviction on your record from a dismissed case, Illinois allows record sealing under 735 ILCS 5/9-121. Contact Metropolitan Tenants Organization at 773-292-4988.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMALL CLAIMS -->
+  <div class="ct-panel" id="ct-small">
+    <div class="ct-card">
+      <h3>Small Claims Court</h3>
+      <p>Small claims court handles disputes up to $10,000 in Illinois. No lawyer needed. You file, pay a small fee, and present your case to a judge. Common cases: security deposit not returned, property damage, unpaid debts, contractor disputes.</p>
+
+      <div class="ct-step"><div class="ct-num">1</div><div class="ct-text"><strong>File a complaint</strong><p>Go to the clerk's office in the county where the person or business is located. Fill out a complaint form. Pay the filing fee ($50–150 depending on amount). The clerk will give you a court date.</p></div></div>
+      <div class="ct-step"><div class="ct-num">2</div><div class="ct-text"><strong>Serve the other party</strong><p>The person you're suing must receive official notice. The clerk can arrange service by sheriff ($30–60). You cannot serve the papers yourself.</p></div></div>
+      <div class="ct-step"><div class="ct-num">3</div><div class="ct-text"><strong>Prepare your case</strong><p>Organize your evidence: contracts, receipts, photos, text messages, repair estimates. Write a brief timeline of what happened. Practice explaining it in 3 minutes.</p></div></div>
+      <div class="ct-step"><div class="ct-num">4</div><div class="ct-text"><strong>Present to the judge</strong><p>Tell the truth. Be calm. Show your evidence. The judge will ask questions. If the other party doesn't show, you likely win by default. The judge decides at the hearing or within a few days.</p></div></div>
+
+      <div class="ct-bring">
+        <h4>📎 What to Bring</h4>
+        <div class="ct-bring-item"><span>✓</span> All contracts, receipts, invoices</div>
+        <div class="ct-bring-item"><span>✓</span> Photos documenting the problem</div>
+        <div class="ct-bring-item"><span>✓</span> Text messages, emails, written communications</div>
+        <div class="ct-bring-item"><span>✓</span> Repair estimates or replacement costs</div>
+        <div class="ct-bring-item"><span>✓</span> A written timeline of events</div>
+        <div class="ct-bring-item"><span>✓</span> 3 copies of everything (you, judge, other party)</div>
+      </div>
+
+      <div class="ct-nbf">
+        <h5 class="n-t">Normal:</h5><p>Two people have a dispute over money. Small claims court provides a fast, affordable way to resolve it with a judge — no lawyers needed.</p>
+        <h5 class="b-t">Broken:</h5><p>People don't know small claims court exists, don't know the dollar limit, get intimidated by the courthouse, or don't know how to collect after they win. Winning the judgment and collecting the money are two different things.</p>
+        <h5 class="f-t">Fix:</h5><p>File in person at the clerk's office. If you win and the other party doesn't pay, you can garnish wages or bank accounts through the court. In Illinois, the statute of limitations is 5 years for oral contracts, 10 years for written. Court self-help centers can assist with forms.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAFFIC COURT -->
+  <div class="ct-panel" id="ct-traffic">
+    <div class="ct-card">
+      <h3>Traffic Court</h3>
+      <p>Traffic tickets in Chicago and Cook County are handled differently depending on the type. Parking tickets go to Administrative Hearings. Moving violations go to Traffic Court. Red light and speed camera tickets are administrative.</p>
+
+      <div class="ct-step"><div class="ct-num">1</div><div class="ct-text"><strong>Read your ticket carefully</strong><p>It shows the violation, the fine, the court date (if any), and how to pay or contest. Note the deadline — missing it can double the fine or result in a warrant.</p></div></div>
+      <div class="ct-step"><div class="ct-num">2</div><div class="ct-text"><strong>Decide: pay or contest</strong><p>Paying the ticket is an admission. If you contest, you get a hearing. For moving violations, the officer must appear — if they don't, the case is usually dismissed.</p></div></div>
+      <div class="ct-step"><div class="ct-num">3</div><div class="ct-text"><strong>Request supervision</strong><p>For minor violations, you can request court supervision instead of a conviction. If you complete the supervision period (usually 3–6 months) without another ticket, it doesn't go on your record.</p></div></div>
+
+      <div class="ct-bring">
+        <h4>📎 What to Bring</h4>
+        <div class="ct-bring-item"><span>✓</span> Your ticket</div>
+        <div class="ct-bring-item"><span>✓</span> Driver's license and insurance card</div>
+        <div class="ct-bring-item"><span>✓</span> Photos (if the sign was obscured, the light was malfunctioning, etc.)</div>
+        <div class="ct-bring-item"><span>✓</span> Proof of repair (if cited for equipment violation)</div>
+      </div>
+
+      <div class="ct-nbf">
+        <h5 class="n-t">Normal:</h5><p>You get a ticket. You either pay or contest it. If you contest, you get a hearing. The system is designed to be navigable without a lawyer.</p>
+        <h5 class="b-t">Broken:</h5><p>Tickets pile up into debt. Missed payments become warrants. License suspensions make it impossible to get to work. In Chicago, speed camera tickets disproportionately affect Black and Latino neighborhoods. Administrative fines bypass due process protections. Fine amounts are the same regardless of income.</p>
+        <h5 class="f-t">Fix:</h5><p>If you have outstanding tickets, contact the City of Chicago Department of Finance about payment plans or the Community Service Program. For license reinstatement, call the Illinois Secretary of State Driver Services at 217-782-6212. Check for warrant status before it becomes a bigger problem.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAMILY COURT -->
+  <div class="ct-panel" id="ct-family">
+    <div class="ct-card">
+      <h3>Family Court</h3>
+      <p>Family court handles divorce, custody, child support, orders of protection, and guardianship. These cases are emotional and high-stakes. Knowing the process helps.</p>
+
+      <div class="ct-step"><div class="ct-num">1</div><div class="ct-text"><strong>Orders of protection</strong><p>If you're in danger, you can get an emergency order of protection the same day — no fee, no lawyer needed. Go to the Domestic Violence courthouse. The order is temporary (14–21 days) until a full hearing. Call the National Domestic Violence Hotline: 1-800-799-7233.</p></div></div>
+      <div class="ct-step"><div class="ct-num">2</div><div class="ct-text"><strong>Custody</strong><p>Illinois uses "allocation of parental responsibilities" instead of "custody." The court considers the child's best interest, not which parent "wins." You can represent yourself but a lawyer helps significantly. Low-income parents can request a court-appointed attorney in some cases.</p></div></div>
+      <div class="ct-step"><div class="ct-num">3</div><div class="ct-text"><strong>Child support</strong><p>Illinois uses an income-shares model — both parents' incomes determine the amount. The Illinois Department of Healthcare and Family Services can help establish, modify, or enforce child support orders at no cost: 1-800-447-4278.</p></div></div>
+
+      <div class="ct-bring">
+        <h4>📎 What to Bring</h4>
+        <div class="ct-bring-item"><span>✓</span> Financial documents (pay stubs, tax returns, bank statements)</div>
+        <div class="ct-bring-item"><span>✓</span> Proof of living situation (lease, utility bills)</div>
+        <div class="ct-bring-item"><span>✓</span> Documentation of the children's needs (school, medical, childcare costs)</div>
+        <div class="ct-bring-item"><span>✓</span> Any existing court orders</div>
+        <div class="ct-bring-item"><span>✓</span> Evidence relevant to your case (photos, messages, police reports)</div>
+      </div>
+
+      <div class="ct-nbf">
+        <h5 class="n-t">Normal:</h5><p>Family court resolves disputes about children, safety, and finances when families change. The process is designed to protect children's best interests and ensure both parents contribute.</p>
+        <h5 class="b-t">Broken:</h5><p>People can't afford lawyers, don't understand the process, miss deadlines that affect their children's lives, or face abusive partners who manipulate the court system. Immigrant parents fear that going to court will expose their status.</p>
+        <h5 class="f-t">Fix:</h5><p>Family court proceedings are confidential. Immigration status is generally not relevant and should not be raised. For domestic violence: emergency orders are available same-day at no cost. For custody and support: contact Legal Aid Chicago (312-341-1070) or Chicago Volunteer Legal Services (312-332-1624). The Self-Help Center at the Daley Center can help with forms.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ct-action">
+    <a href="https://www.illinoislegalaid.org/" target="_blank" rel="noopener">Illinois Legal Aid Online →</a>
+    <a href="https://www.cookcountyclerkofcourt.org/" target="_blank" rel="noopener">Cook County Court Info →</a>
+    <a href="/defend.html">Write a Dispute Letter →</a>
+  </div>
+
+  <p style="font-size:.62rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5">This is general information about how courts work in Illinois and Cook County. It is not legal advice. Every case is different. If you need a lawyer and can't afford one, call CARPLS at 312-738-9200 or Legal Aid Chicago at 312-341-1070.</p>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function showCT(id) {
+  document.querySelectorAll('.ct-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.ct-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('ct-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+EQ.init({
+  ct_title: 'Court Navigator',
+  ct_title_es: 'Navegador de Corte',
+  ct_sub: 'Going to court? Know what to expect, what to bring, and what your rights are.',
+  ct_sub_es: '¿Vas a la corte? Sabe qué esperar, qué llevar y cuáles son tus derechos.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Environmental Check — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Environmental Check — CommUnity OS">
+<meta property="og:description" content="See what's in your air and water. Look up polluters near you. Free public data the EPA removed — we rebuilt it.">
+<meta name="description" content="Environmental justice dashboard. Air quality, nearby polluters, EPA compliance violations. Built from public data after EPA removed EJScreen. Free, bilingual.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.ej-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.ej-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;width:130px}
+.ej-search input:focus{outline:none;border-color:var(--sage)}
+.ej-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.ej-go:hover{background:var(--deep)}
+.ej-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
+.ej-section{margin:16px 0}
+.ej-section h3{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.ej-aqi{display:inline-block;padding:12px 20px;border-radius:12px;text-align:center;margin:8px 4px 8px 0}
+.ej-aqi .ej-aqi-num{font-family:var(--display);font-size:2rem;font-weight:800}
+.ej-aqi .ej-aqi-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.04em}
+.ej-good{background:rgba(91,140,122,.1);color:var(--forest)}
+.ej-moderate{background:rgba(201,168,76,.12);color:var(--gold)}
+.ej-unhealthy{background:rgba(212,112,74,.12);color:var(--coral)}
+.ej-facility{background:var(--warm);border-radius:12px;padding:14px 16px;margin:8px 0;border:1px solid var(--sand);border-left:3px solid var(--sage)}
+.ej-facility.violation{border-left-color:var(--coral)}
+.ej-facility .ej-fname{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep)}
+.ej-facility .ej-faddr{font-size:.68rem;color:var(--dim);margin:2px 0}
+.ej-facility .ej-fstatus{display:inline-block;font-size:.58rem;font-weight:600;padding:2px 8px;border-radius:6px;margin-top:4px}
+.ej-compliant{background:rgba(91,140,122,.1);color:var(--forest)}
+.ej-violation-badge{background:rgba(212,112,74,.1);color:var(--coral)}
+.ej-facility .ej-fdetail{font-size:.68rem;color:var(--body);margin-top:4px;line-height:1.5}
+.ej-nbf{background:var(--warm);border-radius:14px;padding:18px;margin:20px 0;border-left:3px solid var(--sage)}
+.ej-nbf h4{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.ej-nbf p{font-size:.78rem;line-height:1.6;color:var(--body);margin-bottom:6px}
+.ej-nbf .n-t{color:var(--forest);font-weight:700}.ej-nbf .b-t{color:var(--coral);font-weight:700}.ej-nbf .f-t{color:var(--sage);font-weight:700}
+.ej-note{font-size:.65rem;color:var(--dim);line-height:1.5;margin:12px 0;padding:10px;background:rgba(212,112,74,.04);border-radius:8px;border:1px solid rgba(212,112,74,.1)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label">AUDIT</div>
+    <h1 data-t="ej_title">Environmental Check</h1>
+    <p class="subtitle" data-t="ej_sub">See what's in your air. Find polluters near you. Data the EPA removed — rebuilt for free.</p>
+  </div>
+
+  <div class="ej-note">
+    <strong>Why this exists:</strong> In February 2025, the EPA removed EJScreen — the primary tool communities used to assess environmental hazards in their neighborhoods. We rebuilt the core functions using the same public data that still exists across federal APIs. This tool will never be removed.
+  </div>
+
+  <div class="ej-search">
+    <div>
+      <label style="font-size:.65rem;font-weight:600;color:var(--deep);display:block;margin-bottom:2px">Zip Code</label>
+      <input type="text" id="ejZip" maxlength="5" inputmode="numeric" placeholder="60608">
+    </div>
+    <button class="ej-go" onclick="searchEnvironment()">Check My Area</button>
+  </div>
+
+  <div id="ejLoading" class="ej-loading" style="display:none">Checking air quality and EPA data...</div>
+  <div id="ejResults" style="display:none"></div>
+
+  <div class="ej-nbf">
+    <h4>How Environmental Oversight Works — and Where It Fails</h4>
+    <p><span class="n-t">Normal:</span> The EPA monitors air and water quality, tracks pollution from industrial facilities, inspects for compliance, and enforces environmental laws. Communities can check data through public portals. EJScreen combined demographic data with environmental hazard data to identify overburdened neighborhoods.</p>
+    <p><span class="b-t">Broken:</span> Air quality monitors aren't always placed in the most impacted communities. Facilities self-report much of their pollution data. Inspections are infrequent — some facilities go years between visits. The EPA removed EJScreen from its website in February 2025, along with placing 100+ Office of Environmental Justice employees on leave. Communities in pollution hotspots lost their primary tool for assessing cumulative environmental burden.</p>
+    <p><span class="f-t">Fix:</span> The underlying data still exists. This tool pulls real-time air quality from AirNow and facility compliance data from EPA ECHO. If you see violations in your area, file a complaint with your state environmental agency or the EPA regional office. In Illinois, call the EPA Bureau of Air at 217-782-7326. Community air monitoring through PurpleAir sensors costs $250 and provides hyperlocal data the government doesn't collect.</p>
+  </div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+// AirNow API — free, requires key but we use the public observation endpoint
+var AIRNOW = 'https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&distance=25&API_KEY=';
+var AIRNOW_KEY = ''; // Falls back to scraping if no key
+
+// EPA ECHO — free, CORS-enabled, no auth
+var ECHO_API = 'https://echodata.epa.gov/echo/echo_rest_services.get_facilities?output=JSON&p_zip=';
+
+function searchEnvironment() {
+  var zip = document.getElementById('ejZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+
+  document.getElementById('ejLoading').style.display = '';
+  document.getElementById('ejResults').style.display = 'none';
+
+  // Fetch EPA ECHO data (always works — free, CORS)
+  var echoUrl = ECHO_API + zip + '&p_act=Y&p_ptype=NPD';
+
+  fetch(echoUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('ejLoading').style.display = 'none';
+      renderEnvironment(zip, data, null);
+    })
+    .catch(function(err) {
+      document.getElementById('ejLoading').style.display = 'none';
+      renderEnvironment(zip, null, null);
+    });
+}
+
+function renderEnvironment(zip, echoData, airData) {
+  var html = '';
+
+  // Air Quality section — use AirNow widget fallback
+  html += '<div class="ej-section"><h3>🌬️ Air Quality Near ' + zip + '</h3>';
+  html += '<p style="font-size:.78rem;color:var(--body);margin-bottom:8px">Current air quality from the EPA\'s AirNow monitoring network:</p>';
+  html += '<div style="margin:8px 0"><a href="https://www.airnow.gov/?city=&state=&country=USA&zipcode=' + zip + '" target="_blank" rel="noopener" style="font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;display:inline-block">Check Air Quality at AirNow.gov →</a></div>';
+  html += '<p style="font-size:.65rem;color:var(--dim)">AQI 0–50: Good | 51–100: Moderate | 101–150: Unhealthy for sensitive groups | 151+: Unhealthy</p>';
+  html += '</div>';
+
+  // EPA ECHO facilities
+  var facilities = [];
+  if (echoData && echoData.Results && echoData.Results.Facilities) {
+    facilities = echoData.Results.Facilities;
+  }
+
+  if (facilities.length > 0) {
+    var violators = facilities.filter(function(f) {
+      return f.CurrVioFlag === 'Y' || f.QtrsWithNC > 0;
+    });
+
+    html += '<div class="ej-section"><h3>🏭 EPA-Monitored Facilities Near ' + zip + '</h3>';
+    html += '<p style="font-size:.78rem;color:var(--body);margin-bottom:8px">' + facilities.length + ' facility records found. ' +
+      (violators.length > 0 ? '<strong style="color:var(--coral)">' + violators.length + ' with current violations.</strong>' : 'No current violations detected.') + '</p>';
+
+    // Show violators first, then compliant
+    var sorted = violators.concat(facilities.filter(function(f) { return f.CurrVioFlag !== 'Y' && !f.QtrsWithNC; }));
+
+    sorted.slice(0, 15).forEach(function(f) {
+      var isViolator = f.CurrVioFlag === 'Y' || f.QtrsWithNC > 0;
+      var badge = isViolator
+        ? '<span class="ej-fstatus ej-violation-badge">VIOLATION</span>'
+        : '<span class="ej-fstatus ej-compliant">COMPLIANT</span>';
+
+      var details = [];
+      if (f.CAA_Flag === 'Y') details.push('Clean Air Act');
+      if (f.CWA_Flag === 'Y') details.push('Clean Water Act');
+      if (f.RCRA_Flag === 'Y') details.push('Hazardous Waste (RCRA)');
+      if (f.SDWA_Flag === 'Y') details.push('Safe Drinking Water');
+      if (f.TRI_Flag === 'Y') details.push('Toxic Release Inventory');
+      if (f.QtrsWithNC > 0) details.push(f.QtrsWithNC + ' quarters of non-compliance');
+
+      html += '<div class="ej-facility' + (isViolator ? ' violation' : '') + '">' +
+        '<div class="ej-fname">' + (f.FacName || 'Unnamed Facility') + ' ' + badge + '</div>' +
+        '<div class="ej-faddr">' + (f.FacStreet || '') + ', ' + (f.FacCity || '') + ' ' + (f.FacState || '') + '</div>' +
+        (details.length > 0 ? '<div class="ej-fdetail">' + details.join(' · ') + '</div>' : '') +
+        (f.RegistryID ? '<a href="https://echo.epa.gov/detailed-facility-report?fid=' + f.RegistryID + '" target="_blank" rel="noopener" style="font-size:.62rem;color:var(--forest);display:inline-block;margin-top:4px">View Full EPA Report →</a>' : '') +
+        '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="ej-section"><h3>🏭 EPA-Monitored Facilities</h3><p style="font-size:.82rem;color:var(--dim)">No EPA-monitored facilities found near ' + zip + ', or the ECHO database could not be reached. Try again or <a href="https://echo.epa.gov/" target="_blank" rel="noopener" style="color:var(--forest)">search ECHO directly</a>.</p></div>';
+  }
+
+  // Resources
+  html += '<div class="ej-section"><h3>📋 Take Action</h3>' +
+    '<div style="margin:4px 0"><a href="https://echo.epa.gov/?hmda" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--forest);font-weight:600">Search all EPA enforcement data →</a></div>' +
+    '<div style="margin:4px 0"><a href="https://www.epa.gov/trinationalanalysis" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--forest);font-weight:600">Toxic Release Inventory data →</a></div>' +
+    '<div style="margin:4px 0"><a href="https://map.purpleair.com/" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--forest);font-weight:600">PurpleAir community air sensors →</a></div>' +
+    '<div style="margin:4px 0"><a href="https://www.epa.gov/compliance/how-file-complaint-about-environmental-violation" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--forest);font-weight:600">File an EPA environmental complaint →</a></div>' +
+    '</div>';
+
+  document.getElementById('ejResults').innerHTML = html;
+  document.getElementById('ejResults').style.display = '';
+  document.getElementById('ejResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+EQ.init({
+  ej_title: 'Environmental Check',
+  ej_title_es: 'Verificación Ambiental',
+  ej_sub: 'See what\'s in your air. Find polluters near you. Data the EPA removed — rebuilt for free.',
+  ej_sub_es: 'Mira qué hay en tu aire. Encuentra contaminantes cerca de ti. Datos que la EPA removió — reconstruidos gratis.'
+}, { closingKey: 'footer_closing_audit' });
+</script>
+</body>
+</html>

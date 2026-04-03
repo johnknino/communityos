@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learn — CommUnity OS</title>
+<meta name="description" content="Free bilingual civic education. Health, money, rights, and power — organized from basics to action. Build the capacity to see what systems understate.">
+<meta property="og:title" content="Learn — CommUnity OS">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:description" content="Health. Money. Rights. Power. From basics to action — in English and Spanish.">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.learn-intro{max-width:580px;margin:0 auto 28px;text-align:center}
+.learn-intro p{font-size:.88rem;color:var(--dim);line-height:1.7}
+
+.domain-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.domain-tab{font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:6px 16px;border-radius:10px;border:1.5px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.2s}
+.domain-tab:hover,.domain-tab.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.06)}
+.domain-tab[data-d="health"].active{border-color:var(--coral);color:var(--coral);background:rgba(196,101,74,.06)}
+.domain-tab[data-d="money"].active{border-color:var(--gold);color:var(--gold-d);background:rgba(184,150,62,.06)}
+.domain-tab[data-d="rights"].active{border-color:var(--sage);color:var(--forest)}
+.domain-tab[data-d="power"].active{border-color:var(--forest);color:var(--deep);background:rgba(26,60,52,.06)}
+
+.tier-bar{display:flex;gap:4px;justify-content:center;margin-bottom:20px}
+.tier-btn{font-family:var(--sans);font-size:.62rem;font-weight:500;letter-spacing:.04em;padding:4px 10px;border-radius:8px;border:1px solid var(--sand);background:transparent;color:var(--light);cursor:pointer;transition:.2s}
+.tier-btn:hover,.tier-btn.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.04)}
+
+.domain-panel{display:none}
+.domain-panel.active{display:block}
+
+.tier-section{display:none;max-width:600px;margin:0 auto}
+.tier-section.active{display:block}
+.tier-label{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:4px}
+.tier-title{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin-bottom:6px}
+.tier-desc{font-size:.78rem;color:var(--dim);margin-bottom:16px;line-height:1.5}
+
+.resource-card{background:var(--warm);border-radius:12px;padding:14px 18px;margin-bottom:10px;border:1px solid transparent;transition:.2s}
+.resource-card:hover{border-color:var(--sand)}
+.rc-title{font-size:.85rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.rc-desc{font-size:.78rem;color:var(--dim);line-height:1.5;margin-bottom:6px}
+.rc-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rc-tag{font-size:.55rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:6px}
+.rc-tag.video{background:rgba(196,101,74,.08);color:var(--coral)}
+.rc-tag.tool{background:rgba(90,138,120,.08);color:var(--sage)}
+.rc-tag.guide{background:rgba(184,150,62,.08);color:var(--gold-d)}
+.rc-tag.es{background:rgba(26,60,52,.08);color:var(--forest)}
+.rc-tag.gov{background:rgba(138,138,130,.08);color:var(--dim)}
+.rc-link{font-size:.72rem;color:var(--sage);text-decoration:none}
+.rc-link:hover{color:var(--forest);text-decoration:underline}
+
+.coming-soon{text-align:center;padding:32px;color:var(--light);font-size:.82rem;font-style:italic}
+
+.canning-callout{background:linear-gradient(135deg,rgba(90,138,120,.06),rgba(184,150,62,.06));border:1px solid var(--sand);border-radius:12px;padding:18px 20px;margin:16px 0;text-align:center}
+.canning-callout h3{font-family:var(--display);font-size:.92rem;color:var(--deep);margin-bottom:6px}
+.canning-callout p{font-size:.78rem;color:var(--dim);margin-bottom:10px}
+.canning-callout a{font-size:.75rem;color:var(--sage);font-weight:500}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/learn.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Learn — CommUnity OS", "url": "https://comm-unity-os.org/learn.html", "description": "Free bilingual learning resources: health, money, rights, power. 45 curated resources, 22 in Spanish. Four tiers from basics to action.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+<div class="page" role="main">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Learn</div>
+    <h1 data-t="title">Build Your Capacity</h1>
+    <div class="subtitle" data-t="subtitle">Free education in four domains. Start with what you need now. Come back when you need more. Every resource works in English and Spanish where available.</div>
+  </div>
+
+  <div class="learn-intro fade-in fade-in-1">
+    <p data-t="intro">Every system understates something. These resources help you see what each one minimizes — and know where to find what's missing. Start anywhere. The four tiers go from basics to action.</p>
+  </div>
+
+  <!-- DOMAIN TABS -->
+  <div class="domain-tabs fade-in fade-in-1">
+    <button class="domain-tab active" data-d="health" onclick="setDomain('health')" data-t="tab_health">🩺 Health</button>
+    <button class="domain-tab" data-d="money" onclick="setDomain('money')" data-t="tab_money">💰 Money</button>
+    <button class="domain-tab" data-d="rights" onclick="setDomain('rights')" data-t="tab_rights">⚖️ Rights</button>
+    <button class="domain-tab" data-d="power" onclick="setDomain('power')" data-t="tab_power">🏛️ Power</button>
+  </div>
+
+  <!-- TIER BAR -->
+  <div class="tier-bar fade-in fade-in-1">
+    <button class="tier-btn active" onclick="setTier(1)" data-t="t1">Foundations</button>
+    <button class="tier-btn" onclick="setTier(2)" data-t="t2">Building</button>
+    <button class="tier-btn" onclick="setTier(3)" data-t="t3">Launch</button>
+    <button class="tier-btn" onclick="setTier(4)" data-t="t4">Mastery</button>
+  </div>
+
+  <!-- ═══════════ HEALTH DOMAIN ═══════════ -->
+  <div class="domain-panel active" id="panel-health">
+
+    <div class="tier-section active" id="health-1">
+      <div class="tier-label" data-t="t1_label">Tier 1 — Foundations</div>
+      <div class="tier-title" data-t="health_t1_title">What things are</div>
+      <div class="tier-desc" data-t="health_t1_desc">Basic health concepts every family should know. What is blood pressure? What is diabetes? How does nutrition work?</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Khan Academy: Health & Medicine</div>
+        <div class="rc-desc">Free structured health education — diabetes, blood pressure, cardiovascular system, nutrition.</div>
+        <div class="rc-meta">
+          <span class="rc-tag video">Video</span>
+          <span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.khanacademy.org/science/health-and-medicine" target="_blank" rel="noopener">khanacademy.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Khan Academy en Español: Salud</div>
+        <div class="rc-desc">Translated health content including "¿Qué es la presión arterial?" and diabetes/insulin videos. The single best free health resource in Spanish.</div>
+        <div class="rc-meta">
+          <span class="rc-tag video">Video</span>
+          <span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://es.khanacademy.org/science/health-and-medicine" target="_blank" rel="noopener">es.khanacademy.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">CDC: Food Safety Basics</div>
+        <div class="rc-desc">How to store, prepare, and handle food safely. Available in English and Spanish.</div>
+        <div class="rc-meta">
+          <span class="rc-tag gov">Government</span>
+          <span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.cdc.gov/food-safety/" target="_blank" rel="noopener">cdc.gov →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Healthcare.gov: Insurance Basics</div>
+        <div class="rc-desc">What health insurance is, how it works, how to enroll. Full Spanish version at CuidadoDeSalud.gov.</div>
+        <div class="rc-meta">
+          <span class="rc-tag gov">Government</span>
+          <span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.healthcare.gov/" target="_blank" rel="noopener">healthcare.gov →</a>
+        </div>
+      </div>
+
+      <div class="canning-callout">
+        <h3 data-t="canning_title">🫙 The Science of Safe Canning</h3>
+        <p data-t="canning_desc">A complete food preservation workshop. How safe canning works, where it goes wrong, and what to do about it. Three levels so you can start wherever you are.</p>
+        <a href="https://canning.comm-unity-os.org" target="_blank" rel="noopener">canning.comm-unity-os.org →</a>
+      </div>
+
+      <div class="canning-callout" style="border-left:4px solid var(--sage)">
+        <h3 data-t="knowledge_title">📖 Community Knowledge</h3>
+        <p data-t="knowledge_callout">Guides written by neighbors about things they figured out. Prescriptions, overdrafts, rent, ICE rights, council meetings — how it works, where it breaks, what to do. Read them or write your own.</p>
+        <a href="/knowledge.html">Browse and contribute →</a>
+      </div>
+
+      <div class="canning-callout" style="border-left:4px solid var(--leaf, var(--forest))">
+        <h3 data-t="grow_title">🌱 Grow Your Own Food</h3>
+        <p data-t="grow_callout">Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and a month-by-month calendar based on your frost dates. No yard required.</p>
+        <a href="/grow.html" data-t="grow_link">Get your growing guide →</a>
+      </div>
+    </div>
+
+    <div class="tier-section" id="health-2">
+      <div class="tier-label">Tier 2 — Building</div>
+      <div class="tier-title" data-t="health_t2_title">How systems work</div>
+      <div class="tier-desc" data-t="health_t2_desc">How does insulin resistance develop? How does cardiovascular disease progress? How does the healthcare system actually work?</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Khan Academy: Diabetes Series</div>
+        <div class="rc-desc">Type I, Type II, glucose/insulin mechanics, complications. Available in Spanish through Khan en Español.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.khanacademy.org/science/health-and-medicine/endocrine-system-diseases" target="_blank" rel="noopener">khanacademy.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Johns Hopkins: Diabetes Education Videos</div>
+        <div class="rc-desc">Free videos by registered dietitians covering management, monitoring, and lifestyle changes.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://hopkinsdiabetesinfo.org/videos/" target="_blank" rel="noopener">hopkinsdiabetesinfo.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">MedlinePlus en Español</div>
+        <div class="rc-desc">NIH-backed health information in Spanish covering every major condition. Trusted, government-sourced, plain language.</div>
+        <div class="rc-meta"><span class="rc-tag gov">Government</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://medlineplus.gov/spanish/" target="_blank" rel="noopener">medlineplus.gov/spanish →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="health-3">
+      <div class="tier-label">Tier 3 — Launch</div>
+      <div class="tier-title" data-t="health_t3_title">Where systems fail</div>
+      <div class="tier-desc" data-t="health_t3_desc">Insurance denials. Prior authorization delays. Medical debt. The gap between what the system promises and what it delivers.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Last Week Tonight: Medicare Advantage</div>
+        <div class="rc-desc">How insurance companies use prior authorization and narrow networks to deny care. October 2025 episode.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@LastWeekTonight" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Last Week Tonight: Medical Debt</div>
+        <div class="rc-desc">How the debt collection industry works. The show purchased and forgave $14.9 million in medical debt to demonstrate the system.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@LastWeekTonight" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Patient Advocate Foundation</div>
+        <div class="rc-desc">Free help appealing insurance denials, navigating prior authorization, and understanding your rights as a patient. Spanish available.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.patientadvocate.org" target="_blank" rel="noopener">patientadvocate.org →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="health-4">
+      <div class="tier-label">Tier 4 — Mastery</div>
+      <div class="tier-title" data-t="health_t4_title">What to do</div>
+      <div class="tier-desc" data-t="health_t4_desc">Read your own lab results. Advocate at a doctor's visit. Appeal an insurance denial. Navigate the system for your family.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Counterforce Health: Free Appeal Letters</div>
+        <div class="rc-desc">AI-assisted insurance appeal letter service from UPenn/NIH researchers. Free. Helps you fight denials with evidence.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="https://counterforchealth.org" target="_blank" rel="noopener">counterforchealth.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">988 Suicide & Crisis Lifeline</div>
+        <div class="rc-desc">Call, text, or chat 988. Press 2 for Spanish. Text AYUDA to 988. 240+ languages available. 24/7.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://988lifeline.org" target="_blank" rel="noopener">988lifeline.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Poison Control: <a href="tel:18002221222" class="tel-link">1-800-222-1222</a></div>
+        <div class="rc-desc">Immediate help for poisoning emergencies. 200+ languages. Free. Available 24/7.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.poison.org" target="_blank" rel="noopener">poison.org →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ MONEY DOMAIN ═══════════ -->
+  <div class="domain-panel" id="panel-money">
+
+    <div class="tier-section active" id="money-1">
+      <div class="tier-label">Tier 1 — Foundations</div>
+      <div class="tier-title" data-t="money_t1_title">What things are</div>
+      <div class="tier-desc" data-t="money_t1_desc">Budgeting basics. What a pay stub means. How SNAP works. Where money comes from and where it goes.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Khan Academy: Personal Finance</div>
+        <div class="rc-desc">Budgeting, saving, taxes, insurance — structured free course. Available in Spanish.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.khanacademy.org/college-careers-more/personal-finance" target="_blank" rel="noopener">khanacademy.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Pequeño Cerdo Capitalista</div>
+        <div class="rc-desc">Top Spanish-language personal finance channel. Budgets, saving, debt — accessible Mexican Spanish by author Sofía Macías.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.youtube.com/@PequenoCerdoCapitalista" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Consumer.gov: Your Paycheck Explained</div>
+        <div class="rc-desc">What gross pay, net pay, taxes, FICA, and deductions mean. Multilingual. Government-backed.</div>
+        <div class="rc-meta"><span class="rc-tag gov">Government</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://consumer.gov/managing-your-money/your-paycheck-explained" target="_blank" rel="noopener">consumer.gov →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">FDIC Money Smart</div>
+        <div class="rc-desc">Free financial education in English, Spanish, Chinese, Korean, Vietnamese, Braille, and Large Print.</div>
+        <div class="rc-meta"><span class="rc-tag gov">Government</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.fdic.gov/consumer-resource-center/learn-money-smart" target="_blank" rel="noopener">fdic.gov →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="money-2">
+      <div class="tier-label">Tier 2 — Building</div>
+      <div class="tier-title" data-t="money_t2_title">How systems work</div>
+      <div class="tier-desc" data-t="money_t2_desc">Compound interest — both savings and debt. Credit scores. SNAP benefit calculations. How the systems that touch your money actually operate.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">CBPP: Quick Guide to SNAP Eligibility & Benefits</div>
+        <div class="rc-desc">How SNAP benefits are calculated. Maximum benefit minus 30% of net income. Deductions, exemptions, work requirements.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span>
+          <a class="rc-link" href="https://www.cbpp.org/research/food-assistance/a-quick-guide-to-snap-eligibility-and-benefits" target="_blank" rel="noopener">cbpp.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Eduardo Rosas: Finanzas Personales</div>
+        <div class="rc-desc">Spanish-language financial education. Budget basics, 50/30/20 rule, compound interest explained simply.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.youtube.com/@EduardoRosas" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">CFPB: Your Money, Your Goals</div>
+        <div class="rc-desc">Free toolkit for assessing income, setting financial goals, building a plan. Particularly useful for variable income families. English and Spanish.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.consumerfinance.gov/consumer-tools/educator-tools/your-money-your-goals/" target="_blank" rel="noopener">consumerfinance.gov →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="money-3">
+      <div class="tier-label">Tier 3 — Launch</div>
+      <div class="tier-title" data-t="money_t3_title">Where systems fail</div>
+      <div class="tier-desc" data-t="money_t3_desc">Predatory lending. Credit repair scams. Wage theft. The gap between what financial systems promise and how they actually work against you.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Last Week Tonight: Predatory Lending</div>
+        <div class="rc-desc">How payday loan companies charge up to 1,900% APR and capture state legislatures to keep it legal.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@LastWeekTonight" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">FTC: Identity Theft Recovery</div>
+        <div class="rc-desc">Step-by-step identity theft recovery plan. File a report, get a recovery plan, track your progress. Free. Spanish available.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.identitytheft.gov" target="_blank" rel="noopener">identitytheft.gov →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">AnnualCreditReport.com</div>
+        <div class="rc-desc">The ONLY authorized source for free credit reports. One from each bureau per year. Beware imitations. Spanish available.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.annualcreditreport.com" target="_blank" rel="noopener">annualcreditreport.com →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="money-4">
+      <div class="tier-label">Tier 4 — Mastery</div>
+      <div class="tier-title" data-t="money_t4_title">What to do</div>
+      <div class="tier-desc" data-t="money_t4_desc">Appeal a SNAP denial. File a wage theft complaint. Report fraud. Take action with the knowledge you've built.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Illinois Legal Aid: SNAP Appeals</div>
+        <div class="rc-desc">How to appeal a SNAP denial in Illinois. File within 90 days. Request benefits continue during appeal. Call (800) 435-0774.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.illinoislegalaid.org/legal-information/appealing-snap-benefits-decision" target="_blank" rel="noopener">illinoislegalaid.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Illinois DOL: File a Wage Theft Complaint</div>
+        <div class="rc-desc">Report unpaid wages, stolen tips, or misclassification. Illinois Department of Labor complaint form.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="https://labor.illinois.gov/complaints.html" target="_blank" rel="noopener">labor.illinois.gov →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">CFPB: File a Complaint</div>
+        <div class="rc-desc">Complaints about banks, credit cards, debt collectors, mortgages. 180+ languages by phone. Companies must respond.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.consumerfinance.gov/complaint/" target="_blank" rel="noopener">consumerfinance.gov →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHTS DOMAIN ═══════════ -->
+  <div class="domain-panel" id="panel-rights">
+
+    <div class="tier-section active" id="rights-1">
+      <div class="tier-label">Tier 1 — Foundations</div>
+      <div class="tier-title" data-t="rights_t1_title">What things are</div>
+      <div class="tier-desc" data-t="rights_t1_desc">Basic rights every person has. Tenant rights. Worker rights. Patient rights. What the law says — in language anyone can understand.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Illinois Legal Aid Online</div>
+        <div class="rc-desc">Free legal information and forms covering housing, employment, family, immigration, and public benefits. English and Spanish.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.illinoislegalaid.org" target="_blank" rel="noopener">illinoislegalaid.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Chicago RLTO: Tenant Rights</div>
+        <div class="rc-desc">Chicago's Residential Landlord-Tenant Ordinance. What landlords can and can't do. Security deposit rules. Eviction process. Available in multiple languages.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://www.chicago.gov/city/en/depts/doh/provdrs/landlords.html" target="_blank" rel="noopener">chicago.gov →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="rights-2">
+      <div class="tier-label">Tier 2 — Building</div>
+      <div class="tier-title" data-t="rights_t2_title">How systems work</div>
+      <div class="tier-desc" data-t="rights_t2_desc">How eviction court works. How SNAP eligibility is determined. How worker protections are enforced — and where they aren't.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">LegalEagle (YouTube)</div>
+        <div class="rc-desc">Attorney explains legal systems in accessible language. Tenant rights, consumer protection, civic processes.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@LegalEagle" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">IL Attorney General: Consumer Protection</div>
+        <div class="rc-desc">Scam alerts, complaint filing, consumer rights under Illinois law.</div>
+        <div class="rc-meta"><span class="rc-tag gov">Government</span>
+          <a class="rc-link" href="https://www.illinoisattorneygeneral.gov/consumer-protection/" target="_blank" rel="noopener">illinoisattorneygeneral.gov →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="rights-3">
+      <div class="tier-label">Tier 3 — Launch</div>
+      <div class="tier-title" data-t="rights_t3_title">Where systems fail</div>
+      <div class="tier-desc" data-t="rights_t3_desc">Wage theft costs workers $50 billion/year. 1 in 5 construction workers experiences it. Insurance companies deny claims using algorithms. Rights exist on paper — enforcement is the gap.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Last Week Tonight: Gerrymandering</div>
+        <div class="rc-desc">How redistricting undermines representation. Packing, cracking, and what it means for your vote.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@LastWeekTonight" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Vox: How Food Deserts Are Created</div>
+        <div class="rc-desc">Redlining, disinvestment, and grocery store consolidation. How policy decisions decades ago determine who eats today.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@Vox" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="rights-4">
+      <div class="tier-label">Tier 4 — Mastery</div>
+      <div class="tier-title" data-t="rights_t4_title">What to do</div>
+      <div class="tier-desc" data-t="rights_t4_desc">File a FOIA request. Appeal a SNAP denial. Report wage theft. Register to vote. Take the knowledge you've built and act on it.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">BGA: How to File a FOIA Request in Illinois</div>
+        <div class="rc-desc">Step-by-step guide. No special form needed — must be in writing. Agencies respond within 5 business days. Appeals go to IL AG.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span>
+          <a class="rc-link" href="https://www.bettergov.org/2022/12/05/how-to-file-a-foia-request-in-illinois/" target="_blank" rel="noopener">bettergov.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Vote.gov: Register to Vote</div>
+        <div class="rc-desc">Official federal voter registration. Available in multiple languages including Spanish.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span><span class="rc-tag es">Español</span>
+          <a class="rc-link" href="https://vote.gov" target="_blank" rel="noopener">vote.gov →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ POWER DOMAIN ═══════════ -->
+  <div class="domain-panel" id="panel-power">
+
+    <div class="tier-section active" id="power-1">
+      <div class="tier-label">Tier 1 — Foundations</div>
+      <div class="tier-title" data-t="power_t1_title">What things are</div>
+      <div class="tier-desc" data-t="power_t1_desc">What is a school board? What does an alderman do? What is a park district? How does your local government actually work?</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Chicago Ward Lookup</div>
+        <div class="rc-desc">Find your alderman by address. Chicago has 50 wards — your alderman controls zoning, menu money ($1.5M/year), and local infrastructure.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="https://www.chicago.gov/city/en/about/wards.html" target="_blank" rel="noopener">chicago.gov →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Community Tool Box: Civic Participation</div>
+        <div class="rc-desc">University of Kansas resource on community problem-solving, organizing, and civic engagement. Free, comprehensive.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span>
+          <a class="rc-link" href="https://ctb.ku.edu/en" target="_blank" rel="noopener">ctb.ku.edu →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="power-2">
+      <div class="tier-label">Tier 2 — Building</div>
+      <div class="tier-title" data-t="power_t2_title">How systems work</div>
+      <div class="tier-desc" data-t="power_t2_desc">How municipal budgets work. How participatory budgeting lets communities decide where $1M goes. How public meetings actually function.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Chicago 49th Ward: Participatory Budgeting</div>
+        <div class="rc-desc">The first PB process in America (2009). Now in its 15th cycle. Residents 14+ vote on $1M in projects — regardless of citizenship or voter registration.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="https://49thward.org/participatory-budgeting-1" target="_blank" rel="noopener">49thward.org →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">HealthCare Triage (YouTube)</div>
+        <div class="rc-desc">Dr. Aaron Carroll explains how the healthcare system works — policy, evidence, outcomes. Accessible and evidence-based.</div>
+        <div class="rc-meta"><span class="rc-tag video">Video</span>
+          <a class="rc-link" href="https://www.youtube.com/@healthcaretriage" target="_blank" rel="noopener">YouTube →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="power-3">
+      <div class="tier-label">Tier 3 — Launch</div>
+      <div class="tier-title" data-t="power_t3_title">Where systems fail</div>
+      <div class="tier-desc" data-t="power_t3_desc">Why do only some wards have participatory budgeting? Why does the grocery store get $11M in subsidies and leave anyway? Where does accountability break down?</div>
+
+      <div class="resource-card">
+        <div class="rc-title">The TRiiBE: Why Aren't Black Wards Doing PB?</div>
+        <div class="rc-desc">Investigation into why participatory budgeting is unevenly distributed across Chicago. Capacity, outreach, and structural barriers.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span>
+          <a class="rc-link" href="https://thetriibe.com/2025/07/what-is-participatory-budgeting-and-why-arent-many-black-wards-doing-it/" target="_blank" rel="noopener">thetriibe.com →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Block Club: SNAP Paused — How to Find Food</div>
+        <div class="rc-desc">Practical Chicago guide to finding food when SNAP benefits are disrupted. Neighborhood-specific resources.</div>
+        <div class="rc-meta"><span class="rc-tag guide">Guide</span>
+          <a class="rc-link" href="https://blockclubchicago.org/2025/11/05/how-to-find-food-or-help-neighbors-in-need-while-snap-is-paused/" target="_blank" rel="noopener">blockclubchicago.org →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-section" id="power-4">
+      <div class="tier-label">Tier 4 — Mastery</div>
+      <div class="tier-title" data-t="power_t4_title">What to do</div>
+      <div class="tier-desc" data-t="power_t4_desc">Check your leaders. Assess your programs. Attend the meeting. Hold up the scorecard. This is where the arc closes.</div>
+
+      <div class="resource-card">
+        <div class="rc-title">Leader Check → CommUnity OS</div>
+        <div class="rc-desc">Score your alderman, school board member, or program director on criteria your community defines. Print the scorecard. Take it to the meeting.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="/evaluate.html">comm-unity-os.org/evaluate →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Assess a Program → CommUnity OS</div>
+        <div class="rc-desc">Is the food pantry working? Is the youth program producing results? Score it yourself and bring the card to the meeting.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="/assess.html">comm-unity-os.org/assess →</a>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <div class="rc-title">Cook County Board of Review: Property Tax Appeals</div>
+        <div class="rc-desc">Appeal your property tax assessment. Free. The Board of Review exists for this purpose.</div>
+        <div class="rc-meta"><span class="rc-tag tool">Tool</span>
+          <a class="rc-link" href="https://www.cookcountyboardofreview.com" target="_blank" rel="noopener">cookcountyboardofreview.com →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var currentDomain = 'health';
+var currentTier = 1;
+
+function setDomain(d) {
+  currentDomain = d;
+  document.querySelectorAll('.domain-tab').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('.domain-tab[data-d="' + d + '"]').classList.add('active');
+  document.querySelectorAll('.domain-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('panel-' + d).classList.add('active');
+  setTier(1);
+}
+
+function setTier(t) {
+  currentTier = t;
+  document.querySelectorAll('.tier-btn').forEach(function(b,i) { b.classList.toggle('active', i === t-1); });
+  var panel = document.getElementById('panel-' + currentDomain);
+  panel.querySelectorAll('.tier-section').forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById(currentDomain + '-' + t);
+  if (target) target.classList.add('active');
+}
+
+// Deep link: ?domain=money&tier=3
+var params = new URLSearchParams(window.location.search);
+if (params.get('domain')) setDomain(params.get('domain'));
+if (params.get('tier')) setTier(parseInt(params.get('tier')));
+
+EQ.init({
+  en: {
+    arc_label:'Learn', title:'Build Your Capacity',
+    subtitle:'Free education in four domains. Start with what you need now. Come back when you need more. Every resource works in English and Spanish where available.',
+    intro:'Every system understates something. These resources help you see what each one minimizes — and know where to find what\'s missing. Start anywhere. The four tiers go from basics to action.',
+    tab_health:'🩺 Health', tab_money:'💰 Money', tab_rights:'⚖️ Rights', tab_power:'🏛️ Power',
+    t1:'Foundations', t2:'Building', t3:'Launch', t4:'Mastery',
+    canning_title:'🫙 The Science of Safe Canning',
+    canning_desc:'A complete food preservation workshop. How safe canning works, where it goes wrong, and what to do about it. Three levels so you can start wherever you are.',
+    knowledge_title:'📖 Community Knowledge',
+    knowledge_callout:'Guides written by neighbors about things they figured out. Prescriptions, overdrafts, rent, ICE rights, council meetings — how it works, where it breaks, what to do. Read them or write your own.',
+    grow_title:'🌱 Grow Your Own Food',
+    grow_callout:'Enter your zip code. Get a personalized container garden guide — what to plant, when to plant, and a month-by-month calendar based on your frost dates. No yard required.',
+    grow_link:'Get your growing guide →'
+  },
+  es: {
+    arc_label:'Aprender', title:'Construye Tu Capacidad',
+    subtitle:'Educación gratuita en cuatro áreas. Empieza con lo que necesitas ahora. Regresa cuando necesites más. Cada recurso funciona en inglés y español donde esté disponible.',
+    intro:'Cada sistema subestima algo. Estos recursos te ayudan a ver lo que cada uno minimiza — y saber dónde encontrar lo que falta. Empieza donde quieras. Los cuatro niveles van de lo básico a la acción.',
+    tab_health:'🩺 Salud', tab_money:'💰 Dinero', tab_rights:'⚖️ Derechos', tab_power:'🏛️ Poder',
+    t1:'Fundamentos', t2:'Construyendo', t3:'Lanzamiento', t4:'Dominio',
+    canning_title:'🫙 La Ciencia de Enlatar Seguro',
+    canning_desc:'Un taller completo de conservación de alimentos. Cómo funciona el enlatado seguro, dónde puede fallar y qué hacer al respecto. Tres niveles para que empieces donde quieras.',
+    knowledge_title:'📖 Conocimiento Comunitario',
+    knowledge_callout:'Guías escritas por vecinos sobre cosas que descubrieron. Recetas, sobregiros, renta, derechos ante ICE, reuniones del consejo — cómo funciona, dónde falla, qué hacer. Léelas o escribe la tuya.',
+    grow_title:'🌱 Cultiva Tu Propia Comida',
+    grow_callout:'Ingresa tu código postal. Obtén una guía personalizada de jardín en contenedores — qué plantar, cuándo plantar, y un calendario mes a mes basado en tus fechas de helada. No se necesita patio.',
+    grow_link:'Obtén tu guía de cultivo →'
+  }
+}, { footer: true, alertPage: 'learn' });
+</script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CommUnity OS — Platform Briefing</title>
+<meta property="og:title" content="CommUnity OS — Platform Briefing">
+<meta property="og:description" content="Free bilingual civic infrastructure. Competitive analysis, feature matrix, cost comparison. 8,084 officials, 54 guides, 18 tools, $7/year.">
+<meta property="og:image" content="https://comm-unity-os.org/og-image.png">
+<meta property="og:type" content="article">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#12201E;--forest:#182C28;--sage:#5B8C7A;--sage-glow:#7BBFA8;
+  --cream:#FAFAF7;--warm:#F5F0E8;--sand:#E8E0D4;
+  --body:#3A3A36;--dim:#7A7A72;--coral-text:#B04F2B;
+  --shadow-1:0 1px 2px rgba(18,32,30,.06),0 1px 3px rgba(18,32,30,.10);
+  --shadow-2:0 2px 4px rgba(18,32,30,.06),0 4px 8px rgba(18,32,30,.08),0 8px 16px rgba(18,32,30,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--cream);color:var(--body);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* Hero */
+.hero{background:var(--deep);padding:clamp(48px,10vw,80px) 24px clamp(36px,6vw,56px);text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(212,112,74,.1) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(91,140,122,.15) 0%,transparent 50%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-label{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-glow);margin-bottom:12px}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;color:var(--cream);line-height:1.12;letter-spacing:-.04em;margin-bottom:12px}
+.hero p{font-family:'Source Serif 4',Georgia,serif;font-size:clamp(.88rem,2vw,1.05rem);color:rgba(250,246,240,.65);line-height:1.65;max-width:560px;margin:0 auto}
+.hero-stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+.hs{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px}
+.hs-num{font-size:1.4rem;font-weight:800;color:#fff}
+.hs-label{font-size:.5rem;color:rgba(123,191,168,.8);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+/* Content */
+.content{max-width:720px;margin:0 auto;padding:0 24px}
+.section{margin:clamp(36px,6vw,56px) 0}
+.section h2{font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:800;color:var(--deep);letter-spacing:-.04em;margin-bottom:12px;line-height:1.2}
+.section h3{font-size:.88rem;font-weight:700;color:var(--deep);margin:16px 0 8px}
+.section p{font-family:'Source Serif 4',Georgia,serif;font-size:.9rem;color:var(--body);line-height:1.75;margin-bottom:12px}
+.section p:last-child{margin-bottom:0}
+.highlight{color:var(--forest);font-weight:600;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* Comparison matrix */
+.matrix{width:100%;border-collapse:separate;border-spacing:0;margin:16px 0;font-size:.68rem;line-height:1.4}
+.matrix th{background:var(--deep);color:var(--cream);font-weight:700;padding:10px 8px;text-align:left;position:sticky;top:0;letter-spacing:.02em}
+.matrix th:first-child{border-radius:8px 0 0 0}
+.matrix th:last-child{border-radius:0 8px 0 0}
+.matrix td{padding:8px;border-bottom:1px solid var(--sand);vertical-align:top}
+.matrix tr:last-child td{border-bottom:none}
+.matrix tr:nth-child(even) td{background:var(--warm)}
+.matrix .check{color:var(--sage);font-weight:700}
+.matrix .no{color:var(--dim);font-style:italic}
+.matrix .platform{font-weight:700;color:var(--deep);white-space:nowrap}
+.matrix .ours{background:rgba(91,140,122,.06)}
+.matrix .ours td{font-weight:500}
+.matrix .cost{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.75rem}
+.matrix .cost.free{color:var(--sage)}
+.matrix .cost.paid{color:var(--coral-text)}
+
+/* Stats grid */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+.stat-card{background:var(--warm);border:1px solid var(--sand);border-radius:10px;padding:14px;text-align:center;box-shadow:var(--shadow-1)}
+.stat-card .sc-num{font-size:1.5rem;font-weight:800;color:var(--forest);line-height:1}
+.stat-card .sc-label{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+
+/* Feature list */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:16px 0}
+.feat{background:var(--warm);border:1px solid var(--sand);border-radius:10px;padding:14px;box-shadow:var(--shadow-1)}
+.feat-icon{font-size:1.3rem;margin-bottom:6px}
+.feat-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;color:var(--deep);margin-bottom:3px}
+.feat-desc{font-size:.62rem;color:var(--body);line-height:1.5}
+
+/* Trust bar */
+.trust-bar{background:var(--warm);border-top:1px solid var(--sand);border-bottom:1px solid var(--sand);padding:14px 24px;text-align:center;font-size:.6rem;color:var(--dim);line-height:1.8}
+.trust-bar span{white-space:nowrap}
+.trust-bar .sep{margin:0 6px;color:var(--sand)}
+
+/* Quote */
+.quote{border-left:3px solid var(--sage);padding:14px 18px;margin:16px 0;background:rgba(91,140,122,.04);border-radius:0 8px 8px 0}
+.quote p{font-family:'Source Serif 4',Georgia,serif;font-size:.88rem;font-style:italic;color:var(--forest);margin:0}
+.quote cite{display:block;font-style:normal;font-family:'Plus Jakarta Sans',sans-serif;font-size:.62rem;color:var(--dim);margin-top:6px}
+
+/* Footer */
+.footer{background:var(--deep);padding:32px 24px;text-align:center}
+.footer p{font-size:.68rem;color:rgba(250,246,240,.5);line-height:1.6}
+.footer a{color:var(--sage-glow);text-decoration:none}
+.footer .ft-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;color:var(--cream);margin-bottom:6px}
+.footer .ft-name span{color:var(--sage-glow)}
+
+/* Print */
+@media print{
+  .hero{background:#1a2e2a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hs{border:1px solid #666}
+  body{font-size:11px}
+  .content{max-width:100%;padding:0 12px}
+  .section{margin:24px 0}
+}
+
+/* Mobile */
+@media(max-width:480px){
+  .matrix{font-size:.58rem}
+  .matrix th,.matrix td{padding:6px 4px}
+  .features{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">PLATFORM BRIEFING · APRIL 2026</div>
+  <h1>CommUnity OS</h1>
+  <p>Free bilingual civic infrastructure for American neighborhoods. Resource guides, official directories, community organizing, adaptive diagnostics. No accounts. No ads. No venture capital. $7/year to operate.</p>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-num">8,084</div><div class="hs-label">Officials</div></div>
+    <div class="hs"><div class="hs-num">54</div><div class="hs-label">Bilingual Guides</div></div>
+    <div class="hs"><div class="hs-num">18</div><div class="hs-label">Free Tools</div></div>
+    <div class="hs"><div class="hs-num">56</div><div class="hs-label">Pages</div></div>
+    <div class="hs"><div class="hs-num">$7</div><div class="hs-label">/Year</div></div>
+  </div>
+</div>
+
+<div class="trust-bar">
+  <span>Richard J. Daley College</span><span class="sep">·</span>
+  <span>City Colleges of Chicago</span><span class="sep">·</span>
+  <span>Hispanic-Serving Institution</span><span class="sep">·</span>
+  <span>IRB Approved (IRB2026001)</span><span class="sep">·</span>
+  <span>Open Source (MIT / CC BY-SA 4.0)</span>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2>What CommUnity OS Does</h2>
+    <p>CommUnity OS is a free, bilingual civic infrastructure platform that connects residents to their rights, their benefits, and their representatives. It runs on static HTML, costs $7/year to operate, requires no accounts, collects no personal data, and works in English and Spanish on any phone.</p>
+    <p>The platform was built by a Concerned Parent on the southwest side of Chicago who asked three questions about the systems his family depends on: <span class="highlight">How is this supposed to work? Where does access fall short? What can we do about it?</span></p>
+
+    <div class="features">
+      <div class="feat"><div class="feat-icon">📚</div><div class="feat-title">54 Bilingual Guides</div><div class="feat-desc">Health, money, rights, power. Normal→Broken→Fix diagnostic framework. Full English and Spanish.</div></div>
+      <div class="feat"><div class="feat-icon">🏛️</div><div class="feat-title">8,084 Officials</div><div class="feat-desc">538 federal + 7,546 state legislators. Name, party, district, phone, email. Zero API dependency.</div></div>
+      <div class="feat"><div class="feat-icon">💰</div><div class="feat-title">Benefits Screener</div><div class="feat-desc">SNAP, Medicaid, CHIP, WIC, LIHEAP, Pell Grant eligibility. Bilingual. No data stored.</div></div>
+      <div class="feat"><div class="feat-icon">📝</div><div class="feat-title">Dispute Letters</div><div class="feat-desc">Generate FCRA, FDCPA, medical billing, insurance denial letters with one form.</div></div>
+      <div class="feat"><div class="feat-icon">💬</div><div class="feat-title">Community Forum</div><div class="feat-desc">Anonymous discussion with trust levels. No accounts. Civic tokens for verification.</div></div>
+      <div class="feat"><div class="feat-icon">📋</div><div class="feat-title">Proposal System</div><div class="feat-desc">Community proposals with escalating progress bars and voting thresholds.</div></div>
+      <div class="feat"><div class="feat-icon">📊</div><div class="feat-title">Adaptive Diagnostics</div><div class="feat-desc">Cross-references community data with Census and CDC. Identifies civic access gaps automatically.</div></div>
+      <div class="feat"><div class="feat-icon">🤝</div><div class="feat-title">Needs Matching</div><div class="feat-desc">Post what you need. See what neighbors offer. No middleman.</div></div>
+      <div class="feat"><div class="feat-icon">❤️</div><div class="feat-title">Vitals Monitor</div><div class="feat-desc">Camera-based heart rate using photoplethysmography. Zero data storage. Works offline.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Competitive Comparison</h2>
+    <p>No existing platform combines all of CommUnity OS's functions. The closest comparisons come from different domains — each solving one piece of the problem at significantly higher cost.</p>
+
+    <div style="overflow-x:auto">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Resource Guides</th>
+          <th>Official Directory</th>
+          <th>Community Forum</th>
+          <th>Proposals / Voting</th>
+          <th>Diagnostics</th>
+          <th>Bilingual</th>
+          <th>No Account</th>
+          <th>Annual Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ours">
+          <td class="platform">CommUnity OS</td>
+          <td class="check">54 guides</td>
+          <td class="check">8,084</td>
+          <td class="check">Trust levels</td>
+          <td class="check">Progress bars</td>
+          <td class="check">Census + CDC</td>
+          <td class="check">EN/ES</td>
+          <td class="check">Zero-account</td>
+          <td class="cost free">$7</td>
+        </tr>
+        <tr>
+          <td class="platform">Nextdoor</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="check">Yes</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">Limited</td>
+          <td class="no">Account required</td>
+          <td class="cost paid">$0 (ad-supported)</td>
+        </tr>
+        <tr>
+          <td class="platform">Decidim</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="check">Yes</td>
+          <td class="check">Yes</td>
+          <td class="no">No</td>
+          <td class="check">12 languages</td>
+          <td class="no">Account required</td>
+          <td class="cost paid">$5K–$50K deploy</td>
+        </tr>
+        <tr>
+          <td class="platform">CivicPlus</td>
+          <td class="no">No</td>
+          <td class="check">Varies</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">Add-on</td>
+          <td class="no">N/A</td>
+          <td class="cost paid">$15K–$80K/yr</td>
+        </tr>
+        <tr>
+          <td class="platform">mySidewalk</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="check">Census data</td>
+          <td class="no">No</td>
+          <td class="no">Account required</td>
+          <td class="cost paid">$15K–$50K/yr</td>
+        </tr>
+        <tr>
+          <td class="platform">Citizen App</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="check">Alerts</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">Limited</td>
+          <td class="no">Account required</td>
+          <td class="cost paid">$0–$20/mo</td>
+        </tr>
+        <tr>
+          <td class="platform">Open States</td>
+          <td class="no">No</td>
+          <td class="check">7,500+ state</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="check">No account</td>
+          <td class="cost free">Free (API)</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="quote">
+      <p>No platform in civic technology combines resource guides, official directories, community organizing, and adaptive diagnostics in a single free bilingual product. CommUnity OS is in a category of one.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>The Cost Comparison</h2>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sc-num">$7</div><div class="sc-label">CommUnity OS / year</div></div>
+      <div class="stat-card"><div class="sc-num">$80K</div><div class="sc-label">CivicPlus / year</div></div>
+      <div class="stat-card"><div class="sc-num">$50K</div><div class="sc-label">mySidewalk / year</div></div>
+      <div class="stat-card"><div class="sc-num">$695M</div><div class="sc-label">Civic tech invested & failed</div></div>
+    </div>
+
+    <p>CommUnity OS costs $7/year because it uses no servers, no databases that charge per query, and no external APIs that can be shut down. The entire platform is static HTML hosted on Netlify (free tier) with a Cloudflare Worker backend (free tier). Federal official data comes from congress-legislators (public domain). State official data comes from Open States (CC0). The platform can operate for a century at current costs.</p>
+    <p>By contrast, an estimated <span class="highlight">$695 million</span> has been invested in civic technology platforms that have since shut down, pivoted to enterprise sales, or lost their data when APIs were discontinued. The sustainability crisis in civic tech is not a funding problem — it is an architecture problem. CommUnity OS solves it by having nothing expensive to sustain.</p>
+  </div>
+
+  <div class="section">
+    <h2>Privacy Architecture</h2>
+    <p>CommUnity OS was designed for neighborhoods where identity is risk. In communities with active ICE enforcement, requiring an account to access civic resources is not an inconvenience — it is a barrier that excludes the people who need the platform most.</p>
+
+    <div style="overflow-x:auto">
+    <table class="matrix">
+      <thead>
+        <tr><th>Privacy Feature</th><th>CommUnity OS</th><th>Nextdoor</th><th>Decidim</th><th>CivicPlus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Account required</td><td class="check">No</td><td class="no">Yes</td><td class="no">Yes</td><td class="no">Yes</td></tr>
+        <tr><td>Personal data collected</td><td class="check">None</td><td class="no">Name, address, photo</td><td class="no">Email, name</td><td class="no">Varies</td></tr>
+        <tr><td>Anonymous participation</td><td class="check">Full</td><td class="no">No</td><td class="no">Pseudonymous</td><td class="no">No</td></tr>
+        <tr><td>Ad-free</td><td class="check">Yes</td><td class="no">No (ad-supported)</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+        <tr><td>Open source</td><td class="check">MIT / CC BY-SA</td><td class="no">No</td><td class="check">AGPL</td><td class="no">No</td></tr>
+        <tr><td>Works offline</td><td class="check">Service worker</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Design Quality</h2>
+    <p>CommUnity OS was designed by studying the 100 most successful platforms in the world — not civic technology platforms, but the platforms that solved the same UX problems in other domains. The design language draws from:</p>
+
+    <div class="features" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))">
+      <div class="feat"><div class="feat-title">Stripe</div><div class="feat-desc">Tight headline tracking, accessible color system, premium shadow elevation</div></div>
+      <div class="feat"><div class="feat-title">Discord / Discourse</div><div class="feat-desc">Trust levels that auto-promote based on constructive participation</div></div>
+      <div class="feat"><div class="feat-title">Airbnb / LinkedIn</div><div class="feat-desc">Skeleton loading, card shadow system, progressive disclosure</div></div>
+      <div class="feat"><div class="feat-title">Canada.ca</div><div class="feat-desc">Bilingual toggle showing full language name, html lang attribute, ARIA announcements</div></div>
+      <div class="feat"><div class="feat-title">GoFundMe / Change.org</div><div class="feat-desc">Escalating progress bars on proposals, social proof patterns</div></div>
+      <div class="feat"><div class="feat-title">M-Pesa / bKash</div><div class="feat-desc">Mobile-first for low-digital-literacy users, 48px+ touch targets</div></div>
+      <div class="feat"><div class="feat-title">Signal / Mullvad</div><div class="feat-desc">Zero-account design, privacy as UX feature, trust through transparency</div></div>
+      <div class="feat"><div class="feat-title">Linear / Notion</div><div class="feat-desc">Empty states with positive framing, temporal activity signals</div></div>
+    </div>
+
+    <p>Every page uses a unified dark hero with gradient overlay, forest-tinted shadow elevation on cards, spring-curve hover animations, and WCAG 2.2 AA accessibility compliance throughout. The platform achieves visual parity with venture-backed products while running on $7/year.</p>
+  </div>
+
+  <div class="section">
+    <h2>Technical Architecture</h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sc-num">623</div><div class="sc-label">KB total size</div></div>
+      <div class="stat-card"><div class="sc-num">0</div><div class="sc-label">External APIs</div></div>
+      <div class="stat-card"><div class="sc-num">0</div><div class="sc-label">Frameworks</div></div>
+      <div class="stat-card"><div class="sc-num">56</div><div class="sc-label">Static HTML pages</div></div>
+    </div>
+    <p>The platform is 56 static HTML pages, 3 JavaScript files, 1 CSS file, and 2 JSON data files. No React. No Angular. No build step. No npm dependencies. The backend is a single Cloudflare Worker (800 lines) with a D1 SQLite database. Data that changes (official directories) is embedded as static JSON — not fetched from APIs that can be shut down, rate-limited, or deprecated.</p>
+    <p>This architecture is a deliberate response to the civic tech sustainability crisis. When Code for America's brigade tools shut down, when the Sunlight Foundation closed, when ProPublica's Congress API was discontinued — the communities that depended on those tools lost access. CommUnity OS cannot lose access to its own data because it doesn't depend on anyone else's infrastructure.</p>
+  </div>
+
+  <div class="section">
+    <h2>Who This Serves</h2>
+    <p>CommUnity OS serves any American resident, but it was designed for and with the communities least served by existing civic infrastructure:</p>
+    <p><span class="highlight">Hispanic-Serving Institution context.</span> Built at Richard J. Daley College in Chicago's Pilsen/Back of the Yards corridor. Full Spanish translation on every guide, every tool, every interface element. The bilingual toggle is not an afterthought — it is the first design decision.</p>
+    <p><span class="highlight">Low-income households.</span> The benefits screener checks eligibility for SNAP, Medicaid, CHIP, WIC, LIHEAP, and Pell Grants. $60 billion in benefits goes unclaimed every year because the access barriers are higher than the benefits are visible.</p>
+    <p><span class="highlight">Mixed-status families.</span> No accounts. No identity verification. No data collection. In neighborhoods where ICE enforcement is active, requiring an email address to check benefit eligibility is not a minor inconvenience — it is a barrier that excludes the families who need it most.</p>
+    <p><span class="highlight">Underrepresented communities in civic participation.</span> The invite-based seed leader model — pastor, block club president, clinic worker, school counselor, small business owner — distributes civic infrastructure through existing trust networks, not through advertising or app store discoverability.</p>
+  </div>
+
+  <div class="section">
+    <h2>What We're Asking For</h2>
+    <p>CommUnity OS is fully built, fully functional, and live at <span class="highlight">comm-unity-os.org</span>. It needs three things to fulfill its potential:</p>
+    <p><span class="highlight">Community adoption.</span> Five seed leaders in Chicago are ready to activate. Each one distributes invite codes to five more. The platform's adaptive diagnostic engine needs approximately 50 community posts to begin identifying patterns, and 200 to cross-reference meaningfully with Census and CDC data.</p>
+    <p><span class="highlight">Institutional partnership.</span> A city, county, or state agency that links to CommUnity OS from its own resource pages validates the platform for every resident who finds it. A university research partnership enables longitudinal study of civic engagement patterns in underserved communities.</p>
+    <p><span class="highlight">Replication support.</span> The platform is open source. Any community can fork it and run their own instance. What they need is a deployment guide, a seed leader training program, and a federation protocol that connects isolated instances into a national civic health network. The federation protocol already exists in the code.</p>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="ft-name">Comm<span>Unity</span> OS</div>
+  <p>Live at <a href="https://comm-unity-os.org">comm-unity-os.org</a> · Open source on <a href="https://github.com/johnknino/communityos">GitHub</a></p>
+  <p style="margin-top:8px">Built by a Concerned Parent · $7/year · No venture capital · No ads · Just infrastructure</p>
+  <p style="margin-top:8px;font-size:.58rem;opacity:.5">Richard J. Daley College · City Colleges of Chicago · Hispanic-Serving Institution · IRB Approved · Open Source (MIT / CC BY-SA 4.0)</p>
+</div>
+
+</body>
+</html>

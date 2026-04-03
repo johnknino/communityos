@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Neighborhood — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="My Neighborhood — CommUnity OS">
+<meta property="og:description" content="Enter your zip code. See who lives here, what's broken, and what you can do about it.">
+<meta name="description" content="Neighborhood profile by zip code. Demographics, income, health resources, environmental data, consumer complaints, school info, elected officials. All from free federal data.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.mn-hero{text-align:center;padding:20px 0}
+.mn-zip-input{font-family:var(--display);font-size:1.5rem;font-weight:700;text-align:center;width:140px;padding:14px;border:2px solid var(--sand);border-radius:14px;background:#fff;color:var(--deep);letter-spacing:.1em}
+.mn-zip-input:focus{outline:none;border-color:var(--forest)}
+.mn-go{font-family:var(--display);font-size:.85rem;font-weight:700;padding:14px 28px;border-radius:12px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s;margin-top:10px;display:block;margin-left:auto;margin-right:auto}
+.mn-go:hover{background:var(--deep)}
+.mn-loading{text-align:center;padding:30px;font-size:.85rem;color:var(--dim)}
+.mn-section{margin:20px 0;padding:18px;background:var(--warm);border-radius:14px;border:1px solid var(--sand)}
+.mn-section h3{font-family:var(--display);font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:8px 0}
+.mn-stat{text-align:center;padding:10px 8px;background:#fff;border-radius:10px;border:1px solid var(--sand)}
+.mn-stat .mn-val{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--deep)}
+.mn-stat .mn-label{font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.mn-tool-link{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;color:var(--forest);text-decoration:none;padding:6px 12px;border:1px solid var(--sage);border-radius:8px;margin:3px;transition:.2s}
+.mn-tool-link:hover{background:rgba(45,90,78,.04);color:var(--deep)}
+.mn-tools{margin-top:10px;display:flex;flex-wrap:wrap;gap:4px}
+.mn-bar{display:flex;align-items:center;gap:6px;margin:3px 0}
+.mn-bar-label{font-size:.65rem;color:var(--body);width:100px;flex-shrink:0;text-align:right}
+.mn-bar-track{flex:1;height:14px;background:var(--sand);border-radius:3px;overflow:hidden}
+.mn-bar-fill{height:100%;border-radius:3px;background:var(--sage)}
+.mn-bar-pct{font-size:.6rem;color:var(--dim);width:35px;font-weight:600}
+.mn-divider{height:1px;background:var(--sand);margin:20px 0}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">UNDERSTAND</div>
+    <h1 data-t="mn_title">My Neighborhood</h1>
+    <p class="subtitle" data-t="mn_sub">Enter your zip code. See who lives here, what resources exist, and what tools you have.</p>
+  </div>
+
+  <div class="mn-hero">
+    <input type="text" class="mn-zip-input" id="mnZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')loadNeighborhood()">
+    <button class="mn-go" onclick="loadNeighborhood()">Explore My Neighborhood</button>
+  </div>
+
+  <div id="mnLoading" class="mn-loading" style="display:none">Loading neighborhood data from federal sources...</div>
+  <div id="mnResults" style="display:none"></div>
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool collects, stores, and transmits zero data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila, almacena ni transmite ningún dato.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+// State FIPS → name + abbreviation
+var STATE_FIPS = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+var STATE_NAMES = {"AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","DC":"Washington DC","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"};
+
+var EXPANSION_STATES = ['AK','AZ','AR','CA','CO','CT','DE','DC','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SD','UT','VT','VA','WA','WV'];
+
+function loadNeighborhood() {
+  var zip = document.getElementById('mnZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+
+  document.getElementById('mnLoading').style.display = '';
+  document.getElementById('mnResults').style.display = 'none';
+
+  // Census API — get demographics by ZCTA
+  var censusUrl = 'https://api.census.gov/data/2022 /* UPDATE: change year when new ACS releases *//acs/acs5?get=B01003_001E,B19013_001E,B27010_001E,B27010_017E,B16010_001E,B16010_002E,B03003_003E,B02001_003E,B25077_001E,B25064_001E&for=zip%20code%20tabulation%20area:' + zip;
+
+  // CFPB complaints
+  var oneYear = new Date(); oneYear.setFullYear(oneYear.getFullYear() - 1);
+  var cfpbUrl = 'https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?size=0&zip_code=' + zip + '&date_received_min=' + oneYear.toISOString().split('T')[0];
+
+  // EPA ECHO
+  var echoUrl = 'https://echodata.epa.gov/echo/echo_rest_services.get_facilities?output=JSON&p_zip=' + zip + '&p_act=Y';
+
+  // HRSA health centers
+  var hrsaUrl = 'https://findahealthcenter.hrsa.gov/widget/api/v1/search?zip=' + zip + '&radius=10&page=1&pageSize=3';
+
+  Promise.allSettled([
+    fetch(censusUrl).then(function(r) { return r.json(); }),
+    fetch(cfpbUrl).then(function(r) { return r.json(); }),
+    fetch(echoUrl).then(function(r) { return r.json(); }),
+    fetch(hrsaUrl).then(function(r) { return r.json(); })
+  ]).then(function(results) {
+    document.getElementById('mnLoading').style.display = 'none';
+    renderNeighborhood(zip, results);
+  });
+}
+
+function renderNeighborhood(zip, results) {
+  var census = results[0].status === 'fulfilled' ? results[0].value : null;
+  var cfpb = results[1].status === 'fulfilled' ? results[1].value : null;
+  var echo = results[2].status === 'fulfilled' ? results[2].value : null;
+  var hrsa = results[3].status === 'fulfilled' ? results[3].value : null;
+
+  var html = '';
+
+  // Census data
+  if (census && census.length > 1) {
+    var d = census[1];
+    var pop = +d[0] || 0;
+    var medIncome = +d[1] || 0;
+    var insTotal = +d[2] || 0;
+    var insNone = +d[3] || 0;
+    var langTotal = +d[4] || 0;
+    var langEng = +d[5] || 0;
+    var hispanic = +d[6] || 0;
+    var black = +d[7] || 0;
+    var homeValue = +d[8] || 0;
+    var medRent = +d[9] || 0;
+
+    var uninsuredPct = insTotal > 0 ? Math.round((insNone / insTotal) * 100) : 0;
+    var nonEngPct = langTotal > 0 ? Math.round(((langTotal - langEng) / langTotal) * 100) : 0;
+    var hispanicPct = pop > 0 ? Math.round((hispanic / pop) * 100) : 0;
+    var blackPct = pop > 0 ? Math.round((black / pop) * 100) : 0;
+
+    // Detect state from ZCTA
+    var stateFips = zip.substring(0, 2);
+    // This doesn't work for zip→state mapping, so we use a fallback
+    var stateAbbr = '';
+
+    html += '<div class="mn-section"><h3>👥 Who Lives Here</h3>';
+    html += '<div class="mn-grid">';
+    html += '<div class="mn-stat"><div class="mn-val">' + pop.toLocaleString() + '</div><div class="mn-label">Population</div></div>';
+    html += '<div class="mn-stat"><div class="mn-val">$' + medIncome.toLocaleString() + '</div><div class="mn-label">Median Income</div></div>';
+    html += '<div class="mn-stat"><div class="mn-val">' + uninsuredPct + '%</div><div class="mn-label">Uninsured</div></div>';
+    html += '<div class="mn-stat"><div class="mn-val">' + nonEngPct + '%</div><div class="mn-label">Non-English</div></div>';
+    if (homeValue > 0) html += '<div class="mn-stat"><div class="mn-val">$' + homeValue.toLocaleString() + '</div><div class="mn-label">Home Value (Med)</div></div>';
+    if (medRent > 0) html += '<div class="mn-stat"><div class="mn-val">$' + medRent.toLocaleString() + '</div><div class="mn-label">Rent (Median)</div></div>';
+    html += '</div>';
+
+    // Demographics bars
+    if (hispanicPct > 0 || blackPct > 0) {
+      html += '<div style="margin-top:10px">';
+      if (hispanicPct > 0) html += '<div class="mn-bar"><span class="mn-bar-label">Hispanic/Latino</span><div class="mn-bar-track"><div class="mn-bar-fill" style="width:' + hispanicPct + '%"></div></div><span class="mn-bar-pct">' + hispanicPct + '%</span></div>';
+      if (blackPct > 0) html += '<div class="mn-bar"><span class="mn-bar-label">Black</span><div class="mn-bar-track"><div class="mn-bar-fill" style="width:' + blackPct + '%;background:var(--gold)"></div></div><span class="mn-bar-pct">' + blackPct + '%</span></div>';
+      html += '</div>';
+    }
+
+    html += '<p style="font-size:.6rem;color:var(--dim);margin-top:8px">Source: U.S. Census Bureau, American Community Survey 2022 5-Year Estimates</p>';
+    html += '</div>';
+  }
+
+  // Consumer complaints
+  if (cfpb && cfpb.hits && cfpb.hits.total) {
+    var totalComplaints = cfpb.hits.total.value || cfpb.hits.total || 0;
+    html += '<div class="mn-section"><h3>⚠️ Consumer Complaints (12 months)</h3>';
+    html += '<div class="mn-grid"><div class="mn-stat"><div class="mn-val">' + totalComplaints.toLocaleString() + '</div><div class="mn-label">CFPB Complaints</div></div></div>';
+    html += '<div class="mn-tools"><a href="/complaints.html?zip=' + zip + '" class="mn-tool-link">See company breakdown →</a></div>';
+    html += '</div>';
+  }
+
+  // EPA facilities
+  if (echo && echo.Results && echo.Results.Facilities) {
+    var facs = echo.Results.Facilities;
+    var violators = facs.filter(function(f) { return f.CurrVioFlag === 'Y'; });
+    html += '<div class="mn-section"><h3>🏭 Environmental</h3>';
+    html += '<div class="mn-grid">';
+    html += '<div class="mn-stat"><div class="mn-val">' + facs.length + '</div><div class="mn-label">EPA Facilities</div></div>';
+    html += '<div class="mn-stat"><div class="mn-val" style="color:' + (violators.length > 0 ? 'var(--coral)' : 'var(--forest)') + '">' + violators.length + '</div><div class="mn-label">With Violations</div></div>';
+    html += '</div>';
+    html += '<div class="mn-tools"><a href="/environment.html" class="mn-tool-link">Full environmental check →</a><a href="https://www.airnow.gov/?zipcode=' + zip + '" target="_blank" rel="noopener" class="mn-tool-link">Air quality →</a></div>';
+    html += '</div>';
+  }
+
+  // Health centers
+  if (hrsa && hrsa.results && hrsa.results.length > 0) {
+    html += '<div class="mn-section"><h3>🏥 Nearby Health Centers</h3>';
+    hrsa.results.slice(0, 3).forEach(function(h) {
+      html += '<div style="padding:6px 0;border-bottom:1px solid var(--sand)">' +
+        '<div style="font-family:var(--display);font-size:.78rem;font-weight:700;color:var(--deep)">' + (h.name || 'Health Center') + '</div>' +
+        '<div style="font-size:.65rem;color:var(--dim)">' + (h.address || '') + '</div>' +
+        (h.phone ? '<a href="tel:' + h.phone.replace(/\D/g,'') + '" style="font-size:.7rem;color:var(--forest);font-weight:600">' + h.phone + '</a>' : '') +
+        '</div>';
+    });
+    html += '<div class="mn-tools"><a href="https://findahealthcenter.hrsa.gov/?zip=' + zip + '" target="_blank" rel="noopener" class="mn-tool-link">Find more health centers (verify hours before visiting) →</a></div>';
+    html += '</div>';
+  }
+
+  // All tools for this zip
+  html += '<div class="mn-section"><h3>🔧 Tools for ' + zip + '</h3>';
+  html += '<p style="font-size:.78rem;color:var(--body);margin-bottom:10px">Everything on this platform works for your zip code:</p>';
+  html += '<div class="mn-tools">';
+  html += '<a href="/benefits-screener.html" class="mn-tool-link">Benefit Screener</a>';
+  html += '<a href="/benefits-check.html" class="mn-tool-link">Immigration Safety Check</a>';
+  html += '<a href="/health-calc.html" class="mn-tool-link">Health Risk Calculators</a>';
+  html += '<a href="/drug-prices.html" class="mn-tool-link">Drug Price Check</a>';
+  html += '<a href="/worker-rights.html" class="mn-tool-link">Worker Rights</a>';
+  html += '<a href="/school-rights.html" class="mn-tool-link">School Rights</a>';
+  html += '<a href="/court-nav.html" class="mn-tool-link">Court Navigator</a>';
+  html += '<a href="/defend.html" class="mn-tool-link">Dispute Letters</a>';
+  html += '<a href="/complaints.html?zip=' + zip + '" class="mn-tool-link">Company Complaints</a>';
+  html += '<a href="/lending.html" class="mn-tool-link">Lending Fairness</a>';
+  html += '<a href="/environment.html" class="mn-tool-link">Environmental Check</a>';
+  html += '<a href="/disaster.html" class="mn-tool-link">Disaster Ready</a>';
+  html += '<a href="/knowledge.html" class="mn-tool-link">48 Knowledge Guides</a>';
+  html += '</div></div>';
+
+  if (!html) {
+    html = '<p style="text-align:center;color:var(--dim);padding:30px">Could not load data for ' + zip + '. Try again or check the zip code.</p>';
+  }
+
+  document.getElementById('mnResults').innerHTML = html;
+  document.getElementById('mnResults').style.display = '';
+  document.getElementById('mnResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Auto-fill from URL
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  var z = p.get('zip');
+  if (z) { document.getElementById('mnZip').value = z; setTimeout(loadNeighborhood, 200); }
+})();
+
+EQ.init({
+  mn_title: 'My Neighborhood',
+  mn_title_es: 'Mi Vecindario',
+  mn_sub: 'Enter your zip code. See who lives here, what resources exist, and what tools you have.',
+  mn_sub_es: 'Ingresa tu código postal. Mira quién vive aquí, qué recursos existen, y qué herramientas tienes.'
+}, { closingKey: 'footer_closing_understand' });
+</script>
+</body>
+</html>

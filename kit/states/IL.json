@@ -1,0 +1,130 @@
+{
+  "state": "IL",
+  "state_name": "Illinois",
+
+  "tenant_rights": {
+    "security_deposit_limit": "1.5x monthly rent (Chicago RLTO)",
+    "deposit_return_days": 30,
+    "deposit_interest_required": true,
+    "eviction_notice_nonpayment_days": 5,
+    "eviction_notice_lease_violation_days": 10,
+    "rent_control": false,
+    "retaliation_protection": true,
+    "right_to_withhold_rent": true,
+    "eviction_sealing": true,
+    "eviction_sealing_law": "735 ILCS 5/9-121",
+    "eviction_sealing_note": "Courts may seal records in residential eviction actions, especially dismissed or resolved cases"
+  },
+
+  "utility_protections": {
+    "winter_shutoff_moratorium": true,
+    "moratorium_months": ["December", "January", "February", "March"],
+    "moratorium_law": "220 ILCS 5/8-206",
+    "temperature_protection": true,
+    "temperature_low_f": 32,
+    "temperature_high_f": 95,
+    "medical_certificate_days": 60,
+    "medical_certificate_renewable": true,
+    "notice_required_days": 10,
+    "complaint_agency": "Illinois Commerce Commission",
+    "complaint_phone": "1-800-524-0795",
+    "complaint_url": "https://www.icc.illinois.gov/complaints"
+  },
+
+  "employment": {
+    "minimum_wage": 15.00,
+    "minimum_wage_effective": "2025-01-01",
+    "city_overrides": {
+      "Chicago": { "wage": 16.20, "effective": "2025-07-01", "tipped": 11.02 }
+    },
+    "ban_the_box": true,
+    "ban_the_box_law": "Job Opportunities for Qualified Applicants Act (820 ILCS 75)",
+    "ban_the_box_employer_size": 15,
+    "salary_history_ban": true,
+    "paid_leave": true,
+    "paid_leave_law": "Paid Leave for All Workers Act (820 ILCS 192)",
+    "paid_leave_days": 5,
+    "overtime_threshold_weekly_hours": 40
+  },
+
+  "healthcare": {
+    "medicaid_agency": "Illinois Department of Healthcare and Family Services",
+    "medicaid_phone": "1-877-782-5565",
+    "medicaid_url": "https://www.illinois.gov/hfs",
+    "medicaid_application": "https://abe.illinois.gov",
+    "marketplace_url": "https://getcovered.illinois.gov",
+    "insurance_commissioner": "Illinois Department of Insurance",
+    "insurance_commissioner_phone": "1-866-445-5364",
+    "insurance_commissioner_url": "https://insurance.illinois.gov",
+    "fair_hearing_deadline_days": 90,
+    "fair_hearing_benefits_continue": true,
+    "fair_hearing_note": "If you request a hearing BEFORE the termination date, benefits continue during the appeal"
+  },
+
+  "property_tax": {
+    "assessment_cycle": "Triennial by township (Cook County); quadrennial outside Cook",
+    "appeal_board": "Cook County Board of Review (Cook); County Board of Review (other counties)",
+    "appeal_board_url": "https://www.cookcountyboardofreview.com",
+    "homestead_exemption": true,
+    "homestead_exemption_amount": "$10,000 reduction in EAV",
+    "senior_freeze": true,
+    "senior_freeze_income_limit": "$65,000",
+    "veterans_exemption": true,
+    "disabled_exemption": true,
+    "appeal_filing_fee": "Free for homeowners",
+    "appeal_deadline_note": "30 days from publication of assessment — check township schedule"
+  },
+
+  "legal_aid": {
+    "state_bar_referral": "Illinois State Bar Association",
+    "state_bar_phone": "1-800-252-8908",
+    "legal_aid_online": "https://www.illinoislegalaid.org",
+    "legal_aid_languages": ["en", "es"],
+    "key_providers": [
+      { "name": "Legal Aid Chicago", "phone": "312-341-1070", "coverage": "Cook County" },
+      { "name": "CARPLS Hotline", "phone": "312-738-9200", "coverage": "Cook County" },
+      { "name": "Land of Lincoln Legal Aid", "phone": "1-877-342-7891", "coverage": "Central/Southern IL" },
+      { "name": "Prairie State Legal Services", "phone": "1-800-531-7057", "coverage": "Northern IL" }
+    ]
+  },
+
+  "immigration": {
+    "sanctuary_policy": true,
+    "sanctuary_law": "Illinois TRUST Act (5 ILCS 805)",
+    "state_id_undocumented": true,
+    "in_state_tuition_undocumented": true,
+    "drivers_license_undocumented": true,
+    "drivers_license_type": "Temporary Visitor Driver's License (TVDL)",
+    "notario_fraud_law": true,
+    "notario_fraud_penalties": "Class A misdemeanor, civil damages",
+    "icirr_hotline": "1-855-435-7693"
+  },
+
+  "consumer_protection": {
+    "attorney_general": "Illinois Attorney General",
+    "ag_complaint_phone": "1-800-386-5438",
+    "ag_complaint_url": "https://www.illinoisattorneygeneral.gov/consumers/filecomplaint.html",
+    "consumer_fraud_act": "815 ILCS 505",
+    "debt_collection": {
+      "statute_of_limitations_written_years": 10,
+      "statute_of_limitations_oral_years": 5,
+      "wage_garnishment_exemption": "Greater of 85% of gross pay or 45x federal minimum wage per week"
+    }
+  },
+
+  "voting": {
+    "registration_deadline_days_before": 28,
+    "same_day_registration": true,
+    "early_voting": true,
+    "early_voting_days": 40,
+    "no_excuse_absentee": true,
+    "felony_voting_restoration": "Automatic upon release from prison",
+    "voter_registration_url": "https://ova.elections.il.gov"
+  },
+
+  "selective_service": {
+    "fafsa_requirement": true,
+    "state_financial_aid_requirement": true,
+    "state_employment_requirement": false
+  }
+}

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org">
+<title>Things Your Neighbors Figured Out — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Community-authored guides using the Normal → Broken → Fix framework. Health, money, rights, power — built by neighbors for neighbors.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.domain-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.dtab{padding:8px 18px;border-radius:10px;border:1.5px solid var(--sand);background:var(--cream);color:var(--dim);font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer;transition:.2s}
+.dtab:hover{border-color:var(--sage)}.dtab.active{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:16px 0}
+.mod-card{background:var(--warm);border-radius:14px;padding:20px;border:1px solid var(--sand);cursor:pointer;transition:.25s}
+.mod-card:hover{border-color:var(--sage);transform:translateY(-2px);box-shadow:0 4px 16px rgba(26,60,52,.08)}
+.mod-card .mc-domain{font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.mod-card .mc-domain.health{color:var(--coral)}.mod-card .mc-domain.money{color:var(--gold)}
+.mod-card .mc-domain.rights{color:var(--sage)}.mod-card .mc-domain.power{color:var(--forest)}
+.mod-card h3{font-family:var(--sans);font-size:.92rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.mod-card .mc-noun{font-size:.78rem;color:var(--dim);font-style:italic;margin-bottom:8px}
+.mod-card .mc-author{font-size:.65rem;color:var(--light)}
+
+.nbf-view{display:none;margin:20px 0}
+.nbf-view.active{display:block}
+.nbf-title{font-family:var(--display);font-size:1.2rem;font-weight:600;color:var(--deep);text-align:center;margin-bottom:4px}
+.nbf-noun{font-size:.88rem;color:var(--dim);text-align:center;font-style:italic;margin-bottom:20px}
+.nbf-card{border-radius:14px;padding:20px;margin-bottom:10px;border:1px solid var(--sand)}
+.nbf-card h4{font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.nbf-card p{font-size:.85rem;color:var(--body);line-height:1.8}
+.nbf-card.normal{background:rgba(45,90,78,.04);border-left:4px solid var(--forest)}
+.nbf-card.normal h4{color:var(--forest)}
+.nbf-card.broken{background:rgba(196,101,74,.04);border-left:4px solid var(--coral)}
+.nbf-card.broken h4{color:var(--coral)}
+.nbf-card.fix{background:rgba(90,138,120,.04);border-left:4px solid var(--sage)}
+.nbf-card.fix h4{color:var(--sage)}
+.nbf-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0}
+.nbf-card.normal .nbf-icon{background:var(--forest)}
+.nbf-card.broken .nbf-icon{background:var(--coral)}
+.nbf-card.fix .nbf-icon{background:var(--sage)}
+.nbf-action{background:var(--warm);border-radius:10px;padding:14px;margin-top:12px;border:1px solid var(--sand)}
+.nbf-action h5{font-size:.75rem;font-weight:600;color:var(--deep);margin-bottom:4px}
+.nbf-action p{font-size:.78rem;color:var(--dim);line-height:1.6}
+.nbf-meta{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--sand)}
+.nbf-meta .author{font-size:.72rem;color:var(--dim)}
+.nbf-back{font-family:var(--sans);font-size:.82rem;color:var(--forest);cursor:pointer;font-weight:500}
+.nbf-back:hover{text-decoration:underline}
+
+.create-panel{background:var(--warm);border-radius:14px;padding:24px;margin:20px 0;border:1px solid var(--sand)}
+.create-panel h3{font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--deep);margin-bottom:16px}
+.create-panel label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin:14px 0 4px}
+.create-panel label:first-of-type{margin-top:0}
+.create-panel input,.create-panel select,.create-panel textarea{font-family:var(--sans);font-size:.88rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);resize:vertical}
+.create-panel input:focus,.create-panel select:focus,.create-panel textarea:focus{outline:none;border-color:var(--sage)}
+.create-panel .hint{font-size:.68rem;color:var(--light);margin-top:2px;font-style:italic}
+.field-group{background:rgba(0,0,0,.02);border-radius:10px;padding:16px;margin:12px 0;border-left:4px solid var(--sand)}
+.field-group.fg-n{border-left-color:var(--forest)}.field-group.fg-b{border-left-color:var(--coral)}.field-group.fg-f{border-left-color:var(--sage)}
+.field-group h4{font-size:.78rem;font-weight:700;margin-bottom:8px}
+.field-group.fg-n h4{color:var(--forest)}.field-group.fg-b h4{color:var(--coral)}.field-group.fg-f h4{color:var(--sage)}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn-row button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border-radius:10px;border:1.5px solid var(--sand);background:var(--cream);color:var(--body);cursor:pointer;transition:.2s}
+.btn-row button:hover{border-color:var(--sage);color:var(--forest)}
+.btn-row button.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.btn-row button.primary:hover{background:var(--deep)}
+
+.empty{text-align:center;padding:40px;color:var(--dim);font-size:.85rem}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/knowledge.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Things Your Neighbors Figured Out — CommUnity OS", "url": "https://comm-unity-os.org/knowledge.html", "description": "Community-authored guides: prescription access, overdraft protection, rent increases, immigration rights, tax withholding. How it works, where it breaks, what to do.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Learn</div>
+    <h1 data-t="title">Community Knowledge</h1>
+    <div class="subtitle" data-t="subtitle">Guides written by neighbors for neighbors. Each one follows the same structure: how something is supposed to work, where it breaks down, and what you can do about it. Read what others have shared or contribute your own.</div>
+  </div>
+
+  <div style="background:var(--warm);border-radius:12px;padding:18px;margin-bottom:20px;border-left:4px solid var(--sage)" class="fade-in fade-in-1">
+    <p style="font-size:.85rem;color:var(--body);line-height:1.7" data-t="scaffold_explain">Every guide follows the same three questions: <strong style="color:var(--forest)">How does this work?</strong> — when everything goes right. <strong style="color:var(--coral)">Where does it break?</strong> — where people get stuck. <strong style="color:var(--sage)">What can you do?</strong> — specific steps, phone numbers, exact words to say. This is how people already solve problems. We just wrote it down.</p>
+  </div>
+
+  <!-- DOMAIN FILTER -->
+  <div class="domain-tabs fade-in fade-in-1" id="domainTabs">
+    <button class="dtab active" onclick="filterDomain('all',this)" data-t="tab_all">All</button>
+    <button class="dtab" onclick="filterDomain('health',this)">🏥 <span data-t="tab_health">Health</span></button>
+    <button class="dtab" onclick="filterDomain('money',this)">💰 <span data-t="tab_money">Money</span></button>
+    <button class="dtab" onclick="filterDomain('rights',this)">⚖️ <span data-t="tab_rights">Rights</span></button>
+    <button class="dtab" onclick="filterDomain('power',this)">🏛️ <span data-t="tab_power">Power</span></button>
+  </div>
+
+  <!-- MODULE GRID -->
+  <div id="browseView">
+    <div class="module-grid" id="moduleGrid"></div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="dtab" style="background:var(--forest);color:var(--cream);border-color:var(--forest);padding:12px 28px" onclick="showCreatePanel()" data-t="create_btn">+ Contribute a Guide</button>
+    </div>
+  </div>
+
+  <!-- SINGLE MODULE VIEW -->
+  <div class="nbf-view" id="nbfView">
+    <div class="nbf-title" id="viewTitle"></div>
+    <div class="nbf-noun" id="viewNoun"></div>
+    <div class="nbf-card normal"><h4><span class="nbf-icon">N</span> <span data-t="lbl_normal">Normal — How It's Supposed to Work</span></h4><p id="viewNormal"></p></div>
+    <div class="nbf-card broken"><h4><span class="nbf-icon">B</span> <span data-t="lbl_broken">Broken — Where It Fails</span></h4><p id="viewBroken"></p></div>
+    <div class="nbf-card fix"><h4><span class="nbf-icon">F</span> <span data-t="lbl_fix">Fix — What You Can Do</span></h4><p id="viewFix"></p></div>
+    <div class="nbf-action" id="viewAction" style="display:none"><h5 data-t="lbl_action">Take Action</h5><p id="viewActionText"></p></div>
+    <div class="nbf-meta"><div class="author" id="viewAuthor"></div><div class="nbf-back" onclick="showBrowse()" data-t="back_btn">← All Guides</div></div>
+  </div>
+
+  <!-- CREATE PANEL -->
+  <div class="create-panel fade-in" id="createPanel" style="display:none">
+    <h3 data-t="create_title">Share What You Know</h3>
+    <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;line-height:1.6" data-t="create_desc">Think of a system you understand — healthcare, banking, renting, immigration, school enrollment, insurance claims, anything. Explain how it's supposed to work, where people get stuck, and what they can actually do about it.</p>
+
+    <label data-t="lbl_domain">Domain</label>
+    <select id="cDomain">
+      <option value="health">🏥 Health</option>
+      <option value="money">💰 Money</option>
+      <option value="rights">⚖️ Rights</option>
+      <option value="power">🏛️ Power</option>
+    </select>
+
+    <label data-t="lbl_title_field">Title</label>
+    <input type="text" id="cTitle" placeholder="e.g., Understanding Your Insurance Deductible">
+    <div class="hint" data-t="hint_title">What system are you explaining?</div>
+
+    <label data-t="lbl_noun_field">The Noun — What Fails?</label>
+    <input type="text" id="cNoun" placeholder="e.g., Insurance Coverage, Lease Protections, Prescription Access">
+    <div class="hint" data-t="hint_noun">Complete the sentence: "When the _____ Fails"</div>
+
+    <div class="field-group fg-n">
+      <h4>Normal — How It's Supposed to Work</h4>
+      <label data-t="lbl_normal_field">Explain how this system works when it's functioning correctly.</label>
+      <textarea id="cNormal" rows="4" placeholder="When everything works right, this is what happens..."></textarea>
+    </div>
+
+    <div class="field-group fg-b">
+      <h4>Broken — Where It Fails</h4>
+      <label data-t="lbl_broken_field">What goes wrong? Where do people get stuck, denied, or left out?</label>
+      <textarea id="cBroken" rows="4" placeholder="Here's where it breaks down..."></textarea>
+    </div>
+
+    <div class="field-group fg-f">
+      <h4>Fix — What You Can Do</h4>
+      <label data-t="lbl_fix_field">What can someone actually do? Be specific — phone numbers, websites, exact steps.</label>
+      <textarea id="cFix" rows="4" placeholder="Here's what you can do about it..."></textarea>
+    </div>
+
+    <label data-t="lbl_action_field">Take Action (optional)</label>
+    <textarea id="cAction" rows="2" placeholder="One specific step someone can take right now — a phone number, a website, a place to go"></textarea>
+
+    <label data-t="lbl_author">Your name and zip code</label>
+    <input type="text" id="cAuthor" placeholder="e.g., Ana, 60608">
+
+    <div class="btn-row">
+      <button onclick="hideCreatePanel()" data-t="cancel_btn">Cancel</button>
+      <button class="primary" onclick="submitModule()" data-t="submit_btn">Submit Guide</button>
+    </div>
+  </div>
+
+  <!-- DISCLAIMERS -->
+  <div class="section" style="margin:20px 0;text-align:center">
+    <p style="font-size:.65rem;color:var(--light);line-height:1.6;max-width:500px;margin:0 auto" data-t="disclaimer">Health guides on this page are educational and do not replace professional medical advice. If you have a medical concern, contact your doctor or a Federally Qualified Health Center. In an emergency, call 911. Community-authored guides reflect individual experience — verify critical information before acting on it.</p>
+    <p style="font-size:.65rem;color:var(--light);margin-top:6px" data-t="privacy_note">No account. No personal data collected. Guides you submit are reviewed before publishing.</p>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+var modules = [];
+var currentFilter = 'all';
+
+// Guides loaded from external JSON (was inline SEED — reduced HTML from 85KB to 28KB)
+var SEED = [];
+var ES_MAP = {};
+
+async function loadSeedGuides() {
+  try {
+    var resp = await fetch('/data/knowledge_guides.json');
+    SEED = await resp.json();
+    // Build ES_MAP from merged data for backward compatibility
+    SEED.forEach(function(g) {
+      if (g.title_es) {
+        ES_MAP[g.title] = {};
+        ['title_es','noun_es','normal_es','broken_es','fix_es','action_es'].forEach(function(k) {
+          if (g[k]) ES_MAP[g.title][k] = g[k];
+        });
+      }
+    });
+    mergeAndRender();
+  } catch(e) {
+    console.warn('Could not load guides JSON, using empty set');
+    mergeAndRender();
+  }
+}
+
+async function loadModules() {
+  // Load seed guides from external JSON (lazy loaded, cached by SW)
+  await loadSeedGuides();
+  modules = SEED.slice(); // Start with seed content
+
+  if (API) {
+    try {
+      var res = await fetch(API + '?action=get_community_modules');
+      var data = await res.json();
+      if (data.status === 'ok' && data.modules) {
+        data.modules.forEach(function(m) {
+          if (m.approved !== false) modules.push(m);
+        });
+      }
+    } catch(e) { /* use seed only */ }
+  }
+
+  if(modules.length===0){EQ.showEmpty('moduleGrid');}else{renderGrid();}
+}
+
+function renderGrid() {
+  var isEs = EQ && EQ.lang === 'es';
+  var filtered = currentFilter === 'all' ? modules : modules.filter(function(m) { return m.domain === currentFilter; });
+
+  if (filtered.length === 0) {
+    document.getElementById('moduleGrid').innerHTML = '<div class="empty">' + (isEs ? 'No hay guías en esta categoría todavía. ¡Sé el primero!' : 'No guides in this category yet. Be the first!') + '</div>';
+    return;
+  }
+
+  var html = '';
+  filtered.forEach(function(m, idx) {
+    var realIdx = modules.indexOf(m);
+    html += '<div class="mod-card" onclick="showModule(' + realIdx + ')">' +
+      '<div class="mc-domain ' + m.domain + '">' + domainLabel(m.domain, isEs) + '</div>' +
+      '<h3>' + esc((isEs && m.title_es) ? m.title_es : m.title) + '</h3>' +
+      '<div class="mc-noun">' + (isEs ? 'Cuando ' : 'When the ') + esc((isEs && m.noun_es) ? m.noun_es : m.noun) + (isEs ? ' Falla' : ' Fails') + '</div>' +
+      '<div class="mc-author">' + esc(m.author || 'Community contributor') + '</div></div>';
+  });
+  document.getElementById('moduleGrid').innerHTML = html;
+}
+
+function domainLabel(d, isEs) {
+  var labels = {
+    health: isEs ? '🏥 Salud' : '🏥 Health',
+    money: isEs ? '💰 Dinero' : '💰 Money',
+    rights: isEs ? '⚖️ Derechos' : '⚖️ Rights',
+    power: isEs ? '🏛️ Poder' : '🏛️ Power'
+  };
+  return labels[d] || d;
+}
+
+function filterDomain(d, btn) {
+  currentFilter = d;
+  document.querySelectorAll('.dtab').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  if(modules.length===0){EQ.showEmpty('moduleGrid');}else{renderGrid();}
+}
+
+function showModule(idx) {
+  var m = modules[idx]; if (!m) return;
+  var isEs = EQ && EQ.lang === 'es';
+  document.getElementById('viewTitle').textContent = (isEs && m.title_es) ? m.title_es : m.title;
+  document.getElementById('viewNoun').textContent = (isEs ? 'Cuando ' : 'When the ') + ((isEs && m.noun_es) ? m.noun_es : m.noun) + (isEs ? ' Falla' : ' Fails');
+  document.getElementById('viewNormal').textContent = (isEs && m.normal_es) ? m.normal_es : m.normal;
+  document.getElementById('viewBroken').textContent = (isEs && m.broken_es) ? m.broken_es : m.broken;
+  document.getElementById('viewFix').textContent = (isEs && m.fix_es) ? m.fix_es : m.fix;
+
+  var actionEl = document.getElementById('viewAction');
+  var actionText = (isEs && m.action_es) ? m.action_es : m.action;
+  if (actionText) {
+    document.getElementById('viewActionText').textContent = actionText;
+    actionEl.style.display = '';
+  } else { actionEl.style.display = 'none'; }
+
+  document.getElementById('viewAuthor').textContent = (isEs ? 'Contribuido por ' : 'Contributed by ') + (m.author || 'Community');
+
+  document.getElementById('browseView').style.display = 'none';
+  document.getElementById('nbfView').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showBrowse() {
+  document.getElementById('nbfView').classList.remove('active');
+  document.getElementById('browseView').style.display = '';
+}
+
+function showCreatePanel() {
+  document.getElementById('createPanel').style.display = '';
+  document.getElementById('createPanel').scrollIntoView({ behavior: 'smooth' });
+}
+function hideCreatePanel() {
+  document.getElementById('createPanel').style.display = 'none';
+}
+
+async function submitModule() {
+  var title = document.getElementById('cTitle').value.trim();
+  var noun = document.getElementById('cNoun').value.trim();
+  var normal = document.getElementById('cNormal').value.trim();
+  var broken = document.getElementById('cBroken').value.trim();
+  var fix = document.getElementById('cFix').value.trim();
+
+  if (!title || !noun || !normal || !broken || !fix) {
+    showToast('Fill in all required fields'); return;
+  }
+
+  var mod = {
+    domain: document.getElementById('cDomain').value,
+    title: title, noun: noun,
+    normal: normal, broken: broken, fix: fix,
+    action: document.getElementById('cAction').value.trim(),
+    author: document.getElementById('cAuthor').value.trim() || 'Community contributor'
+  };
+
+  if (API) {
+    try {
+      await fetch(API, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'submit_community_module', module: mod, timestamp: new Date().toISOString() })
+      });
+    } catch(e) { /* save locally */ }
+  }
+
+  modules.push(mod);
+  if(modules.length===0){EQ.showEmpty('moduleGrid');}else{renderGrid();}
+  hideCreatePanel();
+  showToast('Guide submitted! Thank you for contributing.');
+
+  // Clear form
+  ['cTitle','cNoun','cNormal','cBroken','cFix','cAction','cAuthor'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+}
+
+function esc(s) { return (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function showToast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 3000); }
+
+loadModules();
+
+EQ.init({
+  en: {
+    arc_label:'Learn', title:'Things Your Neighbors Figured Out',
+    subtitle:'Guides written by people who\'ve been through it. Each one answers three questions: how is this supposed to work, where does it break down, and what can you actually do? Read what\'s here or write one yourself.',
+    scaffold_explain:'Every guide follows the same three questions: <strong style="color:var(--forest)">How does this work?</strong> — when everything goes right. <strong style="color:var(--coral)">Where does it break?</strong> — where people get stuck. <strong style="color:var(--sage)">What can you do?</strong> — specific steps, phone numbers, exact words to say. This is how people already solve problems. We just wrote it down.',
+    tab_all:'All', tab_health:'Health', tab_money:'Money', tab_rights:'Rights', tab_power:'Power',
+    create_btn:'+ Write a Guide',
+    lbl_normal:'How It Works — When Everything Goes Right', lbl_broken:'Where It Breaks — Where People Get Stuck', lbl_fix:'What To Do — Steps You Can Take', lbl_action:'One Thing You Can Do Right Now',
+    back_btn:'← All Guides',
+    create_title:'Share What You Know',
+    create_desc:'Think of something you figured out the hard way — navigating insurance, fighting an eviction, getting benefits, dealing with a bill. Explain it so the next person doesn\'t have to figure it out alone.',
+    lbl_domain:'Topic', lbl_title_field:'Title', hint_title:'What did you figure out?',
+    lbl_noun_field:'What breaks down?', hint_noun:'What stops working when things go wrong?',
+    lbl_normal_field:'How is this supposed to work when everything goes right?',
+    lbl_broken_field:'Where do people get stuck, denied, or left out?',
+    lbl_fix_field:'What can someone actually do? Phone numbers, websites, exact steps.',
+    lbl_action_field:'One thing someone can do right now (optional)', lbl_author:'Your name and zip code',
+    cancel_btn:'Cancel', submit_btn:'Share This',
+    disclaimer:'Health guides on this page are educational and do not replace professional medical advice. If you have a medical concern, contact your doctor or a Federally Qualified Health Center. In an emergency, call 911. Community-authored guides reflect individual experience — verify critical information before acting on it.',
+    privacy_note:'No account. No personal data collected. Guides you submit are reviewed before publishing.'
+  },
+  es: {
+    arc_label:'Aprender', title:'Cosas Que Tus Vecinos Descubrieron',
+    subtitle:'Guías escritas por personas que ya pasaron por eso. Cada una responde tres preguntas: cómo se supone que funcione, dónde falla, y qué puedes hacer realmente. Lee lo que hay o escribe una tú.',
+    scaffold_explain:'Cada guía sigue las mismas tres preguntas: <strong style="color:var(--forest)">¿Cómo funciona?</strong> — cuando todo va bien. <strong style="color:var(--coral)">¿Dónde falla?</strong> — donde la gente se queda atascada. <strong style="color:var(--sage)">¿Qué puedes hacer?</strong> — pasos específicos, números de teléfono, palabras exactas. Así es como la gente ya resuelve problemas. Solo lo escribimos.',
+    tab_all:'Todos', tab_health:'Salud', tab_money:'Dinero', tab_rights:'Derechos', tab_power:'Poder',
+    create_btn:'+ Escribe una Guía',
+    lbl_normal:'Cómo Funciona — Cuando Todo Va Bien', lbl_broken:'Dónde Falla — Donde la Gente Se Queda Atascada', lbl_fix:'Qué Hacer — Pasos Que Puedes Tomar', lbl_action:'Una Cosa Que Puedes Hacer Ahora Mismo',
+    back_btn:'← Todas las Guías',
+    create_title:'Comparte Lo Que Sabes',
+    create_desc:'Piensa en algo que descubriste por las malas — navegando el seguro, peleando un desalojo, obteniendo beneficios, lidiando con una factura. Explícalo para que la próxima persona no tenga que descubrirlo sola.',
+    lbl_domain:'Tema', lbl_title_field:'Título', hint_title:'¿Qué descubriste?',
+    lbl_noun_field:'¿Qué deja de funcionar?', hint_noun:'¿Qué se descompone cuando las cosas salen mal?',
+    lbl_normal_field:'¿Cómo se supone que funcione cuando todo va bien?',
+    lbl_broken_field:'¿Dónde se queda la gente atascada, negada o excluida?',
+    lbl_fix_field:'¿Qué puede hacer alguien realmente? Números de teléfono, sitios web, pasos exactos.',
+    lbl_action_field:'Una cosa que alguien puede hacer ahora mismo (opcional)', lbl_author:'Tu nombre y código postal',
+    cancel_btn:'Cancelar', submit_btn:'Compartir Esto',
+    disclaimer:'Las guías de salud en esta página son educativas y no reemplazan el consejo médico profesional. Si tienes una preocupación médica, contacta a tu doctor o a un Centro de Salud Federalmente Calificado. En una emergencia, llama al 911. Las guías escritas por la comunidad reflejan experiencia individual — verifica la información crítica antes de actuar.',
+    privacy_note:'Sin cuenta. Sin datos personales recopilados. Las guías que envíes son revisadas antes de publicarse.'
+  }
+}, { footer: true, alertPage: 'knowledge' });
+</script>
+</body>
+</html>

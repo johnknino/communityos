@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Needs & Offers — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Post what you need. Share what you can offer. Community-moderated. Free and bilingual.">
+<meta property="og:title" content="Needs & Offers — CommUnity OS">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:description" content="Mutual aid matching. Community-moderated. Free and bilingual.">
+<meta property="og:url" content="https://comm-unity-os.org/needs.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.zip-gate{text-align:center;padding:60px 20px}
+.zip-gate h2{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--deep);margin-bottom:8px}
+.zip-gate p{color:var(--dim);font-size:.9rem;margin-bottom:24px}
+.zip-form{display:flex;gap:10px;max-width:360px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.zip-form input{font-family:var(--sans);font-size:1rem;padding:10px 14px;border:1.5px solid var(--sand);border-radius:10px;background:var(--warm);color:var(--ink);text-align:center;width:120px}
+.zip-form input:focus{outline:none;border-color:var(--sage)}
+.zip-form input.name-input{width:160px;text-align:left}
+.zip-form button{font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:10px 24px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.2s}
+.zip-form button:hover{background:var(--deep)}
+
+
+.board{display:none}
+.board.active{display:block}
+
+.user-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;margin-bottom:20px;border-bottom:1px solid var(--sand);flex-wrap:wrap}
+.user-info{font-size:.82rem;color:var(--dim)}
+.user-info strong{color:var(--deep)}
+.type-tabs{display:flex;gap:6px}
+.type-tab{font-family:var(--sans);font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:6px 16px;border-radius:10px;border:1.5px solid var(--sand);background:transparent;color:var(--dim);cursor:pointer;transition:.2s}
+.type-tab:hover,.type-tab.active{border-color:var(--sage);color:var(--forest);background:rgba(90,138,120,.06)}
+.type-tab.need.active{border-color:var(--coral);color:var(--coral);background:var(--coral-soft)}
+.type-tab.offer.active{border-color:var(--forest);color:var(--forest);background:rgba(45,90,78,.06)}
+
+.compose-toggle{display:flex;gap:8px;margin-bottom:16px}
+.compose-toggle button{flex:1;font-family:var(--sans);font-size:.8rem;font-weight:500;padding:12px;border-radius:10px;border:1.5px solid var(--sand);background:var(--warm);color:var(--body);cursor:pointer;transition:.2s}
+.compose-toggle button:hover{border-color:var(--sage)}
+.compose-toggle button.need-btn{color:var(--coral)}
+.compose-toggle button.offer-btn{color:var(--forest)}
+
+.compose-box{background:var(--warm);border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid var(--sand);display:none}
+.compose-box.active{display:block}
+.compose-box h3{font-family:var(--sans);font-size:.85rem;font-weight:600;margin-bottom:12px}
+.compose-box h3.need-title{color:var(--coral)}
+.compose-box h3.offer-title{color:var(--forest)}
+.compose-box select,.compose-box textarea,.compose-box input{font-family:var(--sans);font-size:.9rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);margin-bottom:10px;resize:vertical}
+.compose-box select{appearance:auto}
+.compose-row{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.compose-row button{font-family:var(--sans);font-size:.75rem;font-weight:500;padding:8px 20px;border:none;border-radius:8px;cursor:pointer;transition:.2s;color:var(--cream)}
+.compose-row button.need-submit{background:var(--coral)}
+.compose-row button.offer-submit{background:var(--forest)}
+.compose-row button:hover{opacity:.85}
+
+.listing{background:var(--warm);border-radius:12px;padding:16px 20px;margin-bottom:10px;border-left:4px solid var(--sand);transition:.2s}
+.listing:hover{box-shadow:0 2px 12px rgba(26,60,52,.04)}
+.listing.need{border-left-color:var(--coral)}
+.listing.offer{border-left-color:var(--forest)}
+.listing-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.listing-type{font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:8px}
+.listing-type.need{background:var(--coral-soft);color:var(--coral)}
+.listing-type.offer{background:rgba(45,90,78,.08);color:var(--forest)}
+.listing-cat{font-size:.65rem;color:var(--dim);background:var(--cream);padding:2px 8px;border-radius:6px}
+.listing-name{font-weight:600;font-size:.82rem;color:var(--deep)}
+.listing-zip{font-size:.7rem;color:var(--light)}
+.listing-desc{font-size:.88rem;color:var(--body);line-height:1.7;margin-bottom:8px}
+.listing-contact{font-size:.8rem;color:var(--sage);font-style:italic}
+.listing-footer{display:flex;align-items:center;gap:12px;margin-top:8px}
+.listing-footer button{font-family:var(--sans);font-size:.7rem;color:var(--dim);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;transition:.2s}
+.listing-footer button:hover{background:var(--cream);color:var(--forest)}
+.listing-time{font-size:.68rem;color:var(--light)}
+
+.safety-section{background:var(--warm);border-radius:14px;padding:24px;margin:30px 0;border-left:4px solid var(--gold)}
+.safety-section h3{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin-bottom:10px}
+.safety-section p{font-size:.85rem;color:var(--body);line-height:1.7;margin-bottom:12px}
+.safety-links{display:flex;flex-direction:column;gap:8px}
+.safety-link{font-size:.82rem;color:var(--forest);padding:8px 12px;background:var(--cream);border-radius:8px;text-decoration:none;display:flex;justify-content:space-between;align-items:center;transition:.15s}
+.safety-link:hover{background:rgba(90,138,120,.06)}
+.safety-link span{font-size:.7rem;color:var(--dim)}
+
+.empty{text-align:center;padding:40px;color:var(--dim)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/needs.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Needs and Offers — CommUnity OS", "url": "https://comm-unity-os.org/needs.html", "description": "Post what you need. Share what you can offer. Zip-code mutual aid board. 30-day expiration. Free, bilingual, no account.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Connect</div>
+    <h1 data-t="title">Needs & Offers</h1>
+    <div class="subtitle" data-t="subtitle">Post what you need. Share what you can offer. Community-moderated. Posts expire after 30 days.</div>
+  </div>
+
+  <!-- STEP 1: ZIP GATE (browse) -->
+  <div class="zip-gate fade-in fade-in-1" id="zipGate">
+    <h2 data-t="gate_title">Enter your zip code</h2>
+    <p data-t="gate_desc">See needs and offers near you.</p>
+    <div class="zip-form">
+      <input type="text" id="zipInput" maxlength="5" pattern="[0-9]{5}" placeholder="Zip" inputmode="numeric">
+      <div id="zipSuggestions" class="zip-suggestions" style="display:none"></div>
+      <input type="text" id="nameInput" class="name-input" maxlength="30" placeholder="Display name">
+      <button onclick="enterBoard()" data-t="gate_btn">Enter</button>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board" id="board">
+    <div class="user-bar">
+      <div class="user-info">
+        <strong id="userName"></strong> · <span id="userZip"></span>
+        · <a href="#" onclick="leaveBoard();return false" style="color:var(--coral);font-size:.75rem" data-t="change_zip">change</a>
+      </div>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="filterType('')">All</button>
+        <button class="type-tab need" onclick="filterType('need')" data-t="tab_needs">Needs</button>
+        <button class="type-tab offer" onclick="filterType('offer')" data-t="tab_offers">Offers</button>
+      </div>
+    </div>
+
+    <!-- COMPOSE -->
+    <div id="composeArea">
+      <div class="compose-toggle">
+        <button class="need-btn" onclick="showCompose('need')" data-t="btn_need">✋ I need something</button>
+        <button class="offer-btn" onclick="showCompose('offer')" data-t="btn_offer">🤝 I can offer something</button>
+      </div>
+
+      <div class="compose-box" id="composeNeed">
+        <h3 class="need-title" data-t="compose_need_title">What do you need?</h3>
+        <select id="needCategory">
+          <option value="food">Food</option>
+          <option value="housing">Housing</option>
+          <option value="childcare">Childcare</option>
+          <option value="health">Health / Medical</option>
+          <option value="legal">Legal Help</option>
+          <option value="employment">Employment</option>
+          <option value="education">Education</option>
+          <option value="financial">Financial</option>
+          <option value="other">Other</option>
+        </select>
+        <textarea id="needDesc" rows="3" placeholder="Describe what you need..." maxlength="1000"></textarea>
+        <input type="text" id="needContact" placeholder="How should someone reach you? (optional)" maxlength="200">
+        <div class="compose-row"><button class="need-submit" onclick="submitListing('need')">Post Need</button></div>
+      </div>
+
+      <div class="compose-box" id="composeOffer">
+        <h3 class="offer-title" data-t="compose_offer_title">What can you offer?</h3>
+        <select id="offerCategory">
+          <option value="food">Food</option>
+          <option value="housing">Housing Help</option>
+          <option value="childcare">Childcare</option>
+          <option value="health">Health / Medical</option>
+          <option value="legal">Legal Help</option>
+          <option value="employment">Employment</option>
+          <option value="education">Education / Tutoring</option>
+          <option value="financial">Financial Advice</option>
+          <option value="other">Other</option>
+        </select>
+        <textarea id="offerDesc" rows="3" placeholder="Describe what you can offer..." maxlength="1000"></textarea>
+        <input type="text" id="offerContact" placeholder="How should someone reach you? (optional)" maxlength="200">
+        <div class="compose-row"><button class="offer-submit" onclick="submitListing('offer')">Post Offer</button></div>
+      </div>
+    </div>
+
+    <!-- LISTINGS -->
+    <div id="listingsContainer">
+      <div class="empty" data-t="loading">Loading...</div>
+    </div>
+
+    <!-- SAFETY SECTION -->
+    <div class="safety-section">
+      <h3 data-t="safety_title">🛡 Before You Meet</h3>
+      <p data-t="safety_desc">Before meeting someone in person, you can look them up through these free public records:</p>
+      <div class="safety-links">
+        <a href="https://isp.illinois.gov/Sor" target="_blank" rel="noopener" class="safety-link">Illinois Sex Offender Registry <span>Free · Public</span></a>
+        <a href="https://www.judici.com/courts/index.jsp?court=CKCR" target="_blank" rel="noopener" class="safety-link">Cook County Circuit Court Records <span>Free · Public</span></a>
+        <a href="https://www.idoc.state.il.us/subsections/search/ISinms2.asp" target="_blank" rel="noopener" class="safety-link">IDOC Inmate Search <span>Free · Public</span></a>
+        <a href="https://www.nsopw.gov" target="_blank" rel="noopener" class="safety-link">National Sex Offender Public Website <span>Free · Public</span></a>
+      </div>
+      <p style="font-size:.75rem;color:var(--dim);margin-top:12px;margin-bottom:0" data-t="safety_note">These are public records maintained by government agencies. CommUnity OS does not run background checks — we give you the tools to make your own decisions.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+var currentZip = '';
+var currentName = '';
+var currentType = '';
+var listings = [];
+
+// ── BOARD ENTRY (browse) ──
+function enterBoard() {
+  var zip = document.getElementById('zipInput').value.trim();
+  var name = document.getElementById('nameInput').value.trim();
+  if (!/^\d{5}$/.test(zip)) { showToast('Enter a valid 5-digit zip code'); return; }
+  if (!name) { showToast('Choose a display name'); return; }
+  currentZip = zip; currentName = name;
+  localStorage.setItem('cos-zip', zip);
+  localStorage.setItem('cos-name', name);
+  if (EQ && EQ.resolveApi) EQ.resolveApi(zip);
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userZip').textContent = zip;
+  document.getElementById('zipGate').style.display = 'none';
+  document.getElementById('board').classList.add('active');
+  loadListings();
+}
+
+function leaveBoard() {
+  currentZip=''; currentName='';
+  localStorage.removeItem('cos-zip'); localStorage.removeItem('cos-name');
+  document.getElementById('zipGate').style.display = '';
+  document.getElementById('board').classList.remove('active');
+}
+
+// ── LISTINGS ──
+function filterType(type) {
+  currentType = type;
+  document.querySelectorAll('.type-tab').forEach(function(b){b.classList.remove('active');});
+  event.target.classList.add('active');
+  renderListings();
+}
+
+function showCompose(type) {
+  document.getElementById('composeNeed').classList.toggle('active', type==='need');
+  document.getElementById('composeOffer').classList.toggle('active', type==='offer');
+}
+
+async function loadListings() {
+  if (!API) { renderDemo(); return; }
+  try {
+    var url = API + '?action=get_needs_crosszip&zip=' + currentZip + '&type=all';
+    var result = await EQ.cachedFetch(url, { maxAge: 180000 }); // 3 min cache
+    var data = result.data;
+    if (data.status==='ok') {
+      listings = (data.items || []).map(function(item) {
+        return {
+          id: item.id, type: item.type, zip: item.zip,
+          display_name: item.name, category: item.category,
+          description: item.text, timestamp: item.timestamp,
+          upvotes: item.upvotes || 0, isLocal: item.isLocal,
+          status: item.status
+        };
+      });
+      adjacentZips = data.adjacentZips || [];
+      renderListings();
+    } else {
+      // Fallback to old endpoint
+      var url2 = API + '?action=get_listings&zip=' + currentZip;
+      var res2 = await fetch(url2, {redirect:'follow'});
+      var data2 = await res2.json();
+      if (data2.status==='ok') { listings = data2.listings; renderListings(); }
+    }
+  } catch(e) { renderDemo(); }
+}
+var adjacentZips = [];
+
+async function submitListing(type) {
+  var cat = document.getElementById(type+'Category').value;
+  var desc = document.getElementById(type+'Desc').value.trim();
+  var contact = document.getElementById(type+'Contact').value.trim();
+  if (!desc) { showToast('Describe what you ' + (type==='need'?'need':'can offer')); return; }
+
+  if (!API) {
+    listings.unshift({
+      id:'demo-'+Date.now(), type:type, zip:currentZip, display_name:currentName,
+      category:cat, description:desc, contact_method:contact,
+      timestamp:new Date().toISOString(), upvotes:0
+    });
+    document.getElementById(type+'Desc').value='';
+    document.getElementById(type+'Contact').value='';
+    document.getElementById('compose'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('active');
+    renderListings();
+    showToast('Posted! (demo mode)');
+    return;
+  }
+
+  try {
+    var res = await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({
+        action:'post_'+type, zip:currentZip, display_name:currentName,
+        category:cat, description:desc, contact_method:contact,
+        verified:true
+      })
+    });
+    var data = await res.json();
+    if (data.status==='ok') {
+      document.getElementById(type+'Desc').value='';
+      document.getElementById(type+'Contact').value='';
+      document.getElementById('compose'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('active');
+      showToast('Posted!');
+      loadListings();
+    } else {
+      showToast(data.message || 'Error posting');
+    }
+  } catch(e) { showToast('Error — try again'); }
+}
+
+function renderListings() {
+  var container = document.getElementById('listingsContainer');
+  var filtered = currentType ? listings.filter(function(l){return l.type===currentType;}) : listings;
+
+  if (filtered.length===0) {
+    var isEs = EQ && EQ.lang === 'es';
+    container.innerHTML = '<div class="empty"><p>' + (isEs ? 'No hay publicaciones para '+currentZip+' ni vecindarios cercanos.' : 'No listings yet for '+currentZip+' or nearby neighborhoods.') + '</p><p style="color:var(--sage)">' + (isEs ? 'Sé el primero. Publica una necesidad o una oferta — tus vecinos la verán.' : 'You\'re the first one here. Post a need or an offer — neighbors nearby will see it too.') + '</p></div>';
+    return;
+  }
+
+  var catLabels = {food:'🍎 Food',housing:'🏠 Housing',childcare:'👶 Childcare',health:'🏥 Health',legal:'⚖️ Legal',employment:'💼 Work',education:'📚 Education',financial:'💰 Financial',other:'📌 Other'};
+  var html = '';
+  filtered.forEach(function(l) {
+    var ago = timeAgo(l.timestamp);
+    var catLabel = catLabels[l.category] || l.category;
+    var vBadge = '';
+    var nameDisplay = esc(l.display_name);
+    var phoneTag = '';
+
+    var isEs = EQ && EQ.lang === 'es';
+    var crosszipLabel = isEs ? 'vecindario cercano' : 'nearby neighborhood';
+
+    html += '<div class="listing '+esc(l.type)+'">' +
+      '<div class="listing-header">' +
+        '<span class="listing-type '+esc(l.type)+'">'+(l.type==='need'?(isEs?'Necesidad':'Need'):(isEs?'Oferta':'Offer'))+'</span>' +
+        '<span class="listing-cat">'+catLabel+'</span>' +
+        '<span class="listing-name">'+nameDisplay+'</span>' +
+        
+        '<span class="listing-zip">'+esc(l.zip)+'</span>' +
+        (l.isLocal === false ? '<span class="crosszip-badge">'+crosszipLabel+'</span>' : '') +
+      '</div>' +
+      '<div class="listing-desc">'+esc(l.description)+'</div>' +
+      (l.contact_method ? '<div class="listing-contact">'+esc(l.contact_method)+'</div>' : '') +
+      '<div class="listing-footer">' +
+        '<button onclick="upvoteListing(\''+l.id+'\')">▲ '+(l.upvotes||0)+'</button>' +
+        '<span class="listing-time">'+ago+'</span>' +
+        '<button onclick="flagListing(\''+l.id+'\')" style="margin-left:auto;font-size:.65rem">⚑</button>' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderDemo() {
+  listings = [
+    {id:'d1',type:'need',zip:currentZip,display_name:'Maria R.',category:'food',description:'Looking for a food pantry open on Saturday mornings near 60608. I work weekdays and can\'t get to the ones that close at 2pm.',contact_method:'Reply here',timestamp:new Date(Date.now()-3600000).toISOString(),upvotes:2},
+    {id:'d2',type:'offer',zip:currentZip,display_name:'Ana G.',category:'food',description:'Extra tomatoes, peppers, and cilantro from my garden. Pick up near 51st and Wood.',contact_method:'Reply here',timestamp:new Date(Date.now()-7200000).toISOString(),upvotes:4},
+    {id:'d3',type:'need',zip:currentZip,display_name:'Jose M.',category:'legal',description:'Looking for help reading a lease. Landlord sent a new one and some of the language looks different from the original.',contact_method:'',timestamp:new Date(Date.now()-10800000).toISOString(),upvotes:1},
+    {id:'d4',type:'offer',zip:currentZip,display_name:'Patricia W.',category:'childcare',description:'Retired teacher. Can watch children (ages 3-10) Thursday afternoons while you run errands. Free.',contact_method:'Reply here or find me at the block club meeting',timestamp:new Date(Date.now()-21600000).toISOString(),upvotes:6}
+  ];
+  renderListings();
+  showToast('Demo mode — deploy Apps Script for live data');
+}
+
+async function upvoteListing(id) {
+  if (!API) { var l=listings.find(function(x){return x.id===id;});if(l){l.upvotes=(l.upvotes||0)+1;renderListings();}return; }
+  try { await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'upvote_listing',id:id,zip:currentZip})}); loadListings(); } catch(e){}
+}
+
+async function flagListing(id) {
+  if(!confirm('Flag this listing for review?'))return;
+  if(!API){showToast('Flagged (demo)');return;}
+  try{await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'flag_listing',id:id,zip:currentZip,reason:'inappropriate'})});showToast('Flagged for review');}catch(e){}
+}
+
+// ── UTILS ──
+function timeAgo(ts){if(!ts)return'';var d=(Date.now()-new Date(ts).getTime())/1000;if(d<60)return'just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return Math.floor(d/86400)+'d ago';}
+function esc(s){return s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+
+// ── INIT ──
+var savedZip=localStorage.getItem('cos-zip');
+var savedName=localStorage.getItem('cos-name');
+if(savedZip&&savedName){document.getElementById('zipInput').value=savedZip;document.getElementById('nameInput').value=savedName;enterBoard();}
+
+EQ.initFuzzyZip('zipInput', 'zipSuggestions', function(zip) {
+  document.getElementById('zipInput').value = zip;
+});
+
+EQ.init({
+  en:{arc_label:'Connect',title:'Needs & Offers',subtitle:'Post what you need. Share what you can offer. Community-moderated. Posts expire after 30 days.',gate_title:'Enter your zip code',gate_desc:'See needs and offers near you.',gate_btn:'Enter',change_zip:'change',tab_needs:'Needs',tab_offers:'Offers',btn_need:'✋ I need something',btn_offer:'🤝 I can offer something',compose_need_title:'What do you need?',compose_offer_title:'What can you offer?',loading:'Loading...',safety_title:'🛡 Before You Meet',safety_desc:'Before meeting someone in person, you can look them up through these free public records:',safety_note:'These are public records maintained by government agencies. CommUnity OS does not run background checks — we give you the tools to make your own decisions.'},
+  es:{arc_label:'Conectar',title:'Necesidades y Ofertas',subtitle:'Publica lo que necesitas. Comparte lo que puedes ofrecer. Moderado por la comunidad. Las publicaciones expiran en 30 días.',gate_title:'Ingresa tu código postal',gate_desc:'Ve necesidades y ofertas cerca de ti.',gate_btn:'Entrar',change_zip:'cambiar',tab_needs:'Necesidades',tab_offers:'Ofertas',btn_need:'✋ Necesito algo',btn_offer:'🤝 Puedo ofrecer algo',compose_need_title:'¿Qué necesitas?',compose_offer_title:'¿Qué puedes ofrecer?',loading:'Cargando...',safety_title:'🛡 Antes de Reunirte',safety_desc:'Antes de reunirte con alguien en persona, puedes buscarlos en estos registros públicos gratuitos:',safety_note:'Estos son registros públicos mantenidos por agencias gubernamentales. CommUnity OS no realiza verificaciones de antecedentes — te damos las herramientas para tomar tus propias decisiones.'}
+}, { footer: true, alertPage: 'needs' });
+</script>
+</body>
+</html>

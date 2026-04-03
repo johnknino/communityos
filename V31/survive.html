@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Survive — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Survive — CommUnity OS">
+<meta property="og:description" content="Find food, health info, emergency contacts, and benefits screening. Free. In English and Spanish.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/survive.html">
+<meta name="description" content="Find food, health information, emergency contacts, and benefits screening near you. Free. In English and Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="canonical" href="https://comm-unity-os.org/survive.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Survive — CommUnity OS", "url": "https://comm-unity-os.org/survive.html", "description": "Emergency contacts, food access, SNAP benefits and appeals, mental health resources including 988 crisis line in English and Spanish. Free, no account required.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}, "about": {"@type": "Thing", "name": "Community survival resources"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- CRISIS BAR — always visible, no scrolling needed -->
+  <div id="crisisBar" class="fade-in"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Survive</div>
+    <h1 data-t="title">Find What You Need Right Now</h1>
+    <div class="subtitle" data-t="subtitle">Food. Health information. Emergency help. Benefits you may qualify for. Everything here is free.</div>
+  </div>
+
+  <div id="alertsContainer"></div>
+
+  <!-- TRIAGE — "What do you need?" -->
+  <div class="fade-in fade-in-1">
+    <h2 style="font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin:16px 0 8px" data-t="triage_title">What do you need right now?</h2>
+    <div class="triage-grid">
+      <div class="triage-btn" onclick="triageSelect('food')"><div class="t-icon">🍎</div><div class="t-label" data-t="t_food">Food</div></div>
+      <div class="triage-btn" onclick="triageSelect('health')"><div class="t-icon">🏥</div><div class="t-label" data-t="t_health">Health</div></div>
+      <div class="triage-btn" onclick="triageSelect('housing')"><div class="t-icon">🏠</div><div class="t-label" data-t="t_housing">Housing</div></div>
+      <div class="triage-btn" onclick="triageSelect('safety')"><div class="t-icon">🛡️</div><div class="t-label" data-t="t_safety">Safety</div></div>
+      <div class="triage-btn" onclick="triageSelect('legal')"><div class="t-icon">⚖️</div><div class="t-label" data-t="t_legal">Legal</div></div>
+      <div class="triage-btn" onclick="triageSelect('work')"><div class="t-icon">💼</div><div class="t-label" data-t="t_work">Work</div></div>
+      <div class="triage-btn" onclick="triageSelect('veterans')"><div class="t-icon">🎖️</div><div class="t-label" data-t="t_veterans">Veterans</div></div>
+    </div>
+    <div id="triageResults" class="triage-results"></div>
+
+    <!-- VITALS CHECK CALLOUT -->
+    <div class="resource-card" style="margin:14px 0;border-left:4px solid var(--sage)">
+      <h3><a href="/vitals.html" style="color:var(--forest)" data-t="vitals_link">❤️ Check Your Vitals — Free, Private, No Data Stored</a></h3>
+      <p style="font-size:.78rem;color:var(--dim)" data-t="vitals_desc">Enter your blood pressure, heart rate, glucose, or temperature. Get a plain-language explanation of what your numbers mean and what to do. Measure your pulse with your phone camera. Nothing is saved — your data disappears when you close the page.</p>
+    </div>
+  </div>
+
+  <!-- SNAP CRISIS RESPONSE -->
+  <div class="alert-box fade-in fade-in-1" style="border-left:4px solid var(--coral)">
+    <h3 data-t="snap_alert_title">⚠ SNAP changes — what you need to know</h3>
+    <p data-t="snap_alert_desc">New work requirements for SNAP took effect February 2026. Adults ages 18-64 must now work or volunteer 80 hours per month. Exemptions exist for caregivers of children under 14, people with disabilities, and students. If your benefits changed or stopped, you have the right to appeal.</p>
+    <div id="snapFreshness" style="margin-top:6px"></div>
+
+    <div class="resource-card" style="margin-top:14px;margin-bottom:8px">
+      <h3><a href="https://abe.illinois.gov" target="_blank" rel="noopener" data-t="snap_abe">Check your benefits — ABE Illinois</a></h3>
+      <p data-t="snap_abe_desc">Log in to your ABE account to check your SNAP status, upload documents, or report changes. If you don't have an account, you can create one and apply online. Available in English and Spanish.</p>
+    </div>
+
+    <div class="resource-card" style="margin-bottom:8px">
+      <h3><a href="https://www.chicagosfoodbank.org/get-help/" target="_blank" rel="noopener" data-t="snap_gcfd">Get help now — Food Depository</a></h3>
+      <p data-t="snap_gcfd_desc">Find a food pantry near you. The Greater Chicago Food Depository's network serves all of Cook County. Call (773) 247-3663 for help in English or Spanish.</p>
+    </div>
+
+    <div class="resource-card" style="margin-bottom:8px">
+      <h3><a href="https://www.chicago.gov/SNAP" target="_blank" rel="noopener" data-t="snap_city">City of Chicago SNAP help</a></h3>
+      <p data-t="snap_city_desc">Information about SNAP changes, how to apply, and where to get help. Available in 7 languages.</p>
+    </div>
+
+    <div class="resource-card" style="margin-bottom:0">
+      <h3 data-t="snap_appeal">Your right to appeal</h3>
+      <p data-t="snap_appeal_desc">If your benefits were reduced or cut, you can request a fair hearing within 90 days. Call (800) 435-0774 or file at your local DHS office. You do not need a lawyer. You do not need to speak English. Interpreter services are available. <a href="https://www.illinoislegalaid.org/legal-information/appealing-snap-benefits-decision" target="_blank" rel="noopener" style="color:var(--sage)">Step-by-step guide from Illinois Legal Aid →</a></p>
+    </div>
+  </div>
+
+  <!-- NARRATIVE -->
+  <div class="narrative fade-in fade-in-1">
+    <p data-t="story"><span class="narrative-name">Maria</span> works the 6am shift at the warehouse. By the time she gets off, the food pantry on 18th Street is closed. Her kids eat lunch at school, but dinner is a gap she fills with whatever's cheapest at the corner store. She qualifies for SNAP but she's never applied — the form was in English the one time she tried, and she didn't know what documents to bring. She left and didn't go back.</p>
+    <p data-t="story2">Everything below exists because someone like Maria shouldn't have to figure this out alone.</p>
+    <span class="narrative-note" data-t="story_note">Maria is a composite — but her situation is real, and it's common. If you recognize any part of her story, these tools are for you.</span>
+  </div>
+
+  <!-- FOOD -->
+  <div class="section fade-in fade-in-1">
+    <div class="section-head">
+      <span class="section-icon">🍎</span>
+      <h2 data-t="food_title">Food</h2>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://feedyours.netlify.app" target="_blank" rel="noopener">FeedYours</a> <span class="badge badge-live" data-t="bl1">Live</span></h3>
+      <p data-t="fy_desc">Find food near you. Compare nutrition. Plan meals. Scan barcodes. Works on any phone, works without internet. No account needed.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://secretsofcanning.netlify.app" target="_blank" rel="noopener" data-t="canning_name">The Science of Safe Canning</a> <span class="badge badge-live" data-t="bl2">Live</span></h3>
+      <p data-t="canning_desc">Preserve food safely when it's cheap and in season. Science-based, three skill levels.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_blank" rel="noopener" data-t="fa_name">Feeding America — Find a Food Bank</a> <span class="badge badge-free" data-t="bf1">Free</span></h3>
+      <p data-t="fa_desc">Search by zip code to find food banks and pantries near you. Over 200 member food banks nationwide.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.snapscreener.com" target="_blank" rel="noopener" data-t="snap_name">SNAP Screener</a> <span class="badge badge-free" data-t="bf2">Free</span> <span class="badge badge-es">Español</span></h3>
+      <p data-t="snap_desc">Check if you qualify for SNAP food assistance. Covers all 50 states. Available in English, Spanish, and Haitian Creole. No data collected — your answers stay on your device.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.myplate.gov" target="_blank" rel="noopener">MyPlate.gov</a> <span class="badge badge-free" data-t="bf3">Free</span> <span class="badge badge-es">20+ languages</span></h3>
+      <p data-t="myplate_desc">USDA nutrition guidance — meal plans, recipes, food group information. Free to use and share. Available in 20+ languages.</p>
+    </div>
+
+    <div class="video-card">
+      <h4>📺 <a href="https://www.youtube.com/watch?v=4pOeqpfDTcI" target="_blank" rel="noopener">Watch: How WIC Works</a></h4>
+      <p>Official Colorado WIC video — what the program covers, how to apply, what to bring. Also available in Spanish.</p>
+      <span class="vc-meta">Colorado CDPHE · 5 min</span>
+      <a href="/discuss.html?topic=survive" class="vc-discuss">💬 Discuss food & benefits →</a>
+    </div>
+  </div>
+
+  <!-- HEALTH -->
+  <div class="section fade-in fade-in-2">
+    <div class="section-head">
+      <span class="section-icon">🏥</span>
+      <h2 data-t="health_title">Health</h2>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://medlineplus.gov" target="_blank" rel="noopener">MedlinePlus</a> <span class="badge badge-free" data-t="bf4">Free</span> <span class="badge badge-es">60+ languages</span></h3>
+      <p data-t="medline_desc">Health information from the National Institutes of Health. Search any condition, medication, or procedure. Plain language. Available in 60+ languages. No account needed.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://findtreatment.gov" target="_blank" rel="noopener">findtreatment.gov</a> <span class="badge badge-free" data-t="bf5">Free</span></h3>
+      <p data-t="findtx_desc">Find substance use and mental health treatment facilities near you. Confidential. Run by SAMHSA.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.healthcare.gov" target="_blank" rel="noopener">Healthcare.gov</a> <span class="badge badge-free" data-t="bf6">Free</span> <span class="badge badge-es">Español</span></h3>
+      <p data-t="hcgov_desc">Find health insurance plans and check if you qualify for Medicaid or subsidized coverage. Open enrollment and special enrollment periods.</p>
+    </div>
+
+    <div class="video-card">
+      <h4>📺 <a href="https://www.youtube.com/watch?v=zhgTCsYLG5g" target="_blank" rel="noopener">Watch: Navigating Mental Health as a Family</a></h4>
+      <p>NAMI — what it looks like when someone you love needs help, and where to start.</p>
+      <span class="vc-meta">NAMI · 8 min</span>
+      <a href="/discuss.html?topic=survive" class="vc-discuss">💬 Discuss health resources →</a>
+    </div>
+  </div>
+
+  <!-- EMERGENCY -->
+  <div class="section fade-in fade-in-2">
+    <div class="section-head">
+      <span class="section-icon">🚨</span>
+      <h2 data-t="emergency_title">Emergency</h2>
+    </div>
+
+    <a href="tel:988" class="hotline">
+      <span class="hl-icon">📞</span>
+      <span class="hl-text">
+        <span class="hl-name" data-t="hl988_name">988 Suicide & Crisis Lifeline</span>
+        <span class="hl-desc" data-t="hl988_desc">Call, text, or chat. 24/7. 240+ languages. Press 2 for Spanish. Text AYUDA to 988.</span>
+      </span>
+      <a href="tel:988" class="hl-number">988</a>
+    </a>
+
+    <a href="tel:18006624357" class="hotline">
+      <span class="hl-icon">📞</span>
+      <span class="hl-text">
+        <span class="hl-name" data-t="hlsamhsa_name">SAMHSA National Helpline</span>
+        <span class="hl-desc" data-t="hlsamhsa_desc">Substance use & mental health. Free. Confidential. No personal info required.</span>
+      </span>
+      <a href="tel:18006624357" class="hl-number">1-800-662-4357</a>
+    </a>
+
+    <a href="tel:211" class="hotline" style="background:var(--forest)">
+      <span class="hl-icon">📞</span>
+      <span class="hl-text">
+        <span class="hl-name">211</span>
+        <span class="hl-desc" data-t="hl211_desc">Local help with food, housing, utilities, health care, and more. Available 24/7 in most areas.</span>
+      </span>
+      <a href="tel:211" class="hl-number">2-1-1</a>
+    </a>
+
+    <div class="resource-card">
+      <h3><a href="https://www.ready.gov" target="_blank" rel="noopener">Ready.gov</a> <span class="badge badge-free" data-t="bf7">Free</span> <span class="badge badge-es">Español</span></h3>
+      <p data-t="ready_desc">Emergency preparedness from FEMA. What to do before, during, and after disasters. All materials free to use and share.</p>
+    </div>
+
+    <div class="video-card">
+      <h4>📺 <a href="https://www.youtube.com/watch?v=I-fs3Lnlwro" target="_blank" rel="noopener">Watch: Practice the Plan</a></h4>
+      <p>FEMA PSA — making a family emergency plan and actually practicing it before you need it.</p>
+      <span class="vc-meta">FEMA · 2 min</span>
+      <a href="/discuss.html?topic=survive" class="vc-discuss">💬 Discuss emergency prep →</a>
+    </div>
+  </div>
+
+  <!-- CLIFFHANGER -->
+  <div class="cliffhanger">
+    <p data-t="cliff">Maria found food for tonight. But her landlord just raised the rent and she doesn't know if that's legal. The check-cashing place takes $12 from every paycheck. The systems around her work for people who understand them — and against people who don't.</p>
+    <a href="/understand.html" data-t="cliff_cta">What does Maria need to know? →</a>
+  </div>
+
+  <div class="section text-center" style="margin:20px 0">
+    <p style="font-size:.72rem;color:var(--light)" data-t="bottom_note">Every resource on this page is free. No account. No data collected.</p>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+EQ.init({
+  en: {
+    arc_label: 'Survive',
+    title: 'Find What You Need Right Now',
+    subtitle: 'Food. Health information. Emergency help. Benefits you may qualify for. Everything here is free.',
+    triage_title: 'What do you need right now?',
+    t_food: 'Food', t_health: 'Health', t_housing: 'Housing', t_safety: 'Safety', t_legal: 'Legal', t_work: 'Work', t_veterans: 'Veterans',
+    vitals_link: '❤️ Check Your Vitals — Free, Private, No Data Stored',
+    vitals_desc: 'Enter your blood pressure, heart rate, glucose, or temperature. Get a plain-language explanation of what your numbers mean and what to do. Measure your pulse with your phone camera. Nothing is saved.',
+    snap_alert_title: '⚠ SNAP changes — what you need to know',
+    snap_alert_desc: 'New work requirements for SNAP took effect February 2026. Adults ages 18-64 must now work or volunteer 80 hours per month. Exemptions exist for caregivers of children under 14, people with disabilities, and students. If your benefits changed or stopped, you have the right to appeal.',
+    snap_abe: 'Check your benefits — ABE Illinois',
+    snap_abe_desc: 'Log in to your ABE account to check your SNAP status, upload documents, or report changes. If you don\'t have an account, you can create one and apply online. Available in English and Spanish.',
+    snap_gcfd: 'Get help now — Food Depository',
+    snap_gcfd_desc: 'Find a food pantry near you. The Greater Chicago Food Depository\'s network serves all of Cook County. Call (773) 247-3663 for help in English or Spanish.',
+    snap_city: 'City of Chicago SNAP help',
+    snap_city_desc: 'Information about SNAP changes, how to apply, and where to get help. Available in 7 languages.',
+    snap_appeal: 'Your right to appeal',
+    snap_appeal_desc: 'If your benefits were reduced or cut, you can request a fair hearing within 90 days. Call the DHS helpline at 1-800-843-6154 (TTY: 1-800-447-6404). You do not need a lawyer. You do not need to speak English. Interpreter services are available.',
+    food_title: 'Food',
+    bl1:'Live',bl2:'Live',bf1:'Free',bf2:'Free',bf3:'Free',bf4:'Free',bf5:'Free',bf6:'Free',bf7:'Free',
+    fy_desc: 'Find food near you. Compare nutrition. Plan meals. Scan barcodes. Works on any phone, works without internet. No account needed.',
+    canning_name: 'The Science of Safe Canning',
+    canning_desc: 'Preserve food safely when it\'s cheap and in season. Science-based, three skill levels.',
+    fa_name: 'Feeding America — Find a Food Bank',
+    fa_desc: 'Search by zip code to find food banks and pantries near you. Over 200 member food banks nationwide.',
+    snap_name: 'SNAP Screener',
+    snap_desc: 'Check if you qualify for SNAP food assistance. Covers all 50 states. Available in English, Spanish, and Haitian Creole. No data collected — your answers stay on your device.',
+    myplate_desc: 'USDA nutrition guidance — meal plans, recipes, food group information. Free to use and share. Available in 20+ languages.',
+    health_title: 'Health',
+    medline_desc: 'Health information from the National Institutes of Health. Search any condition, medication, or procedure. Plain language. Available in 60+ languages. No account needed.',
+    findtx_desc: 'Find substance use and mental health treatment facilities near you. Confidential. Run by SAMHSA.',
+    hcgov_desc: 'Find health insurance plans and check if you qualify for Medicaid or subsidized coverage. Open enrollment and special enrollment periods.',
+    emergency_title: 'Emergency',
+    hl988_name: '988 Suicide & Crisis Lifeline',
+    hl988_desc: 'Call, text, or chat. 24/7. 240+ languages via interpreters.',
+    hlsamhsa_name: 'SAMHSA National Helpline',
+    hlsamhsa_desc: 'Substance use & mental health. Free. Confidential. No personal info required.',
+    hl211_desc: 'Local help with food, housing, utilities, health care, and more. Available 24/7 in most areas.',
+    ready_desc: 'Emergency preparedness from FEMA. What to do before, during, and after disasters. All materials free to use and share.',
+    bottom_note: 'Every resource on this page is free. No account. No data collected.',
+    story: '<span class="narrative-name">Maria</span> works the 6am shift at the warehouse. By the time she gets off, the food pantry on 18th Street is closed. Her kids eat lunch at school, but dinner is a gap she fills with whatever\'s cheapest at the corner store. She qualifies for SNAP but she\'s never applied — the form was in English the one time she tried, and she didn\'t know what documents to bring. She left and didn\'t go back.',
+    story2: 'Everything below exists because someone like Maria shouldn\'t have to figure this out alone.',
+    story_note: 'Maria is a composite — but her situation is real, and it\'s common. If you recognize any part of her story, these tools are for you.',
+    cliff: 'Maria found food for tonight. But her landlord just raised the rent and she doesn\'t know if that\'s legal. The check-cashing place takes $12 from every paycheck. The systems around her work for people who understand them — and against people who don\'t.',
+    cliff_cta: 'What does Maria need to know? →'
+  },
+  es: {
+    arc_label: 'Sobrevivir',
+    title: 'Encuentra Lo Que Necesitas Ahora',
+    subtitle: 'Comida. Información de salud. Ayuda de emergencia. Beneficios para los que podrías calificar. Todo aquí es gratuito.',
+    triage_title: '¿Qué necesitas ahora mismo?',
+    t_food: 'Comida', t_health: 'Salud', t_housing: 'Vivienda', t_safety: 'Seguridad', t_legal: 'Legal', t_work: 'Trabajo', t_veterans: 'Veteranos',
+    vitals_link: '❤️ Revisa Tus Signos Vitales — Gratis, Privado, Sin Datos Guardados',
+    vitals_desc: 'Ingresa tu presión arterial, frecuencia cardíaca, glucosa o temperatura. Obtén una explicación en lenguaje simple de lo que tus números significan y qué hacer. Mide tu pulso con la cámara de tu teléfono. Nada se guarda.',
+    snap_alert_title: '⚠ Cambios en SNAP — lo que necesitas saber',
+    snap_alert_desc: 'Los nuevos requisitos de trabajo para SNAP entraron en vigencia en febrero de 2026. Adultos de 18-64 años deben trabajar o ser voluntarios 80 horas al mes. Existen exenciones para cuidadores de niños menores de 14, personas con discapacidades y estudiantes. Si tus beneficios cambiaron o se detuvieron, tienes derecho a apelar.',
+    snap_abe: 'Verifica tus beneficios — ABE Illinois',
+    snap_abe_desc: 'Inicia sesión en tu cuenta ABE para verificar tu estado de SNAP, subir documentos o reportar cambios. Si no tienes cuenta, puedes crear una y aplicar en línea. Disponible en inglés y español.',
+    snap_gcfd: 'Obtén ayuda ahora — Food Depository',
+    snap_gcfd_desc: 'Encuentra una despensa cerca de ti. La red del Greater Chicago Food Depository sirve todo el condado de Cook. Llama al (773) 247-3663 para ayuda en inglés o español.',
+    snap_city: 'Ayuda SNAP de la Ciudad de Chicago',
+    snap_city_desc: 'Información sobre cambios en SNAP, cómo aplicar y dónde obtener ayuda. Disponible en 7 idiomas.',
+    snap_appeal: 'Tu derecho a apelar',
+    snap_appeal_desc: 'Si tus beneficios fueron reducidos o cortados, puedes solicitar una audiencia justa dentro de 90 días. Llama a la línea de ayuda de DHS al 1-800-843-6154 (TTY: 1-800-447-6404). No necesitas abogado. No necesitas hablar inglés. Servicios de intérprete están disponibles.',
+    food_title: 'Comida',
+    bl1:'Activa',bl2:'Activa',bf1:'Gratis',bf2:'Gratis',bf3:'Gratis',bf4:'Gratis',bf5:'Gratis',bf6:'Gratis',bf7:'Gratis',
+    fy_desc: 'Encuentra comida cerca de ti. Compara nutrición. Planifica comidas. Escanea códigos de barras. Funciona en cualquier teléfono, funciona sin internet. Sin cuenta necesaria.',
+    canning_name: 'La Ciencia de la Conservación Segura',
+    canning_desc: 'Conserva alimentos de forma segura cuando están baratos y en temporada. Basado en ciencia, tres niveles.',
+    fa_name: 'Feeding America — Encuentra un Banco de Alimentos',
+    fa_desc: 'Busca por código postal para encontrar bancos de alimentos y despensas cerca de ti. Más de 200 bancos miembros en todo el país.',
+    snap_name: 'SNAP Screener',
+    snap_desc: 'Verifica si calificas para asistencia alimentaria SNAP. Cubre los 50 estados. Disponible en inglés, español y criollo haitiano. No se recopilan datos — tus respuestas se quedan en tu dispositivo.',
+    myplate_desc: 'Guía de nutrición del USDA — planes de comidas, recetas, información de grupos alimenticios. Gratis para usar y compartir. Disponible en 20+ idiomas.',
+    health_title: 'Salud',
+    medline_desc: 'Información de salud de los Institutos Nacionales de Salud. Busca cualquier condición, medicamento o procedimiento. Lenguaje claro. Disponible en 60+ idiomas. Sin cuenta necesaria.',
+    findtx_desc: 'Encuentra centros de tratamiento de uso de sustancias y salud mental cerca de ti. Confidencial. Operado por SAMHSA.',
+    hcgov_desc: 'Encuentra planes de seguro de salud y verifica si calificas para Medicaid o cobertura subsidiada. Períodos de inscripción abierta y especial.',
+    emergency_title: 'Emergencia',
+    hl988_name: '988 Línea de Prevención del Suicidio y Crisis',
+    hl988_desc: 'Llama, envía un mensaje de texto o chatea. 24/7. 240+ idiomas a través de intérpretes.',
+    hlsamhsa_name: 'Línea Nacional de Ayuda de SAMHSA',
+    hlsamhsa_desc: 'Uso de sustancias y salud mental. Gratis. Confidencial. No se requiere información personal.',
+    hl211_desc: 'Ayuda local con comida, vivienda, servicios públicos, atención médica y más. Disponible 24/7 en la mayoría de las áreas.',
+    ready_desc: 'Preparación para emergencias de FEMA. Qué hacer antes, durante y después de desastres. Todos los materiales son gratuitos.',
+    bottom_note: 'Todos los recursos en esta página son gratuitos. Sin cuenta. Sin datos recopilados.',
+    story: '<span class="narrative-name">María</span> trabaja el turno de las 6am en la bodega. Para cuando sale, la despensa de comida en la calle 18 ya cerró. Sus hijos almuerzan en la escuela, pero la cena es un vacío que llena con lo más barato de la tienda de la esquina. Califica para SNAP pero nunca ha aplicado — la forma estaba en inglés la vez que intentó, y no sabía qué documentos traer. Se fue y no regresó.',
+    story2: 'Todo lo que hay abajo existe porque alguien como María no debería tener que resolver esto sola.',
+    story_note: 'María es un personaje compuesto — pero su situación es real y común. Si reconoces cualquier parte de su historia, estas herramientas son para ti.',
+    cliff: 'María encontró comida para esta noche. Pero su casero acaba de subir la renta y no sabe si eso es legal. El lugar de cambio de cheques le quita $12 de cada pago. Los sistemas a su alrededor funcionan para quienes los entienden — y en contra de quienes no.',
+    cliff_cta: '¿Qué necesita saber María? →'
+  }
+}, { footer: true, closingKey: null, alertPage: 'survive' });
+
+// Init crisis bar
+EQ.renderCrisisBar('crisisBar');
+
+// Content freshness stamps
+EQ.renderFreshnessStamp('snapFreshness', 'March 2026', 'Information verified', 'Información verificada');
+
+// Triage system
+var currentZip = localStorage.getItem('cos-zip') || '';
+
+function triageSelect(category) {
+  document.querySelectorAll('.triage-btn').forEach(function(b) { b.classList.remove('active'); });
+  var btn = document.querySelector('.triage-btn[onclick*="' + category + '"]');
+  if (btn) btn.classList.add('active');
+
+  var container = document.getElementById('triageResults');
+  var isEs = EQ && EQ.lang === 'es';
+  var zip = currentZip || document.getElementById('dashZip') && document.getElementById('dashZip').value || '';
+
+  if (!zip) {
+    container.innerHTML = '<div class="triage-loading">' +
+      (isEs ? 'Ingresa tu código postal en la página principal primero.' : 'Enter your zip code on the home page first.') +
+      '</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="triage-loading">' + (isEs ? 'Buscando recursos...' : 'Finding resources near you...') + '</div>';
+
+  fetch(API + '?action=survive_triage&zip=' + zip + '&category=' + category)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || data.status !== 'ok') {
+        renderTriageFallback(container, category, isEs);
+        return;
+      }
+      renderTriageResults(container, category, data.data ? data.data.results : data.results, isEs);
+    })
+    .catch(function() {
+      renderTriageFallback(container, category, isEs);
+    });
+}
+
+function renderTriageResults(container, category, results, isEs) {
+  if (!results || !results[category]) {
+    renderTriageFallback(container, category, isEs);
+    return;
+  }
+
+  var html = '';
+  var catData = results[category];
+
+  // Render result cards from API data
+  var lists = Object.values(catData);
+  lists.forEach(function(dataset) {
+    if (!dataset || dataset.source === 'error') return;
+    var items = dataset.facilities || dataset.stores || dataset.counselors || dataset.hospitals || dataset.centers || dataset.markets || [];
+    if (items.length === 0) return;
+    html += '<p style="font-size:.65rem;color:var(--dim);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.06em">' + (dataset.source || '') + ' — ' + (dataset.count || items.length) + ' ' + (isEs ? 'resultados' : 'results') + '</p>';
+    items.forEach(function(item) {
+      html += '<div class="result-card">';
+      html += '<div class="rc-name">' + (item.name || '') + '</div>';
+      if (item.address) html += '<div class="rc-address">' + item.address + '</div>';
+      if (item.phone) html += '<div class="rc-phone"><a href="tel:' + item.phone.replace(/[^\d+]/g,'') + '">' + item.phone + '</a></div>';
+      if (item.services) html += '<div class="rc-meta">' + item.services + '</div>';
+      if (item.languages) html += '<div class="rc-meta">' + (isEs ? 'Idiomas: ' : 'Languages: ') + item.languages + '</div>';
+      if (item.rating) html += '<div class="rc-meta">' + (isEs ? 'Calificación: ' : 'Rating: ') + item.rating + '</div>';
+      if (item.lat && item.lon) {
+        html += '<a href="https://www.google.com/maps/dir/?api=1&destination=' + item.lat + ',' + item.lon + '" target="_blank" rel="noopener" class="rc-directions">' +
+          (isEs ? '📍 Cómo llegar' : '📍 Get directions') + '</a>';
+      } else if (item.address) {
+        html += '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.address) + '" target="_blank" rel="noopener" class="rc-directions">' +
+          (isEs ? '📍 Cómo llegar' : '📍 Get directions') + '</a>';
+      }
+      html += '</div>';
+    });
+  });
+
+  if (!html) {
+    renderTriageFallback(container, category, isEs);
+    return;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderTriageFallback(container, category, isEs) {
+  var fallbacks = {
+    food: { en: '<p>SNAP Retailer Search: <a href="https://www.fns.usda.gov/snap/retailer-locator" target="_blank" rel="noopener">Find stores accepting EBT →</a></p><p>Food Depository: <a href="tel:7732473663">(773) 247-3663</a></p><p>SNAP Appeals: <a href="tel:8004350774">(800) 435-0774</a></p>', es: '<p>Tiendas SNAP: <a href="https://www.fns.usda.gov/snap/retailer-locator" target="_blank" rel="noopener">Buscar tiendas que aceptan EBT →</a></p><p>Despensa de Comida: <a href="tel:7732473663">(773) 247-3663</a></p><p>Apelaciones SNAP: <a href="tel:8004350774">(800) 435-0774</a></p>' },
+    health: { en: '<p>Find a Health Center: <a href="https://findahealthcenter.hrsa.gov/" target="_blank" rel="noopener">HRSA Locator →</a> (sliding scale, no insurance needed)</p><p>Find Treatment: <a href="https://findtreatment.gov" target="_blank" rel="noopener">SAMHSA Locator →</a></p>', es: '<p>Centros de Salud: <a href="https://findahealthcenter.hrsa.gov/" target="_blank" rel="noopener">Localizador HRSA →</a> (escala según ingresos)</p><p>Tratamiento: <a href="https://findtreatment.gov" target="_blank" rel="noopener">Localizador SAMHSA →</a></p>' },
+    housing: { en: '<p>HUD Housing Counseling: <a href="https://www.consumerfinance.gov/housing/housing-assistance/" target="_blank" rel="noopener">Find free counseling →</a></p><p>Eviction Help: <a href="tel:8556310811">(855) 631-0811</a></p><p>Metropolitan Tenants Org: <a href="tel:7732924988">(773) 292-4988</a> (Spanish)</p>', es: '<p>Asesoría de Vivienda HUD: <a href="https://www.consumerfinance.gov/housing/housing-assistance/" target="_blank" rel="noopener">Asesoría gratuita →</a></p><p>Ayuda de Desalojo: <a href="tel:8556310811">(855) 631-0811</a></p><p>Organización de Inquilinos: <a href="tel:7732924988">(773) 292-4988</a> (Español)</p>' },
+    safety: { en: '<p>Domestic Violence: <a href="tel:18007997233">1-800-799-7233</a> or text START to 88788</p><p>Sexual Assault (RAINN): <a href="tel:8006564673">800-656-4673</a></p><p>Crisis Line: <a href="tel:988">988</a> (call or text)</p>', es: '<p>Violencia Doméstica: <a href="tel:18007997233">1-800-799-7233</a> o texto START al 88788</p><p>Asalto Sexual (RAINN): <a href="tel:8006564673">800-656-4673</a></p><p>Línea de Crisis: <a href="tel:988">988</a> (llama o texto)</p>' },
+    legal: { en: '<p>Illinois Legal Aid: <a href="https://www.illinoislegalaid.org/get-legal-help" target="_blank" rel="noopener">Get Legal Help →</a></p><p>Fair Hearing (SNAP): <a href="tel:8004350774">(800) 435-0774</a></p><p>Tenant Rights: <a href="tel:7732924988">(773) 292-4988</a></p>', es: '<p>Ayuda Legal Illinois: <a href="https://www.illinoislegalaid.org/get-legal-help" target="_blank" rel="noopener">Obtener Ayuda Legal →</a></p><p>Audiencia Justa (SNAP): <a href="tel:8004350774">(800) 435-0774</a></p><p>Derechos de Inquilinos: <a href="tel:7732924988">(773) 292-4988</a></p>' },
+    work: { en: '<p>American Job Centers: <a href="https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx" target="_blank" rel="noopener">Find a center →</a></p><p>Wage Theft Hotline (IL): <a href="tel:8666521446">(866) 652-1446</a></p>', es: '<p>Centros de Empleo: <a href="https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx" target="_blank" rel="noopener">Encontrar un centro →</a></p><p>Robo de Salario (IL): <a href="tel:8666521446">(866) 652-1446</a></p>' },
+    veterans: { en: '<p>VA Facility Locator: <a href="https://www.va.gov/find-locations/" target="_blank" rel="noopener">Find VA near you →</a></p><p>Veterans Crisis: <a href="tel:988">988 press 1</a> or text 838255</p><p>Homeless Veterans: <a href="tel:18774243838">1-877-424-3838</a></p>', es: '<p>Localizador VA: <a href="https://www.va.gov/find-locations/" target="_blank" rel="noopener">Encontrar VA →</a></p><p>Crisis de Veteranos: <a href="tel:988">988 presiona 1</a> o texto 838255</p><p>Veteranos sin Hogar: <a href="tel:18774243838">1-877-424-3838</a></p>' }
+  };
+
+  var fb = fallbacks[category] || fallbacks.health;
+  container.innerHTML = '<div style="background:var(--warm);border-radius:12px;padding:16px;border:1px solid var(--sand)">' +
+    '<p style="font-size:.72rem;color:var(--dim);margin-bottom:8px">' + (isEs ? 'Recursos directos:' : 'Direct resources:') + '</p>' +
+    (isEs ? fb.es : fb.en) + '</div>';
+}
+</script>
+</body>
+</html>

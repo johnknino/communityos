@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Health Risk Check — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Health Risk Check — CommUnity OS">
+<meta property="og:description" content="Free heart disease, diabetes, and BMI risk calculators. No account. No data stored. Works offline.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta name="description" content="Free health risk calculators for heart disease (ASCVD), diabetes, and BMI. Based on published clinical formulas. Bilingual English/Spanish. No data collected.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.hr-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.hr-tab{font-family:var(--display);font-size:.72rem;font-weight:600;padding:10px 16px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.hr-tab:hover{border-color:var(--sage);color:var(--deep)}
+.hr-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.hr-panel{display:none}.hr-panel.active{display:block}
+.hr-card{background:var(--warm);border-radius:14px;padding:20px;margin:14px 0;border:1px solid var(--sand)}
+.hr-card h3{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:4px}
+.hr-card .hr-desc{font-size:.78rem;color:var(--dim);line-height:1.6;margin-bottom:14px}
+.hr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:400px){.hr-row{grid-template-columns:1fr}}
+.hr-field{margin-bottom:8px}
+.hr-field label{display:block;font-size:.7rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.hr-field input,.hr-field select{width:100%;font-family:var(--sans);font-size:.85rem;padding:9px 12px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--ink)}
+.hr-field input:focus,.hr-field select:focus{outline:none;border-color:var(--sage)}
+.hr-field .hr-hint{font-size:.58rem;color:var(--dim);margin-top:1px}
+.hr-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 24px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s;margin-top:8px}
+.hr-go:hover{background:var(--deep)}
+.hr-result{border-radius:14px;padding:20px;margin:14px 0;display:none}
+.hr-result.show{display:block}
+.hr-result h4{font-family:var(--display);font-size:1rem;font-weight:700;margin-bottom:6px}
+.hr-result p{font-size:.85rem;line-height:1.7;margin-bottom:8px}
+.hr-result .hr-score{font-family:var(--display);font-size:2rem;font-weight:800;margin-bottom:4px}
+.hr-low{background:rgba(91,140,122,.08);border:1.5px solid var(--sage)}.hr-low h4,.hr-low .hr-score{color:var(--forest)}
+.hr-mod{background:rgba(201,168,76,.08);border:1.5px solid var(--gold)}.hr-mod h4,.hr-mod .hr-score{color:var(--gold)}
+.hr-high{background:rgba(212,112,74,.08);border:1.5px solid var(--coral)}.hr-high h4,.hr-high .hr-score{color:var(--coral)}
+.hr-nbf{margin-top:14px;padding-top:12px;border-top:1px solid var(--sand)}
+.hr-nbf h5{font-size:.72rem;font-weight:700;margin-bottom:4px}
+.hr-nbf p{font-size:.75rem;line-height:1.6;color:var(--body)}
+.hr-nbf .n-label{color:var(--forest)}.hr-nbf .b-label{color:var(--coral)}.hr-nbf .f-label{color:var(--sage)}
+.hr-privacy{font-size:.62rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">SURVIVE</div>
+    <h1 data-t="hrc_title">Health Risk Check</h1>
+    <p class="subtitle" data-t="hrc_sub">Quick screeners based on published clinical formulas. Not a diagnosis — a reason to have the conversation.</p>
+  </div>
+
+  <div class="bc-privacy" data-t="hrc_privacy">
+    <strong>100% private.</strong> These calculators run entirely on your phone. Nothing is saved, sent, or recorded. No account needed.
+  </div>
+
+  <div class="hr-tabs">
+    <div class="hr-tab active" onclick="showPanel('heart')">❤️ Heart Risk</div>
+    <div class="hr-tab" onclick="showPanel('diabetes')">🩸 Diabetes Risk</div>
+    <div class="hr-tab" onclick="showPanel('bmi')">⚖️ BMI</div>
+  </div>
+
+  <!-- ═══ HEART RISK (Simplified ASCVD) ═══ -->
+  <div class="hr-panel active" id="panel-heart">
+    <div class="hr-card">
+      <h3 data-t="hrc_heart_title">10-Year Heart Disease Risk</h3>
+      <p class="hr-desc" data-t="hrc_heart_desc">Based on the Pooled Cohort Equations used by the American Heart Association. Estimates your risk of a heart attack or stroke in the next 10 years.</p>
+      <div class="hr-row">
+        <div class="hr-field"><label>Age</label><input type="number" id="hAge" min="40" max="79" placeholder="40–79"></div>
+        <div class="hr-field"><label>Sex</label><select id="hSex"><option value="">—</option><option value="m">Male</option><option value="f">Female</option></select></div>
+      </div>
+      <div class="hr-row">
+        <div class="hr-field"><label>Total Cholesterol (mg/dL)</label><input type="number" id="hTC" placeholder="e.g. 200"><div class="hr-hint">Ask your doctor or check your lab results</div></div>
+        <div class="hr-field"><label>HDL Cholesterol (mg/dL)</label><input type="number" id="hHDL" placeholder="e.g. 50"></div>
+      </div>
+      <div class="hr-row">
+        <div class="hr-field"><label>Systolic Blood Pressure</label><input type="number" id="hSBP" placeholder="Top number, e.g. 130"></div>
+        <div class="hr-field"><label>On BP medication?</label><select id="hBPTx"><option value="0">No</option><option value="1">Yes</option></select></div>
+      </div>
+      <div class="hr-row">
+        <div class="hr-field"><label>Diabetes?</label><select id="hDM"><option value="0">No</option><option value="1">Yes</option></select></div>
+        <div class="hr-field"><label>Current smoker?</label><select id="hSmoke"><option value="0">No</option><option value="1">Yes</option></select></div>
+      </div>
+      <button class="hr-go" onclick="calcASCVD()">Calculate My Risk</button>
+    </div>
+    <div class="hr-result" id="rHeart">
+      <div class="hr-score" id="rHeartScore"></div>
+      <h4 id="rHeartLabel"></h4>
+      <p id="rHeartText"></p>
+      <div class="hr-nbf">
+        <h5 class="n-label">Normal:</h5><p id="rHeartN"></p>
+        <h5 class="b-label">Broken:</h5><p id="rHeartB"></p>
+        <h5 class="f-label">Fix:</h5><p id="rHeartF"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DIABETES RISK (CDC/ADA Prediabetes Screener) ═══ -->
+  <div class="hr-panel" id="panel-diabetes">
+    <div class="hr-card">
+      <h3 data-t="hrc_dm_title">Type 2 Diabetes Risk</h3>
+      <p class="hr-desc" data-t="hrc_dm_desc">Based on the CDC Prediabetes Screening Test. Seven questions. Takes 60 seconds. Over 96 million American adults have prediabetes — most don't know it.</p>
+      <div class="hr-field"><label>Age</label><select id="dAge"><option value="">—</option><option value="0">Under 40</option><option value="0">40–49</option><option value="1">50–59</option><option value="2">60+</option></select></div>
+      <div class="hr-field"><label>Sex</label><select id="dSex"><option value="">—</option><option value="1">Male</option><option value="0">Female</option></select></div>
+      <div class="hr-field"><label>Do you have a parent, brother, or sister with diabetes?</label><select id="dFamily"><option value="">—</option><option value="1">Yes</option><option value="0">No</option></select></div>
+      <div class="hr-field"><label>Have you ever been diagnosed with high blood pressure?</label><select id="dBP"><option value="">—</option><option value="1">Yes</option><option value="0">No</option></select></div>
+      <div class="hr-field"><label>Are you physically active?</label><select id="dActive"><option value="">—</option><option value="0">Yes</option><option value="1">No</option></select></div>
+      <div class="hr-field"><label>Height (inches)</label><input type="number" id="dHeight" placeholder="e.g. 66"><div class="hr-hint">5'0"=60, 5'6"=66, 6'0"=72</div></div>
+      <div class="hr-field"><label>Weight (lbs)</label><input type="number" id="dWeight" placeholder="e.g. 180"></div>
+      <button class="hr-go" onclick="calcDiabetes()">Check My Risk</button>
+    </div>
+    <div class="hr-result" id="rDM">
+      <div class="hr-score" id="rDMScore"></div>
+      <h4 id="rDMLabel"></h4>
+      <p id="rDMText"></p>
+      <div class="hr-nbf">
+        <h5 class="n-label">Normal:</h5><p id="rDMN"></p>
+        <h5 class="b-label">Broken:</h5><p id="rDMB"></p>
+        <h5 class="f-label">Fix:</h5><p id="rDMF"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BMI ═══ -->
+  <div class="hr-panel" id="panel-bmi">
+    <div class="hr-card">
+      <h3 data-t="hrc_bmi_title">Body Mass Index (BMI)</h3>
+      <p class="hr-desc" data-t="hrc_bmi_desc">BMI is one number among many. It doesn't measure muscle, bone density, or where you carry weight. It's a starting point for a conversation — not a verdict.</p>
+      <div class="hr-row">
+        <div class="hr-field"><label>Height (inches)</label><input type="number" id="bHeight" placeholder="e.g. 66"><div class="hr-hint">5'0"=60, 5'6"=66, 6'0"=72</div></div>
+        <div class="hr-field"><label>Weight (lbs)</label><input type="number" id="bWeight" placeholder="e.g. 170"></div>
+      </div>
+      <button class="hr-go" onclick="calcBMI()">Calculate BMI</button>
+    </div>
+    <div class="hr-result" id="rBMI">
+      <div class="hr-score" id="rBMIScore"></div>
+      <h4 id="rBMILabel"></h4>
+      <p id="rBMIText"></p>
+      <div class="hr-nbf">
+        <h5 class="n-label">Normal:</h5><p id="rBMIN"></p>
+        <h5 class="b-label">Broken:</h5><p id="rBMIB"></p>
+        <h5 class="f-label">Fix:</h5><p id="rBMIF"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="hr-privacy" data-t="hrc_legal">These calculators use published clinical formulas (AHA Pooled Cohort Equations, CDC Prediabetes Risk Test, NIH BMI formula). They are screening tools, not diagnoses. Talk to a doctor about your results. Find a free/low-cost clinic at <a href="https://findahealthcenter.hrsa.gov/" style="color:var(--sage)">findahealthcenter.hrsa.gov</a>.</p>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.hr-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.hr-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showResult(el, cls) {
+  el.className = 'hr-result ' + cls + ' show';
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ═══ ASCVD — Simplified Pooled Cohort Equations ═══
+function calcASCVD() {
+  var age = +document.getElementById('hAge').value;
+  var sex = document.getElementById('hSex').value;
+  var tc = +document.getElementById('hTC').value;
+  var hdl = +document.getElementById('hHDL').value;
+  var sbp = +document.getElementById('hSBP').value;
+  var bptx = +document.getElementById('hBPTx').value;
+  var dm = +document.getElementById('hDM').value;
+  var smoke = +document.getElementById('hSmoke').value;
+
+  if (!age || !sex || !tc || !hdl || !sbp) { alert('Please fill in all fields.'); return; }
+  if (age < 40 || age > 79) { alert('This calculator is designed for ages 40–79.'); return; }
+
+  // Simplified ASCVD using published coefficients
+  var lnAge = Math.log(age), lnTC = Math.log(tc), lnHDL = Math.log(hdl), lnSBP = Math.log(sbp);
+  var risk;
+
+  if (sex === 'm') {
+    var s = 12.344*lnAge + 11.853*lnTC - 2.664*lnAge*lnTC - 7.990*lnHDL + 1.769*lnAge*lnHDL;
+    s += (bptx ? 1.797*lnSBP : 1.764*lnSBP) + 7.837*smoke - 1.795*lnAge*smoke + 0.658*dm;
+    risk = 1 - Math.pow(0.9144, Math.exp(s - 61.18));
+  } else {
+    var s = -29.799*lnAge + 13.540*lnTC + 3.071*lnAge*lnTC - 13.578*lnHDL + 3.149*lnAge*lnHDL;
+    s += (bptx ? 2.019*lnSBP : 1.957*lnSBP) + 7.574*smoke - 1.665*lnAge*smoke + 0.661*dm;
+    risk = 1 - Math.pow(0.9665, Math.exp(s + 29.18));
+  }
+
+  risk = Math.max(0, Math.min(1, risk));
+  var pct = (risk * 100).toFixed(1);
+
+  var el = document.getElementById('rHeart');
+  document.getElementById('rHeartScore').textContent = pct + '%';
+
+  var cls, label, text;
+  if (risk < 0.05) {
+    cls = 'hr-low'; label = 'Low Risk'; text = 'Your estimated 10-year risk of a heart attack or stroke is below 5%. This is good — but it\'s not zero. Keep doing what you\'re doing.';
+  } else if (risk < 0.075) {
+    cls = 'hr-low'; label = 'Borderline Risk'; text = 'Your estimated risk is between 5% and 7.5%. This means lifestyle changes — diet, exercise, not smoking — can make a real difference.';
+  } else if (risk < 0.20) {
+    cls = 'hr-mod'; label = 'Intermediate Risk'; text = 'Your estimated risk is between 7.5% and 20%. Your doctor may recommend a statin or blood pressure medication. This is the range where intervention has the highest impact.';
+  } else {
+    cls = 'hr-high'; label = 'High Risk'; text = 'Your estimated risk is 20% or higher. Talk to a doctor soon. Medication and lifestyle changes at this level can significantly reduce your chances of a heart attack or stroke.';
+  }
+
+  document.getElementById('rHeartLabel').textContent = label;
+  document.getElementById('rHeartText').textContent = text;
+  document.getElementById('rHeartN').textContent = 'Your heart pumps blood through arteries. When arteries are flexible and clear, blood flows easily. Blood pressure stays in a healthy range. Cholesterol moves through without building up.';
+  document.getElementById('rHeartB').textContent = 'High blood pressure, high cholesterol, smoking, and diabetes damage artery walls over years. Plaque builds up silently. You feel fine until a blockage causes a heart attack or stroke. Most people with high risk don\'t know it.';
+  document.getElementById('rHeartF').textContent = 'Know your numbers (BP, cholesterol, blood sugar). If your risk is intermediate or high, talk to a doctor about statins and BP medication — they work. Stop smoking. 150 minutes/week of moderate exercise. Find a free clinic: findahealthcenter.hrsa.gov.';
+  showResult(el, cls);
+}
+
+// ═══ DIABETES RISK — CDC Prediabetes Risk Test ═══
+function calcDiabetes() {
+  var age = document.getElementById('dAge').value;
+  var sex = document.getElementById('dSex').value;
+  var family = document.getElementById('dFamily').value;
+  var bp = document.getElementById('dBP').value;
+  var active = document.getElementById('dActive').value;
+  var height = +document.getElementById('dHeight').value;
+  var weight = +document.getElementById('dWeight').value;
+
+  if (age === '' || sex === '' || family === '' || bp === '' || active === '' || !height || !weight) {
+    alert('Please answer all questions.'); return;
+  }
+
+  // CDC scoring: BMI categories
+  var bmi = (weight / (height * height)) * 703;
+  var bmiScore = 0;
+  if (bmi >= 25 && bmi < 30) bmiScore = 1;
+  else if (bmi >= 30 && bmi < 40) bmiScore = 2;
+  else if (bmi >= 40) bmiScore = 3;
+
+  var score = (+age) + (+sex) + (+family) + (+bp) + (+active) + bmiScore;
+
+  var el = document.getElementById('rDM');
+  document.getElementById('rDMScore').textContent = score + ' / 9';
+
+  var cls, label, text;
+  if (score < 5) {
+    cls = 'hr-low'; label = 'Lower Risk'; text = 'Your score suggests lower risk for type 2 diabetes right now. But risk changes over time — especially with weight gain, inactivity, or family history. Check again in a year.';
+  } else {
+    cls = 'hr-high'; label = 'Higher Risk — Talk to a Doctor'; text = 'A score of 5 or higher means you may have prediabetes or be at risk for type 2 diabetes. Over 96 million American adults have prediabetes — most don\'t know. A simple blood test (A1C or fasting glucose) can tell you for sure. This is treatable, especially when caught early.';
+  }
+
+  document.getElementById('rDMLabel').textContent = label;
+  document.getElementById('rDMText').textContent = text;
+  document.getElementById('rDMN').textContent = 'Your body uses insulin to move sugar from food into cells for energy. When this system works, blood sugar stays in a normal range after meals and between meals.';
+  document.getElementById('rDMB').textContent = 'Insulin resistance develops slowly — often over years. Your pancreas makes more insulin to compensate. Blood sugar creeps up. You feel fine. By the time symptoms appear (thirst, frequent urination, fatigue), damage to blood vessels, kidneys, and nerves may have already started.';
+  document.getElementById('rDMF').textContent = 'Get an A1C blood test — it\'s a simple lab draw that shows your average blood sugar over 3 months. Normal is below 5.7%. Prediabetes is 5.7–6.4%. Diabetes is 6.5% or higher. If prediabetic: losing 5–7% of body weight and 150 min/week of walking cuts your risk by 58%. Find a free clinic: findahealthcenter.hrsa.gov.';
+  showResult(el, cls);
+}
+
+// ═══ BMI ═══
+function calcBMI() {
+  var height = +document.getElementById('bHeight').value;
+  var weight = +document.getElementById('bWeight').value;
+  if (!height || !weight) { alert('Please enter height and weight.'); return; }
+
+  var bmi = (weight / (height * height)) * 703;
+  bmi = Math.round(bmi * 10) / 10;
+
+  var el = document.getElementById('rBMI');
+  document.getElementById('rBMIScore').textContent = bmi;
+
+  var cls, label, text;
+  if (bmi < 18.5) {
+    cls = 'hr-mod'; label = 'Underweight'; text = 'A BMI below 18.5 may indicate nutritional deficiency. Talk to a doctor — especially if you\'ve lost weight without trying.';
+  } else if (bmi < 25) {
+    cls = 'hr-low'; label = 'Normal Range'; text = 'Your BMI falls in the range associated with lower risk of weight-related health problems. BMI doesn\'t tell the whole story — it doesn\'t measure fitness, muscle mass, or where you carry weight.';
+  } else if (bmi < 30) {
+    cls = 'hr-mod'; label = 'Overweight Range'; text = 'A BMI of 25–29.9 is associated with increased risk of heart disease, diabetes, and joint problems. Small changes in diet and activity can move this number. But remember: BMI is a screening tool, not a diagnosis. Athletes and people with more muscle mass often fall in this range while being very healthy.';
+  } else {
+    cls = 'hr-high'; label = 'Obese Range'; text = 'A BMI of 30 or higher is associated with significantly higher risk of type 2 diabetes, heart disease, sleep apnea, and certain cancers. This is not a judgment — it\'s a medical signal worth discussing with a doctor. Losing even 5–10% of body weight can measurably improve blood pressure, blood sugar, and cholesterol.';
+  }
+
+  document.getElementById('rBMILabel').textContent = label;
+  document.getElementById('rBMIText').textContent = text;
+  document.getElementById('rBMIN').textContent = 'Your body maintains a balance between calories consumed and calories burned. When this system is in balance, weight stays relatively stable and organs function without excess stress.';
+  document.getElementById('rBMIB').textContent = 'Processed food, stress, irregular schedules, food deserts, and limited access to safe outdoor spaces all push this balance. Weight gain happens gradually. The health effects — insulin resistance, high blood pressure, joint stress — develop silently over years.';
+  document.getElementById('rBMIF').textContent = 'BMI is just one number. Ask your doctor about waist circumference (more predictive than BMI for heart risk), blood pressure, A1C, and cholesterol. If you want to make changes, start with 10 minutes of walking per day and one meal swap per week. Find a free clinic: findahealthcenter.hrsa.gov.';
+  showResult(el, cls);
+}
+
+EQ.init({
+  hrc_title: 'Health Risk Check',
+  hrc_title_es: 'Verificación de Riesgo de Salud',
+  hrc_sub: 'Quick screeners based on published clinical formulas. Not a diagnosis — a reason to have the conversation.',
+  hrc_sub_es: 'Evaluaciones rápidas basadas en fórmulas clínicas publicadas. No es un diagnóstico — es una razón para tener la conversación.',
+  hrc_privacy: '<strong>100% private.</strong> These calculators run entirely on your phone. Nothing is saved, sent, or recorded. No account needed.',
+  hrc_privacy_es: '<strong>100% privado.</strong> Estas calculadoras se ejecutan completamente en tu teléfono. Nada se guarda, envía o registra.',
+  hrc_legal: 'These calculators use published clinical formulas (AHA Pooled Cohort Equations, CDC Prediabetes Risk Test, NIH BMI formula). They are screening tools, not diagnoses. Talk to a doctor about your results.',
+  hrc_legal_es: 'Estas calculadoras usan fórmulas clínicas publicadas (Ecuaciones AHA, Prueba de Riesgo CDC, fórmula BMI del NIH). Son herramientas de evaluación, no diagnósticos. Habla con un médico sobre tus resultados.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

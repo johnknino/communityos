@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Connect — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.cn-hero{text-align:center;padding:28px 16px 16px}
+.cn-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.cn-hero p{font-size:.82rem;color:var(--body);line-height:1.6;max-width:440px;margin:0 auto 16px}
+.cn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:10px 0}
+.cn-card{background:var(--warm);border-radius:12px;padding:16px;border:1px solid var(--sand);text-align:center}
+.cn-card .cc-avatar{width:56px;height:56px;border-radius:50%;background:var(--sage);color:#fff;font-family:var(--display);font-size:1.2rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.cn-card .cc-name{font-family:var(--display);font-size:.85rem;font-weight:700;color:var(--deep)}
+.cn-card .cc-role{font-size:.68rem;color:var(--dim);margin:2px 0}
+.cn-card .cc-skills{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:6px}
+.cn-card .cc-skill{font-size:.58rem;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(91,140,122,.06);color:var(--sage)}
+.cn-card .cc-lang{font-size:.6rem;color:var(--forest);margin-top:4px;font-weight:600}
+.cn-form{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.cn-form h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.cn-form input,.cn-form textarea{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.cn-form button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="cn-hero">
+    <h1 data-t="c_title">Community Directory</h1>
+    <p data-t="c_sub">People and organizations who want to be found. Skills, languages, and how to reach them. Not a social network — a resource map.</p>
+  </div>
+  <div id="connList"></div>
+  <div class="cn-form">
+    <h3 data-t="c_add">Add Yourself or Your Organization</h3>
+    <input type="text" id="cName" placeholder="Name or organization">
+    <input type="text" id="cRole" placeholder="What you do (e.g., Notary, Tax preparer, Translator)">
+    <input type="text" id="cSkills" placeholder="Skills (comma separated: Spanish, Legal, Gardening)">
+    <input type="text" id="cContact" placeholder="How to reach you (phone, email, or location)">
+    <button onclick="addConnection()">Join the Directory</button>
+  </div>
+</div>
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+var people=[];
+function render(){
+  if(!people.length){document.getElementById('connList').innerHTML='<div style="text-align:center;padding:30px;color:var(--dim);font-size:.82rem">No one has joined the directory yet. Be the first.</div>';return}
+  var h='<div class="cn-grid">';
+  people.forEach(function(p){
+    var init=(p.author||p.name||'?').split(' ').map(function(w){return w[0]}).join('').substring(0,2);
+    var skills=(p.metadata&&p.metadata.skills?p.metadata.skills:(p.skills||'')).split(',').filter(Boolean);
+    h+='<div class="cn-card"><div class="cc-avatar">'+init+'</div>';
+    h+='<div class="cc-name">'+(p.author||p.name||'Anonymous')+'</div>';
+    h+='<div class="cc-role">'+(p.title||p.role||'')+'</div>';
+    if(skills.length){h+='<div class="cc-skills">';skills.forEach(function(s){h+='<span class="cc-skill">'+s.trim()+'</span>'});h+='</div>'}
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('connList').innerHTML=h;
+}
+function load(){
+  if(typeof CommunityAPI==='undefined'||!CommunityAPI.isConfigured()){
+    people=[
+      {name:'Rosa Martinez',title:'Tax Preparation (VITA certified)',skills:'Spanish, Tax Filing, ITIN Applications'},
+      {name:'Greater Chicago Food Depository',title:'Food Bank — Cook County',skills:'Food Distribution, SNAP Outreach'},
+      {name:'David Chen',title:'Licensed Notary',skills:'Notary, English, Mandarin'},
+      {name:'ICIRR — Illinois Coalition',title:'Immigration Legal Services',skills:'Immigration, DACA, Asylum, Spanish'},
+      {name:'Metropolitan Tenants Org',title:'Tenant Rights Advocacy',skills:'Eviction Defense, Spanish, Legal Aid'}
+    ];render();return;
+  }
+  CommunityAPI.smartFetch(CommunityAPI.endpoint()+'?action=get_listings&type=connection&zip='+(CommunityAPI.getCommunity()||'60608'))
+    .then(function(r){return r.json()}).then(function(d){people=Array.isArray(d)?d:(d.posts||[]);render()}).catch(function(){people=[];render()});
+}
+function addConnection(){
+  var name=document.getElementById('cName').value.trim();
+  if(!name){alert('Enter a name.');return}
+  var data={action:'submit_listing',type:'connection',name:name,title:document.getElementById('cRole').value.trim(),skills:document.getElementById('cSkills').value.trim(),contact:document.getElementById('cContact').value.trim(),zip:typeof CommunityAPI!=='undefined'?CommunityAPI.getCommunity():'60608'};
+  if(typeof CommunityAPI!=='undefined'&&CommunityAPI.isConfigured()){
+    CommunityAPI.smartFetch(CommunityAPI.endpoint(),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)}).then(function(){load()}).catch(function(){alert('Backend unavailable.')});
+  } else {people.unshift({name:name,title:data.title,skills:data.skills});render()}
+}
+load();
+EQ.init({c_title:'Community Directory',c_title_es:'Directorio Comunitario',c_sub:'People and organizations who want to be found. Skills, languages, and how to reach them.',c_sub_es:'Personas y organizaciones que quieren ser encontradas. Habilidades, idiomas y cómo contactarlos.',c_add:'Add Yourself or Your Organization',c_add_es:'Agrégrate o Agrega Tu Organización'});
+</script>
+</body>
+</html>

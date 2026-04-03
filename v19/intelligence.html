@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Neighborhood Intelligence — CommUnity OS</title>
+<meta name="description" content="Live neighborhood data from 8 public sources with civic reasoning synthesis. Enter your zip code. See the data. Read the pattern. Take action.">
+<link rel="canonical" href="https://comm-unity-os.org/intelligence.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Neighborhood Intelligence — CommUnity OS","url":"https://comm-unity-os.org/intelligence.html","description":"Live neighborhood data dashboard with civic reasoning synthesis. 8 public data sources. Weekly curated briefing. $7/year civic infrastructure.","inLanguage":["en","es"],"applicationCategory":"Civic Technology","isAccessibleForFree":true}
+</script>
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="icon" href="/favicon.png" type="image/png">
+<style>
+.intel-hero{text-align:center;padding:30px 0 20px}
+.intel-hero h1{font-family:var(--display);font-size:1.5rem;font-weight:600;color:var(--deep)}
+.intel-hero p{font-size:.88rem;color:var(--dim);margin-top:6px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6}
+.intel-input{display:flex;gap:10px;max-width:340px;margin:20px auto;justify-content:center}
+.intel-input input{font-family:var(--sans);font-size:1.2rem;padding:12px 16px;border:2.5px solid var(--sage);border-radius:14px;background:var(--warm);color:var(--ink);text-align:center;width:130px;font-weight:500}
+.intel-input button{font-family:var(--sans);font-size:.88rem;font-weight:600;padding:12px 28px;border:none;border-radius:14px;background:var(--forest);color:var(--cream);cursor:pointer}
+.intel-input button:hover{background:var(--deep)}
+.intel-input button:disabled{background:var(--sand);cursor:not-allowed}
+.loading{text-align:center;padding:40px 0;color:var(--dim);font-size:.88rem}
+.loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--sand);border-top:3px solid var(--forest);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.intel-report{margin-top:20px;display:none}
+
+/* ── CONCEPT BOXES (data cards) ── */
+.data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
+.data-card{background:var(--warm);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--sand)}
+.data-card .num{font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--forest)}
+.data-card .num.alert{color:var(--coral)}
+.data-card .lbl{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.section-label{font-family:var(--display);font-size:.82rem;font-weight:600;color:var(--deep);margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--sand)}
+.top-types{margin:8px 0 16px}
+.type-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-size:.78rem;color:var(--ink);background:var(--warm);border-radius:6px;margin:3px 0}
+.type-count{font-weight:600;color:var(--forest)}
+
+/* ── CIVIC SYNTHESIS (the SG Section Synthesis equivalent) ── */
+.civic-synthesis{background:var(--warm);border-left:4px solid var(--sage);border-radius:0 14px 14px 0;padding:20px;margin:20px 0}
+.civic-synthesis .synth-label{font-family:var(--display);font-size:.72rem;font-weight:600;color:var(--sage);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.civic-synthesis .synth-paragraph{font-size:.88rem;color:var(--ink);line-height:1.9}
+.civic-synthesis .data-fill{display:inline;font-weight:600;color:var(--forest);background:rgba(90,138,120,.1);padding:1px 6px;border-radius:4px}
+.civic-synthesis .data-fill.alert{color:var(--coral);background:rgba(200,100,80,.1)}
+
+/* ── MEMORY ANCHOR (crystallized takeaway) ── */
+.memory-anchor{background:var(--cream);border:2px solid var(--gold);border-radius:14px;padding:18px;margin:16px 0;text-align:center}
+.memory-anchor .anchor-icon{font-size:1.2rem;margin-bottom:4px}
+.memory-anchor .anchor-text{font-family:var(--display);font-size:.92rem;font-weight:600;color:var(--deep);line-height:1.5}
+
+/* ── CHECKPOINT PROMPT (civic reasoning) ── */
+.civic-checkpoint{background:var(--warm);border-radius:14px;padding:20px;margin:16px 0;border-left:4px solid var(--gold)}
+.civic-checkpoint .ckpt-label{font-family:var(--display);font-size:.72rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.civic-checkpoint .ckpt-question{font-size:.92rem;font-weight:600;color:var(--deep);line-height:1.6;margin-bottom:10px}
+.civic-checkpoint .ckpt-reveal{background:var(--cream);border-radius:10px;padding:14px;cursor:pointer;font-size:.82rem;color:var(--dim);text-align:center;border:1.5px dashed var(--sand);transition:.2s}
+.civic-checkpoint .ckpt-reveal:hover{border-color:var(--sage);color:var(--ink)}
+.civic-checkpoint .ckpt-answer{display:none;font-size:.85rem;color:var(--ink);line-height:1.7;padding:14px;background:var(--cream);border-radius:10px;border-left:3px solid var(--forest)}
+
+/* ── CLIFFHANGER (action bridge) ── */
+.cliffhanger{text-align:center;margin:20px 0 10px}
+.cliffhanger a{display:inline-block;font-family:var(--sans);font-size:.82rem;font-weight:600;color:var(--forest);text-decoration:none;padding:10px 24px;border:2px solid var(--forest);border-radius:12px;transition:.2s}
+.cliffhanger a:hover{background:var(--forest);color:var(--cream)}
+.cliffhanger .cliff-text{font-size:.75rem;color:var(--dim);margin-bottom:6px}
+
+/* ── WEEKLY BRIEFING ── */
+.briefing{background:var(--cream);border-radius:14px;padding:24px;margin-top:24px;border:2px solid var(--forest)}
+.briefing h3{font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--forest);margin-bottom:4px}
+.briefing .briefing-date{font-size:.7rem;color:var(--light);margin-bottom:14px}
+.briefing .briefing-text{font-size:.88rem;color:var(--ink);line-height:1.8;white-space:pre-wrap}
+.briefing .briefing-empty{font-size:.85rem;color:var(--dim);font-style:italic}
+
+.source-list{font-size:.72rem;color:var(--dim);margin-top:16px;padding-top:10px;border-top:1px solid var(--sand)}
+.source-list span{display:inline-block;background:var(--warm);padding:2px 8px;border-radius:4px;margin:2px}
+.no-data{text-align:center;padding:20px;color:var(--dim);font-size:.85rem;font-style:italic}
+</style>
+</head>
+<body>
+<div class="page" role="main">
+
+  <div class="intel-hero">
+    <h1 data-t="intel_title">What's really happening in your neighborhood?</h1>
+    <p data-t="intel_desc">Live data from 8 public sources. A pattern you can read. A question worth asking. And something you can do about it.</p>
+  </div>
+
+  <div class="intel-input">
+    <input type="text" id="zipInput" maxlength="5" inputmode="numeric" placeholder="60608">
+    <button id="analyzeBtn" onclick="analyze()">Look up</button>
+  </div>
+
+  <div class="loading" id="loadingState" style="display:none">
+    <div class="spinner"></div>
+    <div>Pulling neighborhood data...</div>
+  </div>
+
+  <div class="intel-report" id="report">
+    <!-- CONCEPT BOXES — data cards by section -->
+    <div id="dataCards"></div>
+
+    <!-- CIVIC SYNTHESIS — auto-generated narrative from data -->
+    <div class="civic-synthesis" id="synthSection" style="display:none">
+      <div class="synth-label">Civic Synthesis</div>
+      <div class="synth-paragraph" id="synthParagraph"></div>
+    </div>
+
+    <!-- MEMORY ANCHOR — one crystallized takeaway -->
+    <div class="memory-anchor" id="anchorSection" style="display:none">
+      <div class="anchor-icon">⚓</div>
+      <div class="anchor-text" id="anchorText"></div>
+    </div>
+
+    <!-- CHECKPOINT PROMPT — civic reasoning question -->
+    <div class="civic-checkpoint" id="checkpointSection" style="display:none">
+      <div class="ckpt-label">Checkpoint · Think before you click</div>
+      <div class="ckpt-question" id="ckptQuestion"></div>
+      <div class="ckpt-reveal" id="ckptRevealBtn" onclick="revealCheckpoint()">▶ Click to see the reasoning</div>
+      <div class="ckpt-answer" id="ckptAnswer"></div>
+    </div>
+
+    <!-- CLIFFHANGER — action bridge to governance tools -->
+    <div class="cliffhanger" id="cliffSection" style="display:none">
+      <div class="cliff-text" id="cliffText"></div>
+      <a id="cliffLink" href="/audit.html">Take it to the Promise Tracker →</a>
+    </div>
+
+    <!-- WEEKLY BRIEFING -->
+    <div class="briefing" id="briefingSection">
+      <h3 data-t="brief_title">Weekly Neighborhood Briefing</h3>
+      <div class="briefing-date" id="briefingDate"></div>
+      <div class="briefing-text" id="briefingText">
+        <span class="briefing-empty" data-t="brief_empty">The first weekly briefing is coming soon. Check back after data collection begins.</span>
+      </div>
+    </div>
+
+    <div class="source-list" id="sources"></div>
+  </div>
+
+  <div id="alertsContainer"></div>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+EQ.init({
+  en: {
+    intel_title: "What's really happening in your neighborhood?",
+    intel_desc: "Live data from 8 public sources. A pattern you can read. A question worth asking. And something you can do about it.",
+    brief_title: "Weekly Neighborhood Briefing",
+    brief_empty: "The first weekly briefing is coming soon. Check back after data collection begins."
+  },
+  es: {
+    intel_title: "¿Qué está pasando realmente en tu vecindario?",
+    intel_desc: "Datos en vivo de 8 fuentes públicas. Un patrón que puedes leer. Una pregunta que vale la pena hacer. Y algo que puedes hacer al respecto.",
+    brief_title: "Informe Semanal del Vecindario",
+    brief_empty: "El primer informe semanal llegará pronto. Vuelve después de que comience la recolección de datos."
+  }
+}, { footer: true, alertPage: 'intelligence' });
+
+document.getElementById('zipInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') analyze(); });
+
+async function analyze() {
+  var zip = document.getElementById('zipInput').value.trim();
+  if (!/^\d{5}$/.test(zip)) return;
+  var btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.textContent = 'Loading...';
+  document.getElementById('loadingState').style.display = '';
+  document.getElementById('report').style.display = 'none';
+  try {
+    var resp = await fetch(API + '?action=get_zip_intelligence&zip=' + zip);
+    var data = await resp.json();
+    renderData(zip, data);
+    buildSynthesis(zip, data);
+    buildAnchor(zip, data);
+    buildCheckpoint(zip, data);
+    buildCliffhanger(zip, data);
+    document.getElementById('report').style.display = '';
+  } catch (err) {
+    document.getElementById('report').style.display = '';
+    document.getElementById('dataCards').innerHTML = '<div class="no-data">Unable to load data right now. Try again in a moment.</div>';
+  }
+  btn.disabled = false; btn.textContent = 'Look up';
+  document.getElementById('loadingState').style.display = 'none';
+}
+
+// ═══════════════════════════════════════
+// CONCEPT BOXES — data cards by section
+// ═══════════════════════════════════════
+function renderData(zip, data) {
+  var s = data.sources || {}, html = '', sourceNames = [];
+
+  if (s.census) {
+    sourceNames.push('Census ACS');
+    html += '<div class="section-label">People</div><div class="data-grid">';
+    if (s.census.population) html += card(num(s.census.population), 'Population');
+    if (s.census.medianIncome) html += card('$' + num(s.census.medianIncome), 'Median Income');
+    if (s.census.povertyRate) html += card(s.census.povertyRate + '%', 'Poverty Rate', s.census.povertyRate > 20);
+    if (s.census.uninsured) html += card(num(s.census.uninsured), 'Uninsured');
+    if (s.census.medianRent) html += card('$' + num(s.census.medianRent), 'Median Rent');
+    if (s.census.spanishAtHome) html += card(num(s.census.spanishAtHome), 'Spanish at Home');
+    html += '</div>';
+  }
+  if (s['311']) {
+    sourceNames.push('Chicago 311');
+    html += '<div class="section-label">311 Service Requests (90 days)</div><div class="data-grid">';
+    html += card(num(s['311'].total), 'Total Complaints');
+    html += card(num(s['311'].open), 'Still Open', s['311'].open > 50);
+    html += '</div>';
+    if (s['311'].topTypes && s['311'].topTypes.length > 0) {
+      html += '<div class="top-types">';
+      for (var t = 0; t < Math.min(s['311'].topTypes.length, 5); t++) {
+        html += '<div class="type-row"><span>' + esc(s['311'].topTypes[t].type) + '</span><span class="type-count">' + s['311'].topTypes[t].count + '</span></div>';
+      }
+      html += '</div>';
+    }
+  }
+  if (s.foodSafety && s.foodSafety.total > 0) {
+    sourceNames.push('Food Inspections');
+    html += '<div class="section-label">Food Safety (past year)</div><div class="data-grid">';
+    html += card(s.foodSafety.pass, 'Passed');
+    html += card(s.foodSafety.fail, 'Failed', s.foodSafety.fail > 5);
+    html += card(s.foodSafety.conditional, 'Conditional');
+    html += '</div>';
+  }
+  if (s.cfpb && s.cfpb.complaints && s.cfpb.complaints.length > 0) {
+    sourceNames.push('CFPB');
+    var totalC = 0; s.cfpb.complaints.forEach(function(c) { totalC += c.count; });
+    html += '<div class="section-label">Financial Complaints (since 2024)</div><div class="data-grid">';
+    html += card(totalC, 'Total Complaints');
+    html += '</div><div class="top-types">';
+    for (var c = 0; c < Math.min(s.cfpb.complaints.length, 5); c++) {
+      html += '<div class="type-row"><span>' + esc(s.cfpb.complaints[c].product) + '</span><span class="type-count">' + s.cfpb.complaints[c].count + '</span></div>';
+    }
+    html += '</div>';
+  }
+  if (s.rents) {
+    sourceNames.push('HUD FMR');
+    html += '<div class="section-label">Fair Market Rents (' + (s.rents.year || '') + ')</div><div class="data-grid">';
+    if (s.rents.efficiency) html += card('$' + num(s.rents.efficiency), 'Studio');
+    if (s.rents.oneBR) html += card('$' + num(s.rents.oneBR), '1 Bedroom');
+    if (s.rents.twoBR) html += card('$' + num(s.rents.twoBR), '2 Bedroom');
+    if (s.rents.threeBR) html += card('$' + num(s.rents.threeBR), '3 Bedroom');
+    html += '</div>';
+  }
+  if (s.health && s.health.measures) {
+    sourceNames.push('CDC PLACES');
+    var mKeys = Object.keys(s.health.measures);
+    if (mKeys.length > 0) {
+      html += '<div class="section-label">Health Measures</div><div class="data-grid">';
+      var shown = 0;
+      for (var m = 0; m < mKeys.length && shown < 6; m++) {
+        var measure = s.health.measures[mKeys[m]];
+        if (measure.value > 0) { html += card(measure.value + (measure.unit || '%'), mKeys[m]); shown++; }
+      }
+      html += '</div>';
+    }
+  }
+  if (!html) html = '<div class="no-data">No data available for this zip code yet. Run fetchAllSources() in Apps Script to initialize.</div>';
+  document.getElementById('dataCards').innerHTML = html;
+  document.getElementById('sources').innerHTML = sourceNames.length > 0
+    ? 'Data sources: ' + sourceNames.map(function(s) { return '<span>' + s + '</span>'; }).join('') : '';
+}
+
+// ═══════════════════════════════════════
+// CIVIC SYNTHESIS — narrative from data
+// Forces comprehension, not just scanning
+// ═══════════════════════════════════════
+function buildSynthesis(zip, data) {
+  var s = data.sources || {};
+  var parts = [];
+
+  // Build narrative only if we have data
+  if (s.census) {
+    var rentBurden = '';
+    if (s.census.medianIncome > 0 && s.census.medianRent > 0) {
+      var annualRent = s.census.medianRent * 12;
+      var pct = Math.round(annualRent / s.census.medianIncome * 100);
+      var isHigh = pct > 30;
+      rentBurden = ' A family earning the median income spends roughly <span class="data-fill' + (isHigh ? ' alert' : '') + '">' + pct + '%</span> of it on rent.';
+      if (isHigh) rentBurden += ' That\'s above the 30% threshold where housing becomes a burden.';
+    }
+    parts.push('In zip code <span class="data-fill">' + zip + '</span>, ' +
+      '<span class="data-fill">' + num(s.census.population) + '</span> people live here. ' +
+      'The median household income is <span class="data-fill">$' + num(s.census.medianIncome) + '</span>, ' +
+      'and <span class="data-fill' + (s.census.povertyRate > 20 ? ' alert' : '') + '">' + s.census.povertyRate + '%</span> of residents live below the poverty line.' +
+      rentBurden);
+  }
+
+  if (s['311'] && s['311'].total > 0) {
+    var openPct = s['311'].total > 0 ? Math.round(s['311'].open / s['311'].total * 100) : 0;
+    var topType = (s['311'].topTypes && s['311'].topTypes[0]) ? s['311'].topTypes[0].type : 'unknown';
+    parts.push('In the last 90 days, residents filed <span class="data-fill">' + num(s['311'].total) + '</span> complaints with 311. ' +
+      '<span class="data-fill' + (openPct > 40 ? ' alert' : '') + '">' + openPct + '%</span> of those are still open. ' +
+      'The most common complaint type is <span class="data-fill">' + esc(topType) + '</span>. ' +
+      'That means the system received the request but hasn\'t resolved it.');
+  }
+
+  if (s.foodSafety && s.foodSafety.total > 0) {
+    var failPct = Math.round(s.foodSafety.fail / s.foodSafety.total * 100);
+    parts.push('<span class="data-fill">' + s.foodSafety.total + '</span> food establishments were inspected in the past year. ' +
+      '<span class="data-fill' + (failPct > 15 ? ' alert' : '') + '">' + s.foodSafety.fail + '</span> failed — that\'s <span class="data-fill' + (failPct > 15 ? ' alert' : '') + '">' + failPct + '%</span> of all inspections.');
+  }
+
+  if (s.cfpb && s.cfpb.complaints && s.cfpb.complaints.length > 0) {
+    var topProduct = s.cfpb.complaints[0];
+    parts.push('Residents filed financial complaints with the federal consumer bureau. The most common category is <span class="data-fill">' + esc(topProduct.product) + '</span> with <span class="data-fill">' + topProduct.count + '</span> complaints since 2024.');
+  }
+
+  if (parts.length > 0) {
+    document.getElementById('synthParagraph').innerHTML = parts.join('<br><br>');
+    document.getElementById('synthSection').style.display = '';
+  }
+}
+
+// ═══════════════════════════════════════
+// MEMORY ANCHOR — one crystallized takeaway
+// ═══════════════════════════════════════
+function buildAnchor(zip, data) {
+  var s = data.sources || {};
+  var anchor = '';
+
+  // Pick the most striking pattern
+  if (s['311'] && s['311'].open > 50) {
+    anchor = 'More than ' + s['311'].open + ' complaints in ' + zip + ' are still waiting. The system heard them. It just hasn\'t acted.';
+  } else if (s.census && s.census.povertyRate > 25) {
+    anchor = 'One in four people in ' + zip + ' lives below the poverty line. The data doesn\'t explain why. Your neighbors might.';
+  } else if (s.foodSafety && s.foodSafety.fail > 10) {
+    anchor = zip + ' had ' + s.foodSafety.fail + ' failed food inspections this year. That\'s not a number. That\'s a pattern.';
+  } else if (s.census && s.census.medianRent > 0 && s.census.medianIncome > 0) {
+    var pct = Math.round(s.census.medianRent * 12 / s.census.medianIncome * 100);
+    if (pct > 30) anchor = 'The median family in ' + zip + ' spends ' + pct + '% of income on rent. Above 30% is a burden. This is ' + pct + '%.';
+  }
+
+  if (!anchor && s.census) {
+    anchor = zip + ' has data. Data is not intelligence. Intelligence is knowing what to do with it. That\'s what this page is for.';
+  }
+
+  if (anchor) {
+    document.getElementById('anchorText').textContent = anchor;
+    document.getElementById('anchorSection').style.display = '';
+  }
+}
+
+// ═══════════════════════════════════════
+// CHECKPOINT — civic reasoning prompt
+// ═══════════════════════════════════════
+function buildCheckpoint(zip, data) {
+  var s = data.sources || {};
+  var question = '', answer = '';
+
+  if (s['311'] && s['311'].open > 20 && s['311'].topTypes && s['311'].topTypes[0]) {
+    var topType = s['311'].topTypes[0].type;
+    question = 'The most common 311 complaint in ' + zip + ' is "' + topType + '" — and most are still open. The system is supposed to work like this: you call, they log it, someone dispatches, it gets fixed. Where in that chain is the failure? And who is responsible for the broken link?';
+    answer = 'The data shows the complaint was received — that means the input side works. The failure is between logging and resolution. That\'s either a dispatch bottleneck (staffing), a prioritization failure (this zip gets less attention), or an accountability gap (nobody tracks whether the log becomes a repair). The Promise Tracker on this platform lets you document which link in the chain your alderman committed to fixing — and whether they did.';
+  } else if (s.census && s.census.povertyRate > 20 && s.foodSafety && s.foodSafety.fail > 5) {
+    question = zip + ' has a ' + s.census.povertyRate + '% poverty rate and ' + s.foodSafety.fail + ' failed food inspections. Is that a coincidence? What would you expect to see in a zip code where poverty is high and food inspections are failing?';
+    answer = 'It\'s not a coincidence. High-poverty zip codes attract lower-investment food establishments. Lower investment means less maintenance. Less maintenance means more inspection failures. The families who have the fewest options eat at the places with the worst scores. The system is supposed to protect everyone equally — inspection doesn\'t check the zip code. But the businesses that locate in high-poverty areas often invest less in compliance because the customer base has fewer alternatives. The data connects. The question is what you do with the connection.';
+  } else if (s.census && s.census.medianRent > 0) {
+    question = 'If the median rent in ' + zip + ' is $' + num(s.census.medianRent) + ' and the median income is $' + num(s.census.medianIncome) + ', what happens to the families who earn less than the median?';
+    answer = 'The median is the middle — half of families earn less. For them, rent consumes even more than the percentage shown above. At some point, rent crowds out food, medication, transportation, and childcare. The data shows the median. The crisis is below it. And the families below the median are the least likely to have time to attend a community meeting, file a 311 complaint, or evaluate their alderman. The tools on this platform are designed to be fast enough for someone who has 10 minutes, not 10 hours.';
+  }
+
+  if (question) {
+    document.getElementById('ckptQuestion').textContent = question;
+    document.getElementById('ckptAnswer').innerHTML = answer;
+    document.getElementById('checkpointSection').style.display = '';
+  }
+}
+
+function revealCheckpoint() {
+  var btn = document.getElementById('ckptRevealBtn');
+  var answer = document.getElementById('ckptAnswer');
+  if (answer.style.display === 'none' || !answer.style.display) {
+    answer.style.display = '';
+    btn.textContent = '▼ Collapse';
+  } else {
+    answer.style.display = 'none';
+    btn.textContent = '▶ Click to see the reasoning';
+  }
+}
+
+// ═══════════════════════════════════════
+// CLIFFHANGER — action bridge
+// ═══════════════════════════════════════
+function buildCliffhanger(zip, data) {
+  var s = data.sources || {};
+  var text = '', href = '/audit.html', label = '';
+
+  if (s['311'] && s['311'].open > 20) {
+    text = 'You just saw the complaints. Now ask: did your alderman promise to fix this?';
+    label = 'Take it to the Promise Tracker →';
+    href = '/audit.html';
+  } else if (s.census && s.census.povertyRate > 20) {
+    text = 'The data shows the gap. The discussion board is where neighbors figure out what to do about it.';
+    label = 'Start a conversation →';
+    href = '/discuss.html';
+  } else if (s.foodSafety && s.foodSafety.fail > 5) {
+    text = 'Failed inspections are public record. So are the promises leaders made about food safety.';
+    label = 'Check the Promise Tracker →';
+    href = '/audit.html';
+  } else {
+    text = 'Data is the starting point. What your neighbors know is the rest of the story.';
+    label = 'Join the discussion →';
+    href = '/discuss.html';
+  }
+
+  document.getElementById('cliffText').textContent = text;
+  document.getElementById('cliffLink').textContent = label;
+  document.getElementById('cliffLink').href = href;
+  document.getElementById('cliffSection').style.display = '';
+}
+
+function card(v, l, a) { return '<div class="data-card"><div class="num' + (a ? ' alert' : '') + '">' + v + '</div><div class="lbl">' + l + '</div></div>'; }
+function num(n) { return n ? Number(n).toLocaleString() : '0'; }
+function esc(s) { return s ? String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''; }
+</script>
+</body>
+</html>

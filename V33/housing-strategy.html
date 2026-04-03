@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Housing Strategy Dashboard — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Housing vulnerability assessment by zip code. Rent burden, eviction risk, housing age, vacancy, mortgage denial rates for housing authorities and legal aid.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+<div class="page">
+  <div class="ds-hero">
+    <h1>Housing Strategy Dashboard</h1>
+    <p>For housing authorities, legal aid, CDFIs, affordable housing developers. Housing vulnerability by zip code.</p>
+    <div class="ds-search">
+      <input type="text" class="ds-zip" id="dsZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')runDashboard()">
+      <button class="ds-go" onclick="runDashboard()">Generate Brief</button>
+    </div>
+  </div>
+  <div id="dsLoading" class="ds-loading" style="display:none">Querying federal data sources...</div>
+  <div id="dsResults" style="display:none"></div>
+</div>
+<script src="/js/shared.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script>
+var DE = DashEngine;
+
+var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B11001_001E','B03003_003E','B25064_001E','B25003_001E','B25003_002E','B25003_003E','B25034_001E','B25034_008E','B25034_009E','B25034_010E','B25034_011E','B25002_001E','B25002_003E','B25014_005E','B25014_006E','B25014_007E','B25014_011E','B25014_012E','B25014_013E','B25014_001E','B25070_007E','B25070_008E','B25070_009E','B25070_010E','B25070_001E','B25077_001E'];
+
+function runDashboard() {
+  var zip = document.getElementById('dsZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+  document.getElementById('dsLoading').style.display = '';
+  document.getElementById('dsResults').style.display = 'none';
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryGeo(zip)
+  ]).then(function(r) {
+    var census=r[0].value||{}, geo=r[1].value||{};
+    document.getElementById('dsLoading').style.display = 'none';
+    render(zip, census, geo);
+  });
+}
+
+function render(zip, c, geo) {
+  var h = DE.renderProfile(zip, c, geo);
+  var signals = [];
+  var pop=c.B01003_001E||0;
+  var owners=c.B25003_002E||0, renters=c.B25003_003E||0, tenure=c.B25003_001E||0;
+  var renterPct=DE.pct(renters,tenure);
+  var pre1978=(c.B25034_008E||0)+(c.B25034_009E||0)+(c.B25034_010E||0)+(c.B25034_011E||0);
+  var housingTot=c.B25034_001E||0;
+  var oldPct=DE.pct(pre1978,housingTot);
+  var vacant=c.B25002_003E||0, units=c.B25002_001E||0;
+  var vacRate=DE.pct(vacant,units);
+  var crowdOwn=(c.B25014_005E||0)+(c.B25014_006E||0)+(c.B25014_007E||0);
+  var crowdRent=(c.B25014_011E||0)+(c.B25014_012E||0)+(c.B25014_013E||0);
+  var crowdTot=c.B25014_001E||0;
+  var crowdPct=DE.pct(crowdOwn+crowdRent,crowdTot);
+  var burden30=(c.B25070_007E||0)+(c.B25070_008E||0)+(c.B25070_009E||0)+(c.B25070_010E||0);
+  var burdenTot=c.B25070_001E||0;
+  var burdenPct=DE.pct(burden30,burdenTot);
+  var homeValue=c.B25077_001E||0;
+  var medRent=c.B25064_001E||0;
+  var medIncome=c.B19013_001E||0;
+  var afford=medIncome>0?Math.round(homeValue/medIncome*10)/10:0;
+
+  h += DE.sectionOpen('🏠','Housing Profile');
+  h += '<div class="ds-grid">';
+  h += DE.statCard(renterPct+'%','Renters',renterPct>60?'highlight':'');
+  h += DE.statCard(burdenPct+'%','Cost Burdened (30%+)',burdenPct>40?'highlight':'');
+  h += DE.statCard(oldPct+'%','Pre-1978 Housing',oldPct>50?'highlight':'');
+  h += DE.statCard(vacRate+'%','Vacancy Rate',vacRate>15?'highlight':vacRate>8?'':'good');
+  h += DE.statCard(crowdPct+'%','Overcrowded',crowdPct>5?'highlight':'');
+  h += DE.statCard(DE.money(homeValue),'Median Home Value');
+  h += DE.statCard(afford+'x','Price/Income Ratio',afford>5?'highlight':'');
+  h += DE.statCard(DE.fmt(renters),'Renter Households');
+  h += '</div>';
+  h += DE.sectionClose();
+
+  h += DE.sectionOpen('⚠️','Housing Stress Signals');
+  if (burdenPct>40){signals.push({w:3});h+=DE.signalRow('🔴',burdenPct+'% of renters spend 30%+ on housing — '+DE.fmt(burden30)+' households cost-burdened')}
+  if (renterPct>70){signals.push({w:1});h+=DE.signalRow('🟡',renterPct+'% renters — high vulnerability to rent increases and eviction')}
+  if (oldPct>60){signals.push({w:2});h+=DE.signalRow('🔴',oldPct+'% pre-1978 housing — lead paint, code violations, structural risk')}
+  if (crowdPct>5){signals.push({w:2});h+=DE.signalRow('🔴',crowdPct+'% overcrowded (>1 person/room) — larger affordable units needed')}
+  if (afford>5){signals.push({w:2});h+=DE.signalRow('🔴','Home price '+afford+'x income — homeownership effectively inaccessible')}
+  if (vacRate>15) h+=DE.signalRow('🟡',vacRate+'% vacancy — potential for affordable housing conversion');
+  h += DE.sectionClose();
+
+  var need=DE.calcNeedScore(signals);
+  h += DE.briefOpen('Housing Deployment Brief');
+  h += '<p><strong>Need level: '+need.level+'.</strong></p>';
+  if (burdenPct>40) h+='<p>💰 <strong>Rent burden crisis:</strong> '+DE.fmt(burden30)+' households paying 30%+ of income. Rental assistance and eviction prevention are immediate priorities.</p>';
+  if (afford>5) h+='<p>🏡 <strong>Homeownership gap:</strong> Median home at '+DE.money(homeValue)+' is '+afford+'x income. Down payment assistance and shared equity models needed.</p>';
+  if (oldPct>50) h+='<p>🏗️ <strong>Housing quality:</strong> '+oldPct+'% of housing stock is pre-1978. Code enforcement, lead remediation, and weatherization programs needed.</p>';
+  h += '<p>⚖️ <strong>Legal aid:</strong> CommUnity OS court navigator and dispute letter generator available for tenant defense. Zero data collected.</p>';
+  h += DE.briefClose();
+
+  h += DE.actionLinks([
+    {href:'/neighborhood.html?zip='+zip,label:'Full neighborhood profile →',primary:true},
+    {href:'/court-nav.html',label:'Court navigator →'},
+    {href:'/defend.html?type=tenant',label:'Tenant dispute letter →'},
+    {href:'/lending.html',label:'Lending fairness →'}
+  ]);
+  h += (typeof CivicIntel!=='undefined' ? CivicIntel.deidentNotice() : '') + DE.sourceNote('Sources: Census ACS 2022 (9 housing tables). Zero data collected.');
+  document.getElementById('dsResults').innerHTML = h;
+  document.getElementById('dsResults').style.display = '';
+  document.getElementById('dsResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+DE.autoLoad('dsZip', runDashboard);
+EQ.init({});
+</script>
+</body>
+</html>

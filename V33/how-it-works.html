@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How This Works — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="How CommUnity OS works. Static HTML, free APIs, zero backend, zero data collected. 38 pages, 18 tools, $7/year. Architecture explained.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.hw-section{background:var(--warm);border-radius:14px;padding:18px;margin:14px 0;border:1px solid var(--sand)}
+.hw-section h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:8px}
+.hw-section p{font-size:.82rem;line-height:1.7;color:var(--body);margin-bottom:8px}
+.hw-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:450px){.hw-compare{grid-template-columns:1fr}}
+.hw-them,.hw-us{padding:14px;border-radius:10px;font-size:.75rem;line-height:1.6}
+.hw-them{background:rgba(212,112,74,.04);border:1px solid rgba(212,112,74,.12);color:var(--body)}
+.hw-them strong{color:var(--coral)}
+.hw-us{background:rgba(91,140,122,.04);border:1px solid rgba(91,140,122,.15);color:var(--body)}
+.hw-us strong{color:var(--forest)}
+.hw-source{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.78rem}
+.hw-source:last-child{border:none}
+.hw-source .hw-s-name{font-weight:700;color:var(--deep);min-width:100px}
+.hw-source .hw-s-desc{color:var(--body);line-height:1.5}
+.hw-num{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--forest)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header page-header--dark">
+    <div class="arc-label">ABOUT</div>
+    <h1>How This Works</h1>
+    <p class="subtitle">No server. No database. No accounts. No tracking. Here's why.</p>
+  </div>
+
+  <div class="hw-section" style="border-left:3px solid var(--forest)">
+    <h3>Why This Exists</h3>
+    <p>A parent on the southwest side of Chicago looked at the systems his family depends on — schools, clinics, city services, elected officials — and asked three questions: How is this supposed to work? Where does access fall short? What can we do about it?</p>
+    <p>The programs exist. $60 billion in benefits goes unclaimed every year. Half of medical bills have errors. 92% of legal problems get no legal help. Every zip code in America has elected officials, but most people can't name them. The services are there. The access isn't.</p>
+    <p>So a Concerned Parent built the access layer. Not a startup. Not a grant project. Infrastructure — the kind that costs $7 a year and can't be shut down, bought out, or turned into an advertising platform. The kind any neighborhood can run without asking permission.</p>
+    <p>The platform now watches its own community's health, identifies where civic access falls short, cross-references community data with federal health and economic indicators, and adapts. It applies the same diagnostic reasoning a doctor uses with a patient — except the patient is a neighborhood, and the community owns the diagnosis.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>What This Means</h3>
+    <p>Throughout history, civic infrastructure has required institutional power. Roads required empires. Courts required states. Public schools required governments. Libraries required philanthropy. Every system that connects citizens to governance has required concentrated money and concentrated authority to build and sustain.</p>
+    <p>The internet changed the cost of communication — but not the cost of civic infrastructure. Platforms that connect neighbors cost hundreds of millions to build and operate. When the funding runs out, they die. Over 70 civic technology projects have failed this way, including organizations backed by $695 million in sector investment.</p>
+    <p>What changed is the technology stack. Free global content delivery networks, serverless computing, open government data, and browser-native tools converged in the last five years. For the first time, it is possible to build nationally scalable civic infrastructure without institutional backing, without ongoing funding, and without anyone's permission. This platform is the proof. The question is no longer whether communities can afford civic infrastructure. The question is what they build with it.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>The Architecture</h3>
+    <p>CommUnity OS has two layers, and they work differently on purpose.</p>
+    <p><strong>Layer 1: Survival tools.</strong> The benefit screener, dispute letter generator, health calculators, drug price lookup, court navigator, and all 54 knowledge guides are static HTML files hosted on a free content delivery network. There is no server processing your requests. Everything runs in your browser, on your device. The calculations happen on your phone. The letters are generated on your phone. Nothing leaves your phone. When a tool needs external data — consumer complaints, Census demographics — it calls a free federal API directly from your browser. We are not in the middle.</p>
+    <p><strong>Layer 2: Community tools.</strong> Discussions, proposals, needs matching, official evaluations, promise tracking, and civic diagnostics use a lightweight serverless backend (Cloudflare Workers + D1 database). This layer stores community-generated content — posts, votes, diagnostic reports — so neighbors can communicate with each other. It stores no personal data: no names, no emails, no accounts, no passwords. Participation is anonymous. Civic tokens prove you are a community member without revealing who you are. The diagnostic engine produces only deidentified aggregate reports with counts suppressed below 11.</p>
+    <p>Layer 1 works with zero infrastructure. Layer 2 adds community coordination. Both cost $0 — Cloudflare's free tier handles 100,000 requests per day and 5 million database reads per day. The only paid component is the $7/year domain name.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>What It Costs</h3>
+    <div class="hw-compare">
+      <div class="hw-them"><strong>Typical civic platform</strong><br>$200,000–$2M to build<br>$50,000–$500,000/year to run<br>Team of 5–20 engineers<br>Cloud hosting, databases, security audits</div>
+      <div class="hw-us"><strong>CommUnity OS</strong><br>$0 to build<br>$7/year to run (domain name)<br>Static files + serverless free tier<br>No server to maintain, nothing to breach</div>
+    </div>
+    <p>Healthcare.gov cost $2.14 billion. A typical municipal website costs $20,000–$50,000. This platform costs $7 per year because its architecture eliminates servers, engineering teams, and ongoing hosting fees entirely.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>Why Zero Data Matters</h3>
+    <p>In January 2026, CMS signed an agreement sharing Medicaid data — addresses, birth dates, immigration status, phone numbers for 79 million Americans — with ICE. Families who enrolled in health coverage for their children now face the possibility that enrollment data could be used for enforcement.</p>
+    <p>CommUnity OS makes surveillance impossible through architecture, not policy. There is no account to create. No login to track. No cookie to follow. No database to subpoena. No analytics to mine. This isn't a privacy promise — it's a physics constraint. You can't hand over data that doesn't exist.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>Data Sources</h3>
+    <p>Every number on this platform comes from a named, verifiable source:</p>
+    <div class="hw-source"><span class="hw-s-name">Census Bureau</span><span class="hw-s-desc">American Community Survey — population, income, insurance, language, housing (neighborhood.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">CFPB</span><span class="hw-s-desc">Consumer Financial Protection Bureau — complaint database by company and zip code (complaints.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">EPA ECHO</span><span class="hw-s-desc">Enforcement and Compliance History — regulated facilities, violations, Clean Air/Water Act (environment.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">HMDA</span><span class="hw-s-desc">Home Mortgage Disclosure Act — lending decisions by race, ethnicity, county (lending.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">Chicago SODA</span><span class="hw-s-desc">City of Chicago Open Data — food inspections, building violations, 311 requests (food-safety, building-safety, 311.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">Cost Plus Drugs</span><span class="hw-s-desc">Transparent drug pricing — manufacturer cost + 15% markup (drug-prices.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">AHA / CDC / NIH</span><span class="hw-s-desc">Published clinical formulas — Pooled Cohort Equations, Prediabetes Risk Test, BMI (health-calc.html)</span></div>
+    <div class="hw-source"><span class="hw-s-name">HHS / IRS / DOL</span><span class="hw-s-desc">Federal Poverty Guidelines, EITC thresholds, state minimum wages (benefits-screener, worker-rights.html)</span></div>
+  </div>
+
+  <div class="hw-section">
+    <h3>How to Deploy This in Your Community</h3>
+    <p>CommUnity OS is open source. You can deploy it for any community in America in under 5 minutes:</p>
+    <p>1. Download the zip file (389KB).<br>2. Go to netlify.com and create a free account.<br>3. Drag the folder onto the deploy zone.<br>4. Point your $7 domain at it.<br>5. Done.</p>
+    <p>Every tool works for every zip code. The benefit screener covers all 50 states. The wage calculator has all 50 state minimums plus 20 city overrides. The Census, CFPB, EPA, and HMDA data covers the entire country. The only tools that are Chicago-specific are food inspections, building violations, and the 311 tracker — and those can be swapped to any city with a Socrata open data portal.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>License</h3>
+    <p>Code: MIT License — use it, modify it, deploy it, no restrictions.<br>Content (guides): CC BY-SA 4.0 — share and adapt with attribution.<br>Data: All from public federal sources. No proprietary data.</p>
+  </div>
+
+  <div class="hw-section">
+    <h3>For Libraries, Clinics, and Community Organizations</h3>
+    <p><strong>Libraries:</strong> Bookmark comm-unity-os.org/neighborhood.html?zip=[YOUR ZIP] on public computers. Patrons see their community profile immediately.</p>
+    <p><strong>Health centers:</strong> Share the benefit screener and bilingual health guides with patients. Everything runs on the patient's phone. Zero data leaves the device.</p>
+    <p><strong>Schools:</strong> Share the school-rights page with PTA groups. The IEP and 504 sections help parents prepare for meetings. Everything is available in Spanish.</p>
+    <p><strong>Legal aid:</strong> Share the dispute letter generator with clients. They arrive with a letter already drafted. Your attorneys review and customize rather than starting from scratch.</p>
+  </div>
+
+</div>
+<script src="/js/shared.js"></script>
+<script>EQ.init({});</script>
+</body>
+</html>

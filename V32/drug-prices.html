@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Drug Price Check — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Drug Price Check — CommUnity OS">
+<meta property="og:description" content="Compare drug prices. See what your medication actually costs vs what you're being charged.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta name="description" content="Compare prescription drug prices using transparent pricing data. See manufacturer cost vs what pharmacies charge. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.dp-search{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.dp-search input{font-family:var(--sans);font-size:.92rem;padding:12px 14px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;flex:1;min-width:180px}
+.dp-search input:focus{outline:none;border-color:var(--sage)}
+.dp-go{font-family:var(--display);font-size:.78rem;font-weight:700;padding:12px 20px;border-radius:10px;border:none;background:var(--forest);color:#fff;cursor:pointer;transition:.2s}
+.dp-go:hover{background:var(--deep)}
+.dp-loading{text-align:center;padding:20px;font-size:.82rem;color:var(--dim)}
+.dp-card{background:var(--warm);border-radius:14px;padding:16px;margin:10px 0;border:1px solid var(--sand)}
+.dp-card .dp-name{font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--deep)}
+.dp-card .dp-strength{font-size:.72rem;color:var(--dim);margin:2px 0}
+.dp-card .dp-prices{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.dp-price{text-align:center;padding:10px 14px;border-radius:10px;flex:1;min-width:100px}
+.dp-price .dp-amount{font-family:var(--display);font-size:1.3rem;font-weight:800}
+.dp-price .dp-src{font-size:.58rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.dp-cost-plus{background:rgba(91,140,122,.08);border:1px solid var(--sage)}
+.dp-cost-plus .dp-amount{color:var(--forest)}
+.dp-retail{background:rgba(212,112,74,.06);border:1px solid rgba(212,112,74,.15)}
+.dp-retail .dp-amount{color:var(--coral)}
+.dp-card .dp-link{display:inline-block;font-size:.7rem;font-weight:600;color:var(--forest);margin-top:8px;text-decoration:none;border-bottom:1px solid var(--sage)}
+.dp-card .dp-link:hover{border-color:var(--forest)}
+.dp-nbf{background:var(--warm);border-radius:14px;padding:18px;margin:20px 0;border-left:3px solid var(--sage)}
+.dp-nbf h4{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.dp-nbf p{font-size:.78rem;line-height:1.6;color:var(--body);margin-bottom:6px}
+.dp-nbf .n-t{color:var(--forest);font-weight:700}.dp-nbf .b-t{color:var(--coral);font-weight:700}.dp-nbf .f-t{color:var(--sage);font-weight:700}
+.dp-empty{text-align:center;padding:30px;font-size:.85rem;color:var(--dim);line-height:1.6}
+.dp-alt{margin:16px 0;padding:14px;background:#fff;border-radius:12px;border:1px solid var(--sand)}
+.dp-alt h4{font-size:.78rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.dp-alt p{font-size:.72rem;color:var(--dim);line-height:1.5}
+.dp-alt a{color:var(--forest);font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">SURVIVE</div>
+    <h1 data-t="dp_title">Drug Price Check</h1>
+    <p class="subtitle" data-t="dp_sub">See what your medication actually costs. Transparent pricing from Cost Plus Drugs.</p>
+  </div>
+
+  <div class="bc-privacy" data-t="dp_privacy">
+    <strong>100% private.</strong> Your search stays on your phone. We don't track, store, or sell any information about your medications.
+  </div>
+
+  <div class="dp-search">
+    <input type="text" id="dpQuery" placeholder="Enter medication name (e.g. metformin, lisinopril)..." onkeydown="if(event.key==='Enter')searchDrug()">
+    <button class="dp-go" onclick="searchDrug()">Search</button>
+  </div>
+
+  <div id="dpLoading" class="dp-loading" style="display:none">Searching drug prices...</div>
+  <div id="dpResults"></div>
+
+  <div class="dp-nbf">
+    <h4>How Drug Pricing Works</h4>
+    <p><span class="n-t">Normal:</span> A manufacturer makes a drug. They sell it to a wholesaler. The wholesaler sells it to a pharmacy. The pharmacy sells it to you. Each step adds a markup. Your insurance negotiates a price — but the negotiated price isn't always the lowest.</p>
+    <p><span class="b-t">Broken:</span> Pharmacy Benefit Managers (PBMs) negotiate prices in secret. The same pill can cost $5 at one pharmacy and $300 at another. Generic drugs that cost pennies to manufacture get marked up 1,000%. Coupons and discount cards create the illusion of savings while hiding the actual cost.</p>
+    <p><span class="f-t">Fix:</span> Ask your pharmacist: "What would this cost if I paid cash instead of using insurance?" Compare prices across pharmacies. Use Cost Plus Drugs for transparent pricing (manufacturer cost + 15% + $5). Check NeedyMeds.org for patient assistance programs. Ask your doctor: "Is there a generic for this?"</p>
+  </div>
+
+  <div class="dp-alt">
+    <h4>Other Ways to Save</h4>
+    <p><a href="https://findahealthcenter.hrsa.gov/" target="_blank" rel="noopener">Community Health Centers</a> — sliding scale fees, including prescriptions</p>
+    <p><a href="https://www.needymeds.org/" target="_blank" rel="noopener">NeedyMeds</a> — patient assistance programs, discount drug cards</p>
+    <p><a href="https://www.medicare.gov/plan-compare/" target="_blank" rel="noopener">Medicare Plan Compare</a> — if you're on Medicare, compare Part D plans by your drugs</p>
+  </div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool does not collect or store identifying data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila ni almacena datos identificativos.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+// Cost Plus Drugs API — free, no auth
+var CPAPI = 'https://us-central1-costplusdrugs-publicapi.cloudfunctions.net/main';
+
+function searchDrug() {
+  var q = document.getElementById('dpQuery').value.trim();
+  if (!q || q.length < 3) { alert('Enter a medication name (at least 3 letters).'); return; }
+
+  document.getElementById('dpLoading').style.display = '';
+  document.getElementById('dpResults').innerHTML = '';
+
+  fetch(CPAPI + '?medication_name=' + encodeURIComponent(q))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('dpLoading').style.display = 'none';
+      renderDrugs(data, q);
+    })
+    .catch(function(err) {
+      document.getElementById('dpLoading').style.display = 'none';
+      // API might not support CORS — show fallback
+      document.getElementById('dpResults').innerHTML = '<div class="dp-empty">' +
+        '<p>Direct search is currently unavailable.</p>' +
+        '<p style="margin-top:8px"><a href="https://costplusdrugs.com/medications/' + encodeURIComponent(q.toLowerCase()) + '/" target="_blank" rel="noopener" style="color:var(--forest);font-weight:600">Search "' + q + '" on CostPlusDrugs.com →</a></p>' +
+        '<p style="margin-top:12px;font-size:.75rem">You can also compare prices at <a href="https://www.goodrx.com/" target="_blank" rel="noopener" style="color:var(--forest)">GoodRx.com</a></p>' +
+        '</div>';
+    });
+}
+
+function renderDrugs(data, query) {
+  // Handle different response shapes
+  var drugs = Array.isArray(data) ? data : (data.medications || data.results || []);
+
+  if (!drugs || drugs.length === 0) {
+    document.getElementById('dpResults').innerHTML = '<div class="dp-empty">' +
+      '<p>No results found for "' + query + '" in the Cost Plus Drugs catalog.</p>' +
+      '<p style="margin-top:6px;font-size:.78rem">Cost Plus Drugs carries 2,000+ generic medications. If your drug isn\'t listed, it may be a brand-name only medication.</p>' +
+      '<p style="margin-top:8px"><a href="https://costplusdrugs.com/medications/" target="_blank" rel="noopener" style="color:var(--forest);font-weight:600">Browse all medications at CostPlusDrugs.com →</a></p>' +
+      '</div>';
+    return;
+  }
+
+  var html = '';
+  drugs.slice(0, 10).forEach(function(d) {
+    var name = d.medication_name || d.name || query;
+    var strength = d.strength || '';
+    var quantity = d.quantity_units || d.quantity || '';
+    var price = d.price || d.unit_price || '';
+    var url = d.url || 'https://costplusdrugs.com/medications/' + encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-')) + '/';
+
+    html += '<div class="dp-card">' +
+      '<div class="dp-name">' + name + '</div>' +
+      (strength ? '<div class="dp-strength">' + strength + (quantity ? ' · ' + quantity + ' count' : '') + '</div>' : '') +
+      '<div class="dp-prices">' +
+        (price ? '<div class="dp-price dp-cost-plus"><div class="dp-amount">$' + (typeof price === 'number' ? price.toFixed(2) : price) + '</div><div class="dp-src">Cost Plus Price</div></div>' : '') +
+      '</div>' +
+      '<a href="' + url + '" class="dp-link" target="_blank" rel="noopener">View on CostPlusDrugs.com →</a>' +
+      '</div>';
+  });
+
+  document.getElementById('dpResults').innerHTML = html;
+}
+
+EQ.init({
+  dp_title: 'Drug Price Check',
+  dp_title_es: 'Verificación de Precios de Medicamentos',
+  dp_sub: 'See what your medication actually costs. Transparent pricing from Cost Plus Drugs.',
+  dp_sub_es: 'Mira cuánto realmente cuesta tu medicamento. Precios transparentes de Cost Plus Drugs.',
+  dp_privacy: '<strong>100% private.</strong> Your search stays on your phone. We don\'t track, store, or sell any information about your medications.',
+  dp_privacy_es: '<strong>100% privado.</strong> Tu búsqueda se queda en tu teléfono. No rastreamos, almacenamos ni vendemos información sobre tus medicamentos.'
+}, { closingKey: 'footer_closing_survive' });
+</script>
+</body>
+</html>

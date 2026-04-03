@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Civic Engagement Dashboard — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Civic participation assessment by zip code. Citizenship, age distribution, language barriers, and political contribution data for voter outreach and census planning.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+</head>
+<body>
+<div class="page">
+  <div class="ds-hero">
+    <h1>Civic Engagement Dashboard</h1>
+    <p>For voter registration orgs, census outreach, community organizing. Civic participation potential by zip code.</p>
+    <div class="ds-search">
+      <input type="text" class="ds-zip" id="dsZip" maxlength="5" inputmode="numeric" placeholder="ZIP" onkeydown="if(event.key==='Enter')runDashboard()">
+      <button class="ds-go" onclick="runDashboard()">Generate Brief</button>
+    </div>
+  </div>
+  <div id="dsLoading" class="ds-loading" style="display:none">Querying federal data sources...</div>
+  <div id="dsResults" style="display:none"></div>
+</div>
+<script src="/js/shared.js"></script>
+<script src="/js/civic-intelligence.js"></script>
+<script src="/js/dashboard-engine.js"></script>
+<script>
+var DE = DashEngine;
+
+var CENSUS_VARS = ['B01003_001E','B19013_001E','B17001_002E','B17001_001E','B11001_001E','B03003_003E','B25064_001E','B05001_001E','B05001_002E','B05001_005E','B05001_006E','B01001_007E','B01001_008E','B01001_009E','B01001_010E','B01001_031E','B01001_032E','B01001_033E','B01001_034E','B16001_001E','B16001_002E','B16001_003E'];
+
+function runDashboard() {
+  var zip = document.getElementById('dsZip').value.trim();
+  if (!zip || zip.length !== 5) { alert('Enter a 5-digit zip code.'); return; }
+  document.getElementById('dsLoading').style.display = '';
+  document.getElementById('dsResults').style.display = 'none';
+  Promise.allSettled([
+    DE.queryCensus(zip, CENSUS_VARS),
+    DE.queryGeo(zip)
+  ]).then(function(r) {
+    var census=r[0].value||{},geo=r[1].value||{};
+    document.getElementById('dsLoading').style.display='none';
+    render(zip,census,geo);
+  });
+}
+
+function render(zip,c,geo) {
+  var h = DE.renderProfile(zip,c,geo);
+  var signals=[];
+  var pop=c.B01003_001E||0;
+  var natTotal=c.B05001_001E||0, nativeBorn=c.B05001_002E||0, nonCitizen=c.B05001_006E||0, naturalized=c.B05001_005E||0;
+  var citizenPct=DE.pct(nativeBorn+(naturalized||0),natTotal);
+  var nonCitPct=DE.pct(nonCitizen,natTotal);
+  var young18_24=(c.B01001_007E||0)+(c.B01001_008E||0)+(c.B01001_009E||0)+(c.B01001_010E||0)+(c.B01001_031E||0)+(c.B01001_032E||0)+(c.B01001_033E||0)+(c.B01001_034E||0);
+  var youngPct=DE.pct(young18_24,pop);
+  var langTot=c.B16001_001E||0, engOnly=c.B16001_002E||0, spanish=c.B16001_003E||0;
+  var nonEngPct=DE.pct(langTot-engOnly,langTot);
+  var cvap=Math.round((nativeBorn+(naturalized||0))*0.75); // rough CVAP estimate
+
+  h += DE.sectionOpen('🗳️','Civic Profile');
+  h += '<div class="ds-grid">';
+  h += DE.statCard(citizenPct+'%','Citizens');
+  h += DE.statCard(nonCitPct+'%','Non-Citizens');
+  h += DE.statCard(DE.fmt(naturalized||0),'Naturalized');
+  h += DE.statCard(youngPct+'%','Age 18-24');
+  h += DE.statCard(nonEngPct+'%','Non-English Speakers',nonEngPct>30?'highlight':'');
+  h += DE.statCard('~'+DE.fmt(cvap),'Est. Voting Age Citizens');
+  h += '</div>';
+
+  if (nonCitPct>30){signals.push({w:1});h+=DE.signalRow('📋',nonCitPct+'% non-citizen — naturalization pipeline opportunity ('+DE.fmt(nonCitizen)+' people)')}
+  if (youngPct>12){signals.push({w:1});h+=DE.signalRow('🟡',youngPct+'% age 18-24 — voter registration drive target ('+DE.fmt(young18_24)+' people)')}
+  if (nonEngPct>30){signals.push({w:2});h+=DE.signalRow('🔴',nonEngPct+'% non-English — all civic materials must be multilingual')}
+  h += DE.sectionClose();
+
+  var need=DE.calcNeedScore(signals);
+  h += DE.briefOpen('Civic Engagement Brief');
+  h += '<p><strong>Engagement potential: '+need.level+'.</strong></p>';
+  if (nonCitPct>20) h+='<p>🌎 <strong>Naturalization pipeline:</strong> '+DE.fmt(nonCitizen)+' non-citizens. Partner with immigration legal aid for citizenship workshops.</p>';
+  if (youngPct>10) h+='<p>🗳️ <strong>Youth registration:</strong> '+DE.fmt(young18_24)+' young adults 18-24. Campus registration drives, social media outreach, same-day registration awareness.</p>';
+  if (nonEngPct>25) h+='<p>📄 <strong>Language access:</strong> '+nonEngPct+'% non-English. Bilingual poll workers, translated ballots, language-line partnerships.</p>';
+  h+='<p>📍 <strong>CommUnity OS:</strong> Governance tracker and proposal system available for community organizing. Bilingual. Zero data collected.</p>';
+  h += DE.briefClose();
+
+  h += DE.actionLinks([
+    {href:'https://vote.gov/',label:'Register to vote →',primary:true,external:true},
+    {href:'/neighborhood.html?zip='+zip,label:'Full neighborhood profile →'},
+    {href:'/govern.html',label:'Governance tracker →'}
+  ]);
+  h += (typeof CivicIntel!=='undefined' ? CivicIntel.deidentNotice() : '') + DE.sourceNote('Sources: Census ACS 2022 (citizenship B05001, age B01001, language B16001). Zero data collected.');
+  document.getElementById('dsResults').innerHTML=h;
+  document.getElementById('dsResults').style.display='';
+  document.getElementById('dsResults').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+DE.autoLoad('dsZip', runDashboard);
+EQ.init({});
+</script>
+</body>
+</html>

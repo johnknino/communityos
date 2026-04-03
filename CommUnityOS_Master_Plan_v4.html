@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CommUnity OS — Master Plan v4.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#1a3c34;--forest:#2d5a47;--sage:#5a8a78;--cream:#faf7f2;--warm:#fff;--sand:#e8e0d4;--ink:#2c2418;--dim:#7a6e5f;--coral:#c4654a;--gold:#b8963e;--sky:#7aadcc}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);line-height:1.7}
+.page{max-width:740px;margin:0 auto;padding:16px}
+h1{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--deep)}
+p,li{font-size:.84rem;margin-bottom:8px}
+.hero{background:linear-gradient(160deg,var(--deep) 0%,var(--forest) 100%);border-radius:14px;padding:28px 24px;color:#fff;margin-bottom:20px}
+.hero h1{color:#fff;font-size:1.5rem;margin-bottom:4px}
+.hero .sub{font-size:.82rem;opacity:.8;margin-bottom:14px}
+.hero .stats{display:flex;flex-wrap:wrap;gap:8px}
+.hero .stat{font-size:.65rem;font-weight:600;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)}
+.section{margin:8px 0;border:1.5px solid var(--sand);border-radius:14px;overflow:hidden;background:var(--warm)}
+.section-header{padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.section-header:hover{background:rgba(90,138,120,.03)}
+.section-icon{font-size:1.1rem;flex-shrink:0}
+.section-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:600;color:var(--deep);flex:1}
+.section-badge{font-size:.55rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;color:#fff}
+.badge-complete{background:var(--sage)}.badge-current{background:var(--gold)}.badge-future{background:var(--sky)}.badge-core{background:var(--deep)}
+.chevron{font-size:.7rem;color:var(--dim);transition:transform .3s}
+.section.open .chevron{transform:rotate(90deg)}
+.section-body{max-height:0;overflow:hidden;transition:max-height .5s ease-out}
+.section.open .section-body{max-height:50000px}
+.section-content{padding:0 20px 20px}
+h3{font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--forest);margin:14px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:.72rem;margin:10px 0}
+th{text-align:left;padding:6px 8px;background:rgba(45,90,71,.06);color:var(--deep);font-weight:600;border-bottom:2px solid var(--sand)}
+td{padding:6px 8px;border-bottom:1px solid var(--sand);vertical-align:top;color:var(--ink)}
+tr:last-child td{border-bottom:none}
+.arc{display:flex;gap:4px;margin:12px 0;flex-wrap:wrap}
+.arc-item{font-size:.7rem;font-weight:600;padding:6px 12px;border-radius:8px;color:#fff;text-align:center;flex:1;min-width:80px}
+.nbf-box{background:var(--warm);border-radius:10px;padding:14px;margin:10px 0;border-left:4px solid var(--sage);font-size:.78rem}
+.nbf-box strong{color:var(--deep)}
+.check{color:var(--sage);font-weight:700}
+.warn{color:var(--coral)}
+code{font-family:'SF Mono','Fira Code',monospace;font-size:.72rem;background:rgba(45,90,71,.08);padding:1px 5px;border-radius:3px;color:var(--forest)}
+ul,ol{padding-left:20px}
+li{margin-bottom:4px;font-size:.8rem}
+.card{background:var(--cream);border-radius:10px;padding:14px;margin:8px 0;border:1px solid var(--sand)}
+.footer{text-align:center;padding:30px 0;font-size:.68rem;color:var(--dim);line-height:1.8}
+@media(max-width:600px){.page{padding:10px}table{font-size:.65rem}th,td{padding:4px 6px}}
+@media print{.section-body{max-height:none!important}.chevron{display:none}body{font-size:10pt}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+  <h1>CommUnity OS Master Plan</h1>
+  <div class="sub">v4.0 · March 29, 2026 · Sole authority for all builds</div>
+  <div class="stats">
+    <span class="stat">21 pages</span><span class="stat">40 plants</span><span class="stat">27 guides</span>
+    <span class="stat">50+ APIs</span><span class="stat">$7/year</span><span class="stat">1,700 seeds</span>
+    <span class="stat">7 principles</span><span class="stat">CARE/OCAP aligned</span>
+  </div>
+</div>
+
+<!-- WHY -->
+<div class="section open" id="s-why">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">⚡</span>
+    <span class="section-title">Why This Exists</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <p>The One Big Beautiful Bill Act (signed July 4, 2025) enacted the largest cuts to American safety net programs in history: $1 trillion from Medicaid, up to $187 billion from SNAP. Over 8,000 federal web pages and 3,000+ datasets removed or altered. The USDA eliminated its own 30-year hunger survey.</p>
+    <p>No civic technology platform bridges the gap from crisis survival to community governance. Every existing platform — Findhelp, 211, mRelief, Code for America, Decidim, Loomio, Mutual Aid Hub — occupies one segment. Nobody connects them.</p>
+    <p>CommUnity OS does. And the research confirms no one else has built it.</p>
+  </div></div>
+</div>
+
+<!-- ARC -->
+<div class="section" id="s-arc">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🌊</span>
+    <span class="section-title">The Civic Development Arc</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="arc">
+      <div class="arc-item" style="background:var(--coral)">Survive</div>
+      <div class="arc-item" style="background:var(--gold)">Understand</div>
+      <div class="arc-item" style="background:var(--sky)">Connect</div>
+      <div class="arc-item" style="background:#4a7c59">Grow</div>
+      <div class="arc-item" style="background:var(--deep)">Govern</div>
+    </div>
+    <p><strong>Survive:</strong> Food, health, emergencies, benefits, crisis hotlines. <strong>Understand:</strong> Money, tenant rights, employment, immigration. <strong>Connect:</strong> Neighbors, needs, offers, mutual aid. <strong>Grow:</strong> Container garden by zip code, food sovereignty. <strong>Govern:</strong> Evaluate leaders, track promises, assess programs, propose policy.</p>
+    <p style="font-size:.75rem;color:var(--dim)">Grow added March 28, 2026. Research: community gardens are the strongest documented entry point to civic engagement (D'Amore et al., 2025).</p>
+  </div></div>
+</div>
+
+<!-- CREDENTIALS -->
+<div class="section" id="s-cred">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🎓</span>
+    <span class="section-title">Builder Credentials & Institutional Roles</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <h3>Credential Stack</h3>
+    <table>
+      <tr><th>Credential</th><th>Year</th><th>CommUnity OS Function</th></tr>
+      <tr><td>MD — Loyola Stritch</td><td>2013</td><td>Clinical reasoning origin of N→B→F scaffold</td></tr>
+      <tr><td>Quality Matters — Backwards Design</td><td>2020</td><td>Every page maps outcome→assessment→tool</td></tr>
+      <tr><td>CITI Certified (SBE, RCR, COI, Privacy)</td><td>Current</td><td>IRB-approved civic reasoning research</td></tr>
+      <tr><td>Online Delivery Mode — CCC</td><td>2020</td><td>Formal online teaching qualification</td></tr>
+      <tr><td>Tenured Asst Professor — Daley/CCC</td><td>2022</td><td>Institutional credibility + HSI alignment</td></tr>
+      <tr><td>IRB-Approved Researcher</td><td>2026</td><td>Active study, evidence pipeline</td></tr>
+      <tr><td>HAPS Member</td><td>2021+</td><td>National assessment benchmarks</td></tr>
+      <tr><td>Copyright Holder (4 reg)</td><td>2026</td><td>IP protected, Berne Convention</td></tr>
+    </table>
+    <h3>Institutional Role Stack (Daley College / CCC)</h3>
+    <table>
+      <tr><th>Role</th><th>Institutional Function</th><th>CommUnity OS Function</th></tr>
+      <tr><td>Assessment Coordinator (multi-dept)</td><td>Assessment infrastructure across departments</td><td>Same architecture → evaluate, assess, audit pages; proves institutional transfer</td></tr>
+      <tr><td>Faculty Council Secretary</td><td>Documents governance decisions</td><td>Observed Grievance→Codification in real time → Principle 3</td></tr>
+      <tr><td>Honors College Co-Director</td><td>Integrative learning + civic formation</td><td>Civic formation pathway = Survive→Govern arc; Honors = first civic reasoners</td></tr>
+      <tr><td>SUH Principal Advocate</td><td>Sustainable Urban Horticulture certificate</td><td>grow.html = digital extension; CBG/Windy City Harvest partnership; Summer 2027 pilot</td></tr>
+      <tr><td>Tenure Assistance Mentor</td><td>Mentors junior faculty through tenure</td><td>Builder Need Not Operate at institutional scale — developing successors</td></tr>
+      <tr><td>PACC Committee</td><td>Program assessment + curriculum review</td><td>Assessment-first principle validated at policy level; same methodology as civic pressure index</td></tr>
+    </table>
+    <div class="nbf-box">
+      <strong>Why this matters:</strong> The platform emerged from simultaneously occupying governance, assessment, teaching, mentoring, and community partnership roles at one institution. Each role revealed a different face of the same problem: systems that should serve people but don't, because the data layer connecting need to response doesn't exist. The platform is the data layer.
+    </div>
+  </div></div>
+</div>
+
+<!-- 7 PRINCIPLES -->
+<div class="section" id="s-principles">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🏛️</span>
+    <span class="section-title">The Seven Principles (Fluid Democracy)</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <table>
+      <tr><th>#</th><th>Principle</th><th>Scholarly Foundation</th><th>Platform Operation</th></tr>
+      <tr><td>1</td><td>Infrastructure Precedes Authority</td><td>Winner (1980)</td><td>Survive/Understand built before Govern</td></tr>
+      <tr><td>2</td><td>Legitimacy Composited</td><td>Ostrom (1990); Arnstein (1969)</td><td>Scores from all members, no single voice dominates</td></tr>
+      <tr><td>3</td><td>Grievance → Codification</td><td>Tilly & Tarrow (2015); Kingdon (1984)</td><td>Discussion→needs→escalation→proposal→action</td></tr>
+      <tr><td>4</td><td>Access = Framing</td><td>Bowker & Star (1999); Sen; Kleine (2013)</td><td>What platform shows = what people know is possible</td></tr>
+      <tr><td>5</td><td><strong>Information Topology ★</strong></td><td><strong>NOVEL — no direct precedent</strong></td><td>Communities see each other's solutions; map IS topology</td></tr>
+      <tr><td>6</td><td>Systems Persist</td><td>Ostrom; Hess & Ostrom (2007)</td><td>$7/year. Federated Sheets. No single failure point</td></tr>
+      <tr><td>7</td><td>Builder Need Not Operate</td><td>Boyte (2004); Evans & Boyte (1992)</td><td>Communities run Sheets. Builder steps back</td></tr>
+    </table>
+    <p style="font-size:.72rem;color:var(--sage)">★ "Information topology" and the N→B→F civic reasoning scaffold are genuinely novel contributions with no direct precedent in published literature.</p>
+  </div></div>
+</div>
+
+<!-- DATA GOVERNANCE -->
+<div class="section" id="s-charter">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">📜</span>
+    <span class="section-title">Data Governance Charter (CARE + OCAP)</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <p style="font-size:.75rem;color:var(--dim)">Adapted from Carroll et al. (Data Science Journal, 2020) and Canada's OCAP principles.</p>
+    <p><strong>Collective Benefit:</strong> Community data serves communities first. Summaries flow up for resource allocation only — never surveillance or extraction.</p>
+    <p><strong>Authority to Control:</strong> Each community owns their Sheet. They decide what to collect, share, and when to disconnect.</p>
+    <p><strong>Responsibility:</strong> Builder maintains code + docs. Communities maintain local data. Neither owns the other's domain.</p>
+    <p><strong>Ethics:</strong> No personal data flows upward. Only counts, averages, patterns.</p>
+    <p><strong>Ownership + Possession:</strong> Community Sheet owned by community's Google account. Platform holds no copies. Revoke access anytime.</p>
+  </div></div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section" id="s-arch">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🔧</span>
+    <span class="section-title">Architecture (v29)</span>
+    <span class="section-badge badge-current">Current</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <h3>Frontend</h3>
+    <p>21 static HTML pages, bilingual. shared.js (1,129 lines). shared.css. plant_database.json (40 plants, 16 zones). No frameworks. Progressive enhancement.</p>
+    <h3>Backend</h3>
+    <p>Google Apps Script: Code.gs (router), CivicDataHub.gs (26 routes), CivicEscalation.gs (11 functions), CommunityRegistry.gs (routing). All data in Sheets.</p>
+    <h3>Federation (IMPORTRANGE Chain)</h3>
+    <p>Community → Ward → City → County → State → National → Global. Same 32-column Summary row at every level. No code. Spreadsheets referencing spreadsheets. Each level sovereign.</p>
+    <h3>Registry Routing</h3>
+    <p>One Netlify deployment. CommunityRegistry tab maps zip→script_url. New community joins by adding one row.</p>
+  </div></div>
+</div>
+
+<!-- CURRENT STATE -->
+<div class="section" id="s-state">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">📊</span>
+    <span class="section-title">Current State — 20 Pages, 40 Plants, 27 Guides</span>
+    <span class="section-badge badge-current">v29</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <p><strong>Pages:</strong> index, survive, vitals, understand, connect, govern, learn, grow, discuss, needs, evaluate, assess, audit, dashboard, intelligence, propose, knowledge, story, share, support, 404</p>
+    <h3>Key Features</h3>
+    <ul>
+      <li>Bilingual engine (EN/ES) + community translation pipeline</li>
+      <li><strong>Vitals check:</strong> camera PPG heart rate, manual BP/glucose/temp/BMI, N→B→F interpretation, zero storage</li>
+      <li><strong>Community Health Pulse:</strong> opt-in anonymous contribution, 3-digit ZIP, k≥11 suppression</li>
+      <li>40-plant garden guide with USDA zone API</li>
+      <li>27 N→B→F knowledge guides, full Spanish</li>
+      <li>15 crisis hotlines, tap-to-call</li>
+      <li>Discussion board (30s auto-refresh)</li>
+      <li>Needs/offers with cross-zip mutual aid</li>
+      <li>Leadership evaluation + program assessment + promise tracker</li>
+      <li>Escalation pipeline (community → federal)</li>
+      <li>Civic pressure index per zip</li>
+      <li>Privacy policy + medical disclaimer + data governance charter</li>
+      <li>WhatsApp sharing + native share</li>
+      <li>SHA-256 integrity hashing</li>
+      <li>Welcome banner + version badge</li>
+      <li>50+ API integrations (CivicDataHub.gs)</li>
+    </ul>
+  </div></div>
+</div>
+
+<!-- ROLES -->
+<div class="section" id="s-roles">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">👥</span>
+    <span class="section-title">Roles</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <h3>Community Data Steward</h3>
+    <p>One per community. Curates local pantry hours, crisis resources, intelligence briefings. The person who knows which pantry has diapers this week. First instance of Principle 7.</p>
+    <h3>Builder (Assessment Coordinator Role)</h3>
+    <p>Peer review, not central command. Communities operate. Builder reads the network's output and improves the design. Same complementary capacity model as the Alta Williams partnership. Work scales with pattern density, not community count.</p>
+    <h3>Community Governance Association (Future)</h3>
+    <p>Modeled on Decidim's Free Software Association. Community-governed body that controls platform direction after the builder steps back.</p>
+  </div></div>
+</div>
+
+<!-- BUILD PHASES -->
+<div class="section" id="s-phases">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🗺️</span>
+    <span class="section-title">Build Phases</span>
+    <span class="section-badge badge-current">Phase 2</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <h3><span class="check">✅</span> Phase 1: Chicago Proof — COMPLETE</h3>
+    <p>20 bilingual pages. 1,700 healthcare students at Daley College HSI. Deployed March 28, 2026.</p>
+    <h3>Phase 2: Network Foundation — CURRENT</h3>
+    <ul>
+      <li>CommunityRegistry routing</li><li>CivicDataHub (50+ APIs) tested</li>
+      <li>60608 seed content</li><li>Register 6 API keys</li><li>HCB fiscal sponsorship</li>
+      <li>Community Kit + IMPORTRANGE template (complete)</li><li>First non-Chicago community</li>
+    </ul>
+    <h3>Phase 3: Community Governance</h3>
+    <ul>
+      <li>Data Governance Charter on support.html <span class="check">✅</span></li>
+      <li>Binding institutional commitment layer</li><li>WhatsApp integration</li>
+      <li>.edu identity verification</li><li>WCAG 2.1 AA audit</li><li>10 languages</li>
+    </ul>
+    <h3>Phase 4: National Scale</h3>
+    <ul>
+      <li>100+ communities in registry</li><li>IMPORTRANGE chain operational</li>
+      <li>NSF CIVIC + Mozilla applications</li><li>First publication (JMBE)</li>
+    </ul>
+    <h3>Phase 5: Global</h3>
+    <ul>
+      <li>International communities (Spanish-speaking first)</li>
+      <li>Global IMPORTRANGE tier</li><li>Fluid Democracy paper published</li>
+    </ul>
+  </div></div>
+</div>
+
+<!-- FUNDING -->
+<div class="section" id="s-fund">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">💰</span>
+    <span class="section-title">Funding Sequence</span>
+    <span class="section-badge badge-future">Roadmap</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <table>
+      <tr><th>#</th><th>Source</th><th>Amount</th><th>Timeline</th></tr>
+      <tr><td>1</td><td>HCB Fiscal Sponsorship</td><td>Enables donations</td><td>Days</td></tr>
+      <tr><td>2</td><td>Mozilla Foundation Incubator</td><td>Democracy × AI</td><td>Next cohort</td></tr>
+      <tr><td>3</td><td>NSF CIVIC Stage 1</td><td>$75K / 6 months</td><td>Next solicitation</td></tr>
+      <tr><td>4</td><td>Ford Foundation</td><td>Civic + Tech</td><td>Rolling</td></tr>
+      <tr><td>5</td><td>NSF HSI EFRT</td><td>Research grant</td><td>Annual</td></tr>
+      <tr><td>6</td><td>Knight Foundation</td><td>Civic tech</td><td>When LOI reopens</td></tr>
+      <tr><td>7</td><td>MacKenzie Scott</td><td>$1M+ unrestricted</td><td>Long horizon</td></tr>
+      <tr><td>8</td><td>Robert Wood Johnson</td><td>Community health</td><td>Rolling</td></tr>
+    </table>
+  </div></div>
+</div>
+
+<!-- PUBLICATIONS -->
+<div class="section" id="s-pub">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">📄</span>
+    <span class="section-title">Publication Pipeline</span>
+    <span class="section-badge badge-future">Roadmap</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <table>
+      <tr><th>#</th><th>Paper</th><th>Journal</th><th>Status</th></tr>
+      <tr><td>1</td><td>A&P instructional architecture</td><td>JMBE / APE</td><td>IRB pending</td></tr>
+      <tr><td>2</td><td>Bio 233 ASM decomposition</td><td>JMBE</td><td>Matrix built</td></tr>
+      <tr><td>3a</td><td>Community transfer / assessment</td><td>AALHE / JCI</td><td>Accumulating</td></tr>
+      <tr><td>3b</td><td>Civic reasoning calibration</td><td>JCI / PUS</td><td>Design pending</td></tr>
+      <tr><td>4</td><td>Fluid Democracy theory</td><td>TBD</td><td>Foundations compiled</td></tr>
+    </table>
+    <h3>Additional Opportunities</h3>
+    <ul>
+      <li>Federated IMPORTRANGE chain (no academic precedent)</li>
+      <li>Gardens as civic entry points (D'Amore 2025)</li>
+      <li>N→B→F clinical → civic transfer (Geva-May 2005)</li>
+      <li>QM backwards design → civic infrastructure</li>
+      <li>Civic pressure index as bottom-up governance signal</li>
+    </ul>
+  </div></div>
+</div>
+
+<!-- RESEARCH MAPPING -->
+<div class="section" id="s-research">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🔬</span>
+    <span class="section-title">Research-to-Build Mapping</span>
+    <span class="section-badge badge-core">Evidence</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <table>
+      <tr><th>Research Finding</th><th>Platform Feature</th><th>Principle</th></tr>
+      <tr><td>Civic tech failure = economics (Stempeck 2018)</td><td>$7/year cost</td><td>6</td></tr>
+      <tr><td>CfA Brigade collapse: centralized fails</td><td>Federated IMPORTRANGE</td><td>7</td></tr>
+      <tr><td>CARE/OCAP: community data sovereignty</td><td>Each community owns Sheet</td><td>Charter</td></tr>
+      <tr><td>Decidim survived via governance association</td><td>Community Governance Assn</td><td>7</td></tr>
+      <tr><td>vTaiwan: "tiger without teeth"</td><td>Binding commitment layer</td><td>3</td></tr>
+      <tr><td>Porto Alegre PB: 75%→98% sewer</td><td>Civic Pressure Index</td><td>2</td></tr>
+      <tr><td>Gardens = social capital (D'Amore 2025)</td><td>grow.html</td><td>S→G→C</td></tr>
+      <tr><td>WhatsApp = Latina preferred channel</td><td>shareWhatsApp()</td><td>4</td></tr>
+      <tr><td>Login.gov excludes undocumented</td><td>.edu email verification</td><td>4</td></tr>
+      <tr><td>DHIS2: community health workers</td><td>Data Steward role</td><td>7</td></tr>
+      <tr><td>Star & Ruhleder: infrastructure visible on breakdown</td><td>N→B→F by design</td><td>5</td></tr>
+      <tr><td>MIT CSAIL: no blockchain voting</td><td>SHA-256 hashing instead</td><td>Security</td></tr>
+      <tr><td>QM backwards design</td><td>Every page = outcome→assessment→tool</td><td>Arch</td></tr>
+      <tr><td>Geva-May: clinical = policy reasoning</td><td>N→B→F transfers domains</td><td>5</td></tr>
+      <tr><td>Faculty Council Secretary</td><td>Escalation pipeline mirrors observed process</td><td>3</td></tr>
+      <tr><td>Assessment Coordinator (multi-dept)</td><td>evaluate + assess + audit pages</td><td>Arch</td></tr>
+      <tr><td>SUH Principal Advocate + CBG</td><td>grow.html → academic pathway</td><td>S→G→C</td></tr>
+      <tr><td>Honors Co-Director</td><td>Governance tools develop the evaluator</td><td>2</td></tr>
+      <tr><td>Tenure Mentor</td><td>Developing successors</td><td>7</td></tr>
+    </table>
+  </div></div>
+</div>
+
+<!-- DESIGN PRINCIPLES -->
+<div class="section" id="s-design">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🎨</span>
+    <span class="section-title">Design Principles</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <ol>
+      <li>From love, not antagonism</li><li>Plain language</li><li>No resume — shows what tools DO</li>
+      <li>Nothing requiring substantiation</li><li>Build gaps, curate excellence</li>
+      <li>Everything runs on N→B→F</li><li>Warm cream aesthetic</li><li>Bilingual from day one</li>
+      <li>Civic function, not institutional</li><li>Page IS the scaffold</li>
+      <li>Zip code is the seed</li><li>Map is the heartbeat</li>
+      <li>Builder Need Not Operate</li>
+    </ol>
+  </div></div>
+</div>
+
+<!-- RETIRED -->
+<div class="section" id="s-retired">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">🚫</span>
+    <span class="section-title">Retired Elements (Do Not Build)</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <ul>
+      <li>EquityOS branding</li><li>Firebase Spark</li><li>Twilio SMS</li><li>Supabase</li>
+      <li>AES-256 encryption</li><li>Centralized Sheet sharding</li>
+      <li>US Map as Phase 3 priority</li><li>Firebase anonymous auth</li>
+    </ul>
+  </div></div>
+</div>
+
+<!-- CLOSING -->
+<div class="section" id="s-closing">
+  <div class="section-header" onclick="toggle(this)">
+    <span class="section-icon">💡</span>
+    <span class="section-title">What Fluid Democracy Actually Is</span>
+    <span class="section-badge badge-core">Core</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <p>When all tools run simultaneously across communities nationwide: Maria finds food. Carlos reads his rights. A neighbor posts tomatoes. José grows peppers on his porch. Doris scores her alderman. Detroit sees Chicago's solution. Oakland builds a tenant tool. A foundation sees the data. A governor sees the story. Results flow to communities. Decisions come from evidence. No one controls it. Everyone owns their node.</p>
+    <p>Seven principles. Never named on the platform. Operating everywhere.</p>
+    <p>One idea. Every tool runs on it. <strong>How does this work. Where is it failing. What can we do about it.</strong></p>
+    <p>The content changes. The idea never does.</p>
+  </div></div>
+</div>
+
+<div class="footer">
+  NinoTech LLC · Amended March 2026 · Chicago, Illinois<br>
+  A nervous system for civic resilience. Built from love. Owned by the communities that use it.<br>
+  $7/year · 21 pages · 40 plants · 27 guides · 50+ data sources · Every zip code in America
+</div>
+
+</div>
+
+<script>
+function toggle(el) {
+  var s = el.parentElement;
+  s.classList.toggle('open');
+  var body = s.querySelector('.section-body');
+  if (s.classList.contains('open')) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  } else {
+    body.style.maxHeight = '0';
+  }
+}
+// Expand all for print
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.add('open'); });
+});
+</script>
+</body>
+</html>

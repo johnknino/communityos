@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Issues & Candidates — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Where do your candidates stand on the issues? Evaluate leaders across healthcare, education, housing, environment, and more. Track what they promised vs. what they did.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.is-hero{text-align:center;padding:28px 16px 16px}
+.is-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.is-hero p{font-size:.82rem;color:var(--body);line-height:1.7;max-width:500px;margin:0 auto 16px}
+.is-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.is-tab{font-family:var(--display);font-size:.65rem;font-weight:600;padding:7px 14px;border-radius:8px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.is-tab:hover{border-color:var(--sage)}
+.is-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+
+/* Issue Cards */
+.is-issue{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.is-issue h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:4px}
+.is-issue .ii-desc{font-size:.78rem;color:var(--body);line-height:1.6;margin-bottom:10px}
+.is-issue .ii-question{font-size:.82rem;font-weight:600;color:var(--deep);margin:8px 0 4px;font-style:italic}
+
+/* Candidate Position Grid */
+.cp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin:8px 0}
+.cp-card{background:#fff;border-radius:10px;padding:12px;border:1px solid var(--sand)}
+.cp-card .cp-name{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);display:flex;align-items:center;gap:6px}
+.cp-card .cp-party{font-size:.55rem;font-weight:700;padding:1px 6px;border-radius:3px}
+.cp-party.dem{background:rgba(59,130,246,.1);color:#2563eb}
+.cp-party.rep{background:rgba(239,68,68,.1);color:#dc2626}
+.cp-party.ind{background:rgba(107,114,128,.1);color:#4b5563}
+.cp-card .cp-stance{font-size:.78rem;color:var(--body);line-height:1.5;margin:6px 0}
+.cp-card .cp-source{font-size:.6rem;color:var(--dim)}
+.cp-card .cp-action{margin-top:6px;padding-top:6px;border-top:1px solid var(--sand);font-size:.72rem}
+.cp-card .cp-action-label{font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.cp-action-match{color:var(--forest);font-weight:600}
+.cp-action-gap{color:var(--coral);font-weight:600}
+.cp-action-unknown{color:var(--dim);font-style:italic}
+
+/* Behavioral Anchors */
+.ba-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:8px 0}
+.ba-level{padding:6px;border-radius:6px;text-align:center;font-size:.6rem;line-height:1.4;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+.ba-level:hover{border-color:var(--sage)}
+.ba-level.selected{border-color:var(--forest);background:rgba(91,140,122,.06)}
+.ba-level .ba-score{font-family:var(--display);font-size:.8rem;font-weight:800;display:block;margin-bottom:2px}
+.ba-0{background:rgba(239,68,68,.04);color:#991b1b}
+.ba-1{background:rgba(234,179,8,.04);color:#92400e}
+.ba-2{background:rgba(91,140,122,.04);color:#166534}
+.ba-3{background:rgba(34,197,94,.04);color:#15803d}
+
+/* Compose */
+.is-compose{background:var(--warm);border-radius:12px;padding:16px;margin:16px 0;border:1.5px solid var(--sage)}
+.is-compose h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.is-compose p{font-size:.75rem;color:var(--dim);line-height:1.6;margin-bottom:8px}
+.is-compose input,.is-compose textarea,.is-compose select{width:100%;font-family:var(--sans);font-size:.78rem;padding:10px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--deep);margin-bottom:6px;box-sizing:border-box}
+.is-compose textarea{min-height:60px;resize:vertical}
+.is-compose button{font-family:var(--display);font-size:.75rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer;width:100%}
+.is-note{font-size:.6rem;color:var(--dim);text-align:center;margin:16px 0;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="is-hero">
+    <h1 data-t="is_title">Issues & Candidates</h1>
+    <p data-t="is_sub">Democracy isn't one question with one answer. It's many questions, each requiring its own lens. Evaluate candidates on where they stand — then track whether they do what they said.</p>
+  </div>
+
+  <div class="is-tabs" id="issueTabs"></div>
+  <div id="issueContent"></div>
+
+  <div class="is-compose">
+    <h3>📋 Record a Candidate's Position</h3>
+    <p>When a candidate takes a public position on an issue — at a town hall, in a debate, on their website — record it here. The community builds the most complete picture of where every candidate stands.</p>
+    <input type="text" id="isCandidate" placeholder="Candidate name">
+    <select id="isIssue"><option value="">Select issue...</option></select>
+    <input type="text" id="isStance" placeholder="Their stated position (in their own words if possible)">
+    <input type="text" id="isSource" placeholder="Source (URL, event name, date)">
+    <select id="isAction"><option value="">Did they follow through?</option><option value="match">✅ Actions match position</option><option value="gap">❌ Actions contradict position</option><option value="unknown">❓ Too early to tell</option></select>
+    <textarea id="isEvidence" placeholder="Evidence for your assessment (optional)"></textarea>
+    <button onclick="submitPosition()">Record Position (costs 1 token)</button>
+  </div>
+
+  <div id="tokenArea"></div>
+  <p class="is-note" data-t="is_note">Positions are community-documented. Sources are required. The Bayesian scoring engine weights recent evaluations more heavily and requires 5+ independent submissions before displaying scores. No identifying data collected.</p>
+</div>
+
+<script src="/js/civic-tokens.js"></script>
+<script src="/js/community-api.js"></script>
+<script src="/js/shared.js"></script>
+<script>
+// ═══ ISSUE FRAMEWORK ═══
+// Inspired by Honors Hub CSLO: each issue is a "disciplinary lens"
+// Components map to N→B→F: stated position (Normal) → action gap (Broken) → accountability (Fix)
+var ISSUES = [
+  {
+    id: 'healthcare',
+    icon: '🏥',
+    name: 'Healthcare',
+    name_es: 'Salud',
+    question: 'Should healthcare be treated as a right or a market good?',
+    question_es: '¿La salud debe ser un derecho o un bien de mercado?',
+    anchors: [
+      {score:0, label:'Opposes expansion', desc:'Voted against or would repeal coverage expansions. No plan for uninsured.'},
+      {score:1, label:'Market-based', desc:'Supports private insurance solutions. Opposes public option.'},
+      {score:2, label:'Mixed approach', desc:'Supports ACA protections. Open to public option. Incremental expansion.'},
+      {score:3, label:'Universal access', desc:'Advocates universal coverage. Concrete plan with funding mechanism.'}
+    ]
+  },
+  {
+    id: 'education',
+    icon: '🎓',
+    name: 'Education',
+    name_es: 'Educación',
+    question: 'How should public education be funded and governed?',
+    question_es: '¿Cómo debe financiarse y gobernarse la educación pública?',
+    anchors: [
+      {score:0, label:'Defund/privatize', desc:'Supports vouchers that redirect public funds. Opposes teacher unions.'},
+      {score:1, label:'Choice-focused', desc:'Supports charter expansion. Favors competition over investment.'},
+      {score:2, label:'Reform within', desc:'Supports public schools with accountability. Some choice, increased funding.'},
+      {score:3, label:'Full investment', desc:'Advocates equitable funding formula. Reduces reliance on property tax. Supports teachers.'}
+    ]
+  },
+  {
+    id: 'housing',
+    icon: '🏠',
+    name: 'Housing',
+    name_es: 'Vivienda',
+    question: 'What should government do about housing affordability?',
+    question_es: '¿Qué debe hacer el gobierno sobre la vivienda accesible?',
+    anchors: [
+      {score:0, label:'No intervention', desc:'Opposes rent regulation. Relies entirely on market supply.'},
+      {score:1, label:'Light touch', desc:'Supports tax incentives for developers. Opposes rent control.'},
+      {score:2, label:'Active policy', desc:'Supports affordable housing mandates. Some tenant protections.'},
+      {score:3, label:'Housing as right', desc:'Advocates rent stabilization, community land trusts, right to counsel in eviction.'}
+    ]
+  },
+  {
+    id: 'environment',
+    icon: '🌳',
+    name: 'Environment',
+    name_es: 'Medio Ambiente',
+    question: 'How urgently should we address climate change and environmental justice?',
+    question_es: '¿Con qué urgencia debemos abordar el cambio climático?',
+    anchors: [
+      {score:0, label:'No action', desc:'Denies climate science or opposes regulation. Prioritizes fossil fuels.'},
+      {score:1, label:'Gradual transition', desc:'Acknowledges climate change. Opposes mandates. Market-based solutions only.'},
+      {score:2, label:'Active transition', desc:'Supports emissions targets. Invests in renewables. Environmental justice language.'},
+      {score:3, label:'Urgent transformation', desc:'Concrete decarbonization plan. Environmental justice enforcement. Frontline community investment.'}
+    ]
+  },
+  {
+    id: 'safety',
+    icon: '🔒',
+    name: 'Public Safety',
+    name_es: 'Seguridad Pública',
+    question: 'What is the right balance between policing and community investment?',
+    question_es: '¿Cuál es el equilibrio entre la policía y la inversión comunitaria?',
+    anchors: [
+      {score:0, label:'Law and order only', desc:'Increased police budgets. Opposes reform. No community investment.'},
+      {score:1, label:'Reform cautious', desc:'Supports training reform. Body cameras. Opposes budget reallocation.'},
+      {score:2, label:'Balanced approach', desc:'Supports accountability measures AND community violence intervention programs.'},
+      {score:3, label:'Transformative', desc:'Invests in root causes. Mental health response teams. Restorative justice. Measurable accountability.'}
+    ]
+  },
+  {
+    id: 'immigration',
+    icon: '🌎',
+    name: 'Immigration',
+    name_es: 'Inmigración',
+    question: 'How should the country handle immigration and immigrant communities?',
+    question_es: '¿Cómo debe el país manejar la inmigración?',
+    anchors: [
+      {score:0, label:'Enforcement only', desc:'Mass deportation. Opposes pathways. Opposes DACA.'},
+      {score:1, label:'Secure first', desc:'Border security priority. Legal immigration reform. No amnesty.'},
+      {score:2, label:'Comprehensive', desc:'Path to legal status. DACA protection. Border security with humanitarian standards.'},
+      {score:3, label:'Welcoming', desc:'Citizenship pathway. Sanctuary policies. Immigrant integration investment. Family reunification.'}
+    ]
+  },
+  {
+    id: 'economy',
+    icon: '💰',
+    name: 'Economic Justice',
+    name_es: 'Justicia Económica',
+    question: 'How should wealth and economic opportunity be distributed?',
+    question_es: '¿Cómo deben distribuirse la riqueza y las oportunidades?',
+    anchors: [
+      {score:0, label:'Trickle down', desc:'Tax cuts for wealthy. Deregulation. Opposes minimum wage increases.'},
+      {score:1, label:'Growth first', desc:'Pro-business. Some safety net. Moderate tax policy.'},
+      {score:2, label:'Shared prosperity', desc:'Living wage. Worker protections. Progressive taxation. Small business support.'},
+      {score:3, label:'Structural equity', desc:'Wealth tax. Worker ownership. Universal basic services. Anti-monopoly enforcement.'}
+    ]
+  }
+];
+
+var currentIssue = 'all';
+
+function init() {
+  var es = EQ && EQ.lang === 'es';
+
+  // Build tabs
+  var h = '<div class="is-tab active" onclick="filterIssue(\'all\',this)">All Issues</div>';
+  ISSUES.forEach(function(iss) {
+    h += '<div class="is-tab" onclick="filterIssue(\'' + iss.id + '\',this)">' + iss.icon + ' ' + (es && iss.name_es ? iss.name_es : iss.name) + '</div>';
+  });
+  document.getElementById('issueTabs').innerHTML = h;
+
+  // Populate issue dropdown
+  var sel = document.getElementById('isIssue');
+  ISSUES.forEach(function(iss) {
+    var opt = document.createElement('option');
+    opt.value = iss.id;
+    opt.textContent = iss.icon + ' ' + iss.name;
+    sel.appendChild(opt);
+  });
+
+  renderIssues();
+  CivicTokens.renderInviteForm('tokenArea');
+}
+
+function filterIssue(id, btn) {
+  currentIssue = id;
+  document.querySelectorAll('.is-tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderIssues();
+}
+
+function renderIssues() {
+  var es = EQ && EQ.lang === 'es';
+  var issues = currentIssue === 'all' ? ISSUES : ISSUES.filter(function(i) { return i.id === currentIssue; });
+  var h = '';
+
+  issues.forEach(function(iss) {
+    h += '<div class="is-issue">';
+    h += '<h3>' + iss.icon + ' ' + (es && iss.name_es ? iss.name_es : iss.name) + '</h3>';
+    h += '<div class="ii-question">' + (es && iss.question_es ? iss.question_es : iss.question) + '</div>';
+
+    // Behavioral anchors — the spectrum of positions
+    h += '<div class="ba-grid">';
+    iss.anchors.forEach(function(a) {
+      h += '<div class="ba-level ba-' + a.score + '" title="' + a.desc + '">';
+      h += '<span class="ba-score">' + a.score + '</span>';
+      h += a.label;
+      h += '</div>';
+    });
+    h += '</div>';
+
+    // Demo candidate positions (in production, these come from community data)
+    h += '<div class="cp-grid">';
+    h += renderDemoCandidates(iss.id);
+    h += '</div>';
+
+    h += '</div>';
+  });
+
+  document.getElementById('issueContent').innerHTML = h;
+}
+
+function renderDemoCandidates(issueId) {
+  // Demo data — in production, fetched from backend
+  var demos = {
+    healthcare: [
+      {name:'Candidate A',party:'dem',stance:'Supports expanding Medicaid to cover all uninsured residents. Co-sponsored the community health center funding bill.',source:'Town hall, March 2026',action:'match',evidence:'Voted yes on HB 1247 (Medicaid expansion)'},
+      {name:'Candidate B',party:'rep',stance:'Believes in market-based solutions. Supports health savings accounts and interstate insurance competition.',source:'Campaign website',action:'unknown',evidence:''}
+    ],
+    housing: [
+      {name:'Candidate A',party:'dem',stance:'Promised to introduce rent stabilization ordinance within first 100 days.',source:'Candidate forum, Feb 2026',action:'gap',evidence:'100 days passed. No ordinance introduced. Office says "still in development."'},
+      {name:'Candidate B',party:'rep',stance:'Supports fast-tracking zoning permits for new construction. Opposes rent control.',source:'Op-ed, Chicago Tribune',action:'match',evidence:'Consistently voted for zoning reform on the committee.'}
+    ]
+  };
+
+  var candidates = demos[issueId] || [];
+  if (!candidates.length) return '<div style="font-size:.75rem;color:var(--dim);padding:8px;text-align:center">No positions documented yet for this issue. Be the first to record one.</div>';
+
+  var h = '';
+  candidates.forEach(function(c) {
+    var pc = c.party === 'dem' ? 'dem' : c.party === 'rep' ? 'rep' : 'ind';
+    var ps = c.party === 'dem' ? 'D' : c.party === 'rep' ? 'R' : 'I';
+    h += '<div class="cp-card">';
+    h += '<div class="cp-name">' + c.name + ' <span class="cp-party ' + pc + '">' + ps + '</span></div>';
+    h += '<div class="cp-stance">' + c.stance + '</div>';
+    h += '<div class="cp-source">📎 ' + c.source + '</div>';
+    if (c.action) {
+      h += '<div class="cp-action">';
+      h += '<div class="cp-action-label">Position → Action</div>';
+      if (c.action === 'match') h += '<div class="cp-action-match">✅ Actions consistent with stated position</div>';
+      else if (c.action === 'gap') h += '<div class="cp-action-gap">❌ Actions contradict stated position</div>';
+      else h += '<div class="cp-action-unknown">❓ Too early to assess</div>';
+      if (c.evidence) h += '<div style="font-size:.68rem;color:var(--dim);margin-top:2px">' + c.evidence + '</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  return h;
+}
+
+function submitPosition() {
+  var candidate = document.getElementById('isCandidate').value.trim();
+  var issue = document.getElementById('isIssue').value;
+  var stance = document.getElementById('isStance').value.trim();
+  var source = document.getElementById('isSource').value.trim();
+
+  if (!candidate || !issue || !stance) {
+    alert('Candidate, issue, and their position are required.');
+    return;
+  }
+  if (!source) {
+    alert('A source is required. Where did they take this position? (URL, event, date)');
+    return;
+  }
+
+  CivicTokens.requireToken('evaluate', function(result) {
+    var data = {
+      action: 'submit_position',
+      candidate: candidate,
+      issue: issue,
+      stance: stance,
+      source: source,
+      follow_through: document.getElementById('isAction').value,
+      evidence: document.getElementById('isEvidence').value.trim()
+    };
+
+    if (typeof CommunityAPI !== 'undefined' && CommunityAPI.isConfigured()) {
+      CommunityAPI.smartFetch(CommunityAPI.endpoint(), {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify(data)
+      }).then(function() {
+        alert('Position recorded! The community can now see where this candidate stands.');
+        document.getElementById('isCandidate').value = '';
+        document.getElementById('isStance').value = '';
+        document.getElementById('isSource').value = '';
+        document.getElementById('isEvidence').value = '';
+      }).catch(function() { alert('Backend unavailable.'); });
+    } else {
+      alert('Position recorded locally. (Demo mode — connect a backend for persistent storage.)');
+    }
+  });
+}
+
+init();
+EQ.init({
+  is_title:'Issues & Candidates',is_title_es:'Temas y Candidatos',
+  is_sub:"Democracy isn't one question with one answer. It's many questions, each requiring its own lens. Evaluate candidates on where they stand — then track whether they do what they said.",
+  is_sub_es:'La democracia no es una pregunta con una respuesta. Son muchas preguntas, cada una con su propio lente. Evalúa candidatos según sus posiciones — y rastrea si cumplen.',
+  is_note:'Positions are community-documented. Sources are required. Bayesian scoring requires 5+ independent submissions.',
+  is_note_es:'Las posiciones son documentadas por la comunidad. Se requieren fuentes. La puntuación requiere 5+ envíos independientes.'
+});
+</script>
+</body>
+</html>

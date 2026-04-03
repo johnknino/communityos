@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org">
+<title>How's Our Neighborhood? — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Traffic-light view of how your community is doing. Survival needs, civic engagement, governance accountability — all in one view.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.dash-header{background:var(--deep);color:var(--cream);border-radius:16px;padding:24px;margin-bottom:20px;text-align:center}
+.dash-header h2{font-family:var(--display);font-size:1.3rem;font-weight:600;margin-bottom:4px}
+.dash-header .zip-display{font-size:.88rem;color:var(--mint);margin-bottom:12px}
+.dash-header .last-updated{font-size:.65rem;opacity:.6}
+
+.pulse-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.pulse-card{background:var(--warm);border-radius:14px;padding:18px 14px;text-align:center;border:1px solid var(--sand);position:relative;overflow:hidden}
+.pulse-card .pc-icon{font-size:1.6rem;margin-bottom:6px}
+.pulse-card .pc-value{font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1}
+.pulse-card .pc-label{font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.pulse-card .pc-trend{position:absolute;top:8px;right:10px;font-size:.7rem;font-weight:700}
+.trend-up{color:var(--forest)}.trend-down{color:var(--coral)}.trend-flat{color:var(--dim)}
+
+.domain-section{margin-bottom:20px}
+.domain-header-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.domain-header-bar h3{font-family:var(--sans);font-size:.92rem;font-weight:600;color:var(--deep);flex:1}
+.domain-light{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.light-green{background:var(--forest);box-shadow:0 0 8px rgba(45,90,78,.3)}
+.light-yellow{background:var(--gold);box-shadow:0 0 8px rgba(184,150,62,.3)}
+.light-red{background:var(--coral);box-shadow:0 0 8px rgba(196,101,74,.3)}
+.light-gray{background:#ccc}
+
+.indicator-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.indicator{background:var(--warm);border-radius:10px;padding:14px;border:1px solid var(--sand);border-left:4px solid #ccc}
+.indicator.green{border-left-color:var(--forest)}.indicator.yellow{border-left-color:var(--gold)}.indicator.red{border-left-color:var(--coral)}
+.indicator .ind-name{font-size:.78rem;font-weight:600;color:var(--deep);margin-bottom:2px}
+.indicator .ind-value{font-size:.72rem;color:var(--dim)}
+.indicator .ind-action{font-size:.68rem;color:var(--coral);margin-top:4px;font-style:italic;display:none}
+.indicator.red .ind-action,.indicator.yellow .ind-action{display:block}
+
+.action-items{background:rgba(196,101,74,.04);border:1px solid rgba(196,101,74,.15);border-radius:14px;padding:20px;margin:20px 0}
+.action-items h3{font-family:var(--sans);font-size:.88rem;font-weight:600;color:var(--coral);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.action-item{padding:10px 0;border-bottom:1px solid rgba(196,101,74,.1);font-size:.82rem;color:var(--body);line-height:1.6;display:flex;gap:8px}
+.action-item:last-child{border-bottom:none}
+.action-item .ai-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:6px}
+.action-item a{color:var(--forest);font-weight:500}
+
+.tools-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:20px 0}
+.tool-link{background:var(--warm);border:1px solid var(--sand);border-radius:12px;padding:14px;text-decoration:none;color:var(--deep);transition:.2s;text-align:center}
+.tool-link:hover{border-color:var(--sage);transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,60,52,.06)}
+.tool-link .tl-icon{font-size:1.4rem;margin-bottom:4px}
+.tool-link h4{font-size:.78rem;font-weight:600}
+.tool-link p{font-size:.65rem;color:var(--dim);margin-top:2px}
+
+.empty-state{text-align:center;padding:40px;color:var(--dim)}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:.88rem;margin-bottom:16px}
+.empty-state a{color:var(--forest);font-weight:500;text-decoration:none}
+.empty-state a:hover{text-decoration:underline}
+
+.zip-input{display:flex;gap:8px;justify-content:center;align-items:center;margin:20px 0}
+.zip-input input{font-family:var(--sans);font-size:1rem;padding:10px 14px;border:1.5px solid var(--sand);border-radius:10px;background:var(--cream);color:var(--ink);text-align:center;width:100px}
+.zip-input input:focus{outline:none;border-color:var(--sage)}
+.zip-input button{font-family:var(--sans);font-size:.82rem;font-weight:500;padding:10px 20px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+
+@media print{.site-nav,.tools-row,.zip-input{display:none}.dash-header{break-inside:avoid}}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/dashboard.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "How Is Our Neighborhood? — CommUnity OS", "url": "https://comm-unity-os.org/dashboard.html", "description": "Zip-code neighborhood dashboard. Do people have what they need? Are neighbors talking? Are leaders doing their jobs? Do we know our rights?", "inLanguage": ["en", "es"], "applicationCategory": "Civic Technology", "isAccessibleForFree": true}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Govern</div>
+    <h1 data-t="title">Community Dashboard</h1>
+    <div class="subtitle" data-t="subtitle">Traffic-light view of how your community is doing. Green means things are working. Yellow means something needs attention. Red means action is needed. Simple enough for a block club meeting. Backed by real data.</div>
+  </div>
+
+  <!-- ZIP ENTRY -->
+  <div id="zipEntry" class="fade-in fade-in-1" style="text-align:center;padding:20px 0">
+    <p style="font-size:.88rem;color:var(--dim);margin-bottom:12px" data-t="enter_zip">Enter your zip code to see community data</p>
+    <div class="zip-input">
+      <input type="text" id="dashZip" maxlength="5" inputmode="numeric" placeholder="60608">
+      <button onclick="loadDashboard()" data-t="load_btn">Load Dashboard</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (hidden until zip entered) -->
+  <div id="dashPanel" style="display:none">
+
+    <div class="dash-header fade-in">
+      <h2 data-t="dash_title">Community Health</h2>
+      <div class="zip-display" id="zipDisplay"></div>
+      <div class="last-updated" id="lastUpdated"></div>
+    </div>
+
+    <!-- PULSE ROW — top-level numbers -->
+    <div class="pulse-row fade-in fade-in-1" id="pulseRow"></div>
+
+    <!-- DOMAIN: SURVIVAL -->
+    <div class="domain-section fade-in fade-in-1" id="domSurvival">
+      <div class="domain-header-bar">
+        <div class="domain-light light-gray" id="lightSurvival"></div>
+        <h3 data-t="dom_survival">Survival & Basic Needs</h3>
+      </div>
+      <div class="indicator-grid" id="indSurvival"></div>
+    </div>
+
+    <!-- DOMAIN: CONNECTION -->
+    <div class="domain-section fade-in fade-in-2" id="domConnection">
+      <div class="domain-header-bar">
+        <div class="domain-light light-gray" id="lightConnection"></div>
+        <h3 data-t="dom_connection">Community Connection</h3>
+      </div>
+      <div class="indicator-grid" id="indConnection"></div>
+    </div>
+
+    <!-- DOMAIN: GOVERNANCE -->
+    <div class="domain-section fade-in fade-in-2" id="domGovernance">
+      <div class="domain-header-bar">
+        <div class="domain-light light-gray" id="lightGovernance"></div>
+        <h3 data-t="dom_governance">Governance & Accountability</h3>
+      </div>
+      <div class="indicator-grid" id="indGovernance"></div>
+    </div>
+
+    <!-- DOMAIN: KNOWLEDGE -->
+    <div class="domain-section fade-in fade-in-2" id="domKnowledge">
+      <div class="domain-header-bar">
+        <div class="domain-light light-gray" id="lightKnowledge"></div>
+        <h3 data-t="dom_knowledge">Community Knowledge</h3>
+      </div>
+      <div class="indicator-grid" id="indKnowledge"></div>
+    </div>
+
+    <!-- ACTION ITEMS -->
+    <div class="action-items fade-in fade-in-3" id="actionPanel" style="display:none">
+      <h3>⚠️ <span data-t="actions_title">Where Action Is Needed</span></h3>
+      <div id="actionList"></div>
+    </div>
+
+    <!-- CIVIC PRESSURE — escalation pipeline status -->
+    <div class="civic-pressure fade-in fade-in-3" id="pressurePanel" style="display:none">
+      <h3 data-t="pressure_title">Civic Pressure</h3>
+      <p style="font-size:.75rem;color:var(--dim);margin:-8px 0 14px;line-height:1.5" data-t="pressure_desc">How responsive is the system to this neighborhood? Based on unmet needs, unresolved escalations, and accountability scores.</p>
+      <div class="pressure-overall" id="pressureOverall"></div>
+      <div class="pressure-grid" id="pressureGrid"></div>
+      <div id="pressureEscalations" style="margin-top:14px"></div>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="fade-in fade-in-3">
+      <h3 style="font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--deep);margin:24px 0 10px" data-t="tools_title">Take Action</h3>
+      <div class="tools-row">
+        <a href="/discuss.html" class="tool-link"><div class="tl-icon">💬</div><h4 data-t="tl_discuss">Discussion</h4><p data-t="tl_discuss_d">Start a conversation</p></a>
+        <a href="/needs.html" class="tool-link"><div class="tl-icon">🤝</div><h4 data-t="tl_needs">Needs & Offers</h4><p data-t="tl_needs_d">Share or request help</p></a>
+        <a href="/evaluate.html" class="tool-link"><div class="tl-icon">📋</div><h4 data-t="tl_eval">Evaluate a Leader</h4><p data-t="tl_eval_d">Score on 5 criteria</p></a>
+        <a href="/audit.html" class="tool-link"><div class="tl-icon">🔎</div><h4 data-t="tl_audit">Accountability Audit</h4><p data-t="tl_audit_d">Domain-by-domain review</p></a>
+        <a href="/knowledge.html" class="tool-link"><div class="tl-icon">📖</div><h4 data-t="tl_knowledge">Share Knowledge</h4><p data-t="tl_knowledge_d">Write an N→B→F guide</p></a>
+        <a href="/assess.html" class="tool-link"><div class="tl-icon">🔍</div><h4 data-t="tl_assess">Assess a Program</h4><p data-t="tl_assess_d">Traffic-light scoring</p></a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+// Restore zip from localStorage
+var savedZip = localStorage.getItem('cos-zip') || '';
+if (savedZip) {
+  document.getElementById('dashZip').value = savedZip;
+  setTimeout(loadDashboard, 100);
+}
+
+async function loadDashboard() {
+  var zip = document.getElementById('dashZip').value.trim();
+  if (!/^\d{5}$/.test(zip)) { showToast('Enter a 5-digit zip code'); return; }
+  localStorage.setItem('cos-zip', zip);
+
+  document.getElementById('zipEntry').style.display = 'none';
+  document.getElementById('dashPanel').style.display = '';
+  document.getElementById('zipDisplay').textContent = 'ZIP ' + zip;
+  document.getElementById('lastUpdated').textContent = '';
+
+  // Show loading state
+  var domains = document.querySelectorAll('.domain-card .domain-status');
+  domains.forEach(function(d) { d.innerHTML = '<div class="loading-spinner"></div>'; });
+
+  var isEs = EQ && EQ.lang === 'es';
+
+  // Fetch all data sources in parallel
+  var [needsData, discussData, govData, modulesData] = await Promise.all([
+    safeFetch(API + '?action=get_listings&type=all&limit=500'),
+    safeFetch(API + '?action=getDiscussions&limit=200'),
+    safeFetch(API + '?action=get_governance_pulse'),
+    safeFetch(API + '?action=get_community_modules')
+  ]);
+
+  // ── PULSE ROW — top-level numbers ──
+  var needs = (needsData.listings || []);
+  var zipNeeds = needs.filter(function(n) { return n.zip === zip; });
+  var discussions = (discussData.discussions || []);
+  var zipDiscussions = discussions.filter(function(d) { return d.zip === zip; });
+  var totalEvals = (govData.evaluations || 0);
+  var totalAudits = (govData.audits || 0);
+  var totalModules = ((modulesData.modules || []).length) + 7; // +7 seed
+
+  var pulseHTML = '';
+  pulseHTML += pulseCard('🏘️', zipNeeds.length, isEs ? 'Publicaciones del barrio' : 'Neighborhood posts', '');
+  pulseHTML += pulseCard('💬', zipDiscussions.length, isEs ? 'Discusiones' : 'Discussions', '');
+  pulseHTML += pulseCard('📋', totalEvals, isEs ? 'Revisiones de líderes' : 'Leader checks', '');
+  pulseHTML += pulseCard('🔎', totalAudits, isEs ? 'Auditorías completadas' : 'Audits completed', '');
+  pulseHTML += pulseCard('📖', totalModules, isEs ? 'Guías de conocimiento' : 'Knowledge guides', '');
+  pulseHTML += pulseCard('📍', Object.keys(needs.reduce(function(a,n){ if(n.zip)a[n.zip]=1; return a; },{})).length, isEs ? 'Códigos postales activos' : 'Active zip codes', '');
+  document.getElementById('pulseRow').innerHTML = pulseHTML;
+
+  // ── SURVIVAL DOMAIN ──
+  var needsCats = {};
+  zipNeeds.forEach(function(n) { var c = n.category || 'other'; needsCats[c] = (needsCats[c] || 0) + 1; });
+  var survivalIndicators = [];
+  var catNames = { food: isEs?'Comida':'Food', health: isEs?'Salud':'Health', housing: isEs?'Vivienda':'Housing', legal: isEs?'Legal':'Legal', childcare: isEs?'Cuidado infantil':'Childcare', work: isEs?'Trabajo':'Work' };
+  ['food','health','housing','legal','childcare','work'].forEach(function(cat) {
+    var count = needsCats[cat] || 0;
+    var status = count === 0 ? 'green' : count <= 3 ? 'yellow' : 'red';
+    var action = count > 3 ? (isEs ? 'Alta demanda — se necesitan más recursos' : 'High demand — more resources needed') : count > 0 ? (isEs ? 'Necesidades activas — conectar vecinos' : 'Active needs — connect neighbors') : '';
+    survivalIndicators.push({ name: catNames[cat] || cat, value: count + (isEs ? ' publicaciones' : ' posts'), status: status, action: action });
+  });
+  renderDomain('Survival', survivalIndicators);
+
+  // ── CONNECTION DOMAIN ──
+  var recentDiscussions = zipDiscussions.filter(function(d) {
+    return d.timestamp && (Date.now() - new Date(d.timestamp).getTime()) < 7 * 86400000;
+  });
+  var uniquePosters = {};
+  zipDiscussions.forEach(function(d) { if (d.name) uniquePosters[d.name] = 1; });
+  var posterCount = Object.keys(uniquePosters).length;
+  var offersCount = zipNeeds.filter(function(n) { return n.type === 'offer'; }).length;
+
+  var connectionIndicators = [
+    { name: isEs ? 'Discusiones esta semana' : 'Discussions this week', value: recentDiscussions.length, status: recentDiscussions.length >= 3 ? 'green' : recentDiscussions.length > 0 ? 'yellow' : 'red', action: recentDiscussions.length === 0 ? (isEs ? 'Sin actividad reciente — inicia una conversación' : 'No recent activity — start a conversation') : '' },
+    { name: isEs ? 'Vecinos participando' : 'Neighbors participating', value: posterCount, status: posterCount >= 5 ? 'green' : posterCount > 0 ? 'yellow' : 'red', action: posterCount < 3 ? (isEs ? 'Pocos vecinos activos — invita a más' : 'Few active neighbors — invite more') : '' },
+    { name: isEs ? 'Ofertas compartidas' : 'Offers shared', value: offersCount, status: offersCount >= 3 ? 'green' : offersCount > 0 ? 'yellow' : 'red', action: offersCount === 0 ? (isEs ? 'Nadie ha compartido ofertas aún' : 'No one has shared offers yet') : '' }
+  ];
+  renderDomain('Connection', connectionIndicators);
+
+  // ── GOVERNANCE DOMAIN ──
+  var avgEval = govData.avgEvalScore || 0;
+  var avgAudit = govData.avgAuditScore || 0;
+  var greenPct = govData.greenPct || 0;
+  var assessCount = govData.assessments || 0;
+
+  var governanceIndicators = [
+    { name: isEs ? 'Revisiones de líderes' : 'Leader checks', value: totalEvals > 0 ? totalEvals + (isEs ? ' completadas' : ' done') : (isEs ? 'Ninguna aún' : 'None yet'), status: totalEvals >= 3 ? 'green' : totalEvals > 0 ? 'yellow' : 'red', action: totalEvals === 0 ? (isEs ? 'Sin revisiones — revisa a tu líder' : 'No checks yet — check your leader') : '' },
+    { name: isEs ? 'Puntaje promedio de líderes' : 'Avg leader score', value: totalEvals > 0 ? avgEval + '%' : '—', status: avgEval >= 70 ? 'green' : avgEval >= 50 ? 'yellow' : totalEvals > 0 ? 'red' : 'red', action: avgEval < 50 && totalEvals > 0 ? (isEs ? 'Los líderes tienen bajo puntaje — lleva la tarjeta a la reunión' : 'Leaders scoring low — bring the scorecard to the meeting') : '' },
+    { name: isEs ? 'Programas evaluados' : 'Programs assessed', value: assessCount > 0 ? assessCount + ' (' + greenPct + '% ' + (isEs ? 'verde' : 'green') + ')' : (isEs ? 'Ninguno aún' : 'None yet'), status: greenPct >= 60 ? 'green' : greenPct >= 30 ? 'yellow' : assessCount > 0 ? 'red' : 'red', action: assessCount === 0 ? (isEs ? 'Sin evaluaciones de programas' : 'No program assessments yet') : '' },
+    { name: isEs ? 'Auditorías de rendición de cuentas' : 'Accountability audits', value: totalAudits > 0 ? totalAudits + ' (avg ' + avgAudit + '%)' : (isEs ? 'Ninguna aún' : 'None yet'), status: avgAudit >= 70 ? 'green' : avgAudit >= 40 ? 'yellow' : totalAudits > 0 ? 'red' : 'red', action: totalAudits === 0 ? (isEs ? 'Sin auditorías — inicia una' : 'No audits — start one') : '' }
+  ];
+  renderDomain('Governance', governanceIndicators);
+
+  // ── KNOWLEDGE DOMAIN ──
+  var allModules = (modulesData.modules || []);
+  var domainCounts = { health:0, money:0, rights:0, power:0 };
+  allModules.forEach(function(m) { if (domainCounts[m.domain] !== undefined) domainCounts[m.domain]++; });
+  // Add seed counts
+  domainCounts.health += 2; domainCounts.money += 2; domainCounts.rights += 2; domainCounts.power += 1;
+
+  var knowledgeIndicators = [
+    { name: isEs ? 'Guías de salud' : 'Health guides', value: domainCounts.health, status: domainCounts.health >= 3 ? 'green' : domainCounts.health > 0 ? 'yellow' : 'red', action: '' },
+    { name: isEs ? 'Guías de dinero' : 'Money guides', value: domainCounts.money, status: domainCounts.money >= 3 ? 'green' : domainCounts.money > 0 ? 'yellow' : 'red', action: '' },
+    { name: isEs ? 'Guías de derechos' : 'Rights guides', value: domainCounts.rights, status: domainCounts.rights >= 3 ? 'green' : domainCounts.rights > 0 ? 'yellow' : 'red', action: '' },
+    { name: isEs ? 'Guías de poder' : 'Power guides', value: domainCounts.power, status: domainCounts.power >= 3 ? 'green' : domainCounts.power > 0 ? 'yellow' : 'red', action: domainCounts.power < 2 ? (isEs ? 'Se necesitan más guías de poder cívico' : 'More civic power guides needed') : '' }
+  ];
+  renderDomain('Knowledge', knowledgeIndicators);
+
+  // ── ACTION ITEMS — aggregate all red/yellow indicators ──
+  var allIndicators = survivalIndicators.concat(connectionIndicators, governanceIndicators, knowledgeIndicators);
+  var actions = allIndicators.filter(function(i) { return i.status === 'red' && i.action; });
+  if (actions.length > 0) {
+    document.getElementById('actionPanel').style.display = '';
+    document.getElementById('actionList').innerHTML = actions.map(function(a) {
+      return '<div class="action-item"><div class="ai-dot"></div><div><strong>' + a.name + '</strong> — ' + a.action + '</div></div>';
+    }).join('');
+  }
+
+  // ── CIVIC PRESSURE — escalation pipeline ──
+  loadCivicPressure(zip, isEs);
+}
+
+async function loadCivicPressure(zip, isEs) {
+  try {
+    var [pressure, agg] = await Promise.all([
+      safeFetch(API + '?action=get_civic_pressure&zip=' + zip),
+      safeFetch(API + '?action=get_aggregated_issues&zip=' + zip)
+    ]);
+
+    if (!pressure || !pressure.domains) return;
+
+    document.getElementById('pressurePanel').style.display = '';
+
+    // Overall score
+    var ov = pressure.overall || { score: 0, status: 'green' };
+    document.getElementById('pressureOverall').className = 'pressure-overall ' + ov.status;
+    document.getElementById('pressureOverall').innerHTML =
+      '<div class="p-big">' + ov.score + '</div>' +
+      '<div class="p-sublabel">' + (isEs ? 'Puntuación de Presión Cívica' : 'Civic Pressure Score') + '</div>';
+
+    // Domain cards
+    var domainMap = {
+      survive: { en: 'Survive', es: 'Sobrevivir' },
+      understand: { en: 'Understand', es: 'Comprender' },
+      connect: { en: 'Connect', es: 'Conectar' },
+      govern: { en: 'Govern', es: 'Gobernar' }
+    };
+    var gridHTML = '';
+    ['survive', 'understand', 'connect', 'govern'].forEach(function(d) {
+      var dm = pressure.domains[d];
+      if (!dm) return;
+      var label = (domainMap[d] || {})[isEs ? 'es' : 'en'] || d;
+      gridHTML += '<div class="pressure-card ' + dm.status + '">' +
+        '<div class="p-score">' + dm.score + '</div>' +
+        '<div class="p-label">' + label + '</div>' +
+        '<div class="p-detail">' + (dm.detail || '') + '</div></div>';
+    });
+    document.getElementById('pressureGrid').innerHTML = gridHTML;
+
+    // Aggregated escalation issues
+    if (agg && agg.issues && agg.issues.length > 0) {
+      var escHTML = '<div style="font-size:.75rem;font-weight:600;color:var(--deep);margin-bottom:8px">' +
+        (isEs ? 'Problemas agregados' : 'Aggregated Issues') + '</div>';
+      agg.issues.forEach(function(issue) {
+        var isEsc = issue.escalation_recommended === 'YES';
+        escHTML += '<div style="background:var(--cream);border-radius:8px;padding:10px 12px;margin-bottom:6px;border-left:3px solid ' +
+          (isEsc ? 'var(--coral)' : 'var(--gold)') + ';font-size:.78rem;color:var(--ink)">' +
+          '<strong>' + (issue.category || '') + '</strong> — ' + (issue.count || 0) + ' ' +
+          (isEs ? 'sin resolver' : 'unresolved') + ', ' + (issue.oldest_days || 0) + ' ' +
+          (isEs ? 'días el más antiguo' : 'days oldest');
+        if (isEsc) {
+          escHTML += ' <span class="esc-status esc-unresolved">' +
+            (isEs ? 'Escalación recomendada' : 'Escalation recommended') + '</span>';
+        }
+        escHTML += '</div>';
+      });
+      document.getElementById('pressureEscalations').innerHTML = escHTML;
+    }
+  } catch(e) {
+    // Civic pressure data not available yet — silently skip
+  }
+}
+
+function renderDomain(name, indicators) {
+  var container = document.getElementById('ind' + name);
+  var light = document.getElementById('light' + name);
+
+  var greens = indicators.filter(function(i) { return i.status === 'green'; }).length;
+  var reds = indicators.filter(function(i) { return i.status === 'red'; }).length;
+  var total = indicators.length;
+
+  // Domain-level traffic light
+  var domainStatus = greens === total ? 'green' : reds > total / 2 ? 'red' : 'yellow';
+  light.className = 'domain-light light-' + domainStatus;
+
+  container.innerHTML = indicators.map(function(ind) {
+    return '<div class="indicator ' + ind.status + '">' +
+      '<div class="ind-name">' + ind.name + '</div>' +
+      '<div class="ind-value">' + ind.value + '</div>' +
+      '<div class="ind-action">' + (ind.action || '') + '</div></div>';
+  }).join('');
+}
+
+function pulseCard(icon, value, label, trend) {
+  var trendHTML = '';
+  if (trend === 'up') trendHTML = '<div class="pc-trend trend-up">▲</div>';
+  else if (trend === 'down') trendHTML = '<div class="pc-trend trend-down">▼</div>';
+  return '<div class="pulse-card">' + trendHTML +
+    '<div class="pc-icon">' + icon + '</div>' +
+    '<div class="pc-value" style="color:var(--forest)">' + value + '</div>' +
+    '<div class="pc-label">' + label + '</div></div>';
+}
+
+async function dashFetch(url) {
+  try { var r = await fetch(url); return await r.json(); }
+  catch(e) { return {}; }
+}
+
+function showToast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 3000); }
+
+EQ.init({
+  en: {
+    arc_label:'Govern', title:'How\'s Our Neighborhood?',
+    subtitle:'Green means things are working. Yellow means something needs attention. Red means it\'s time to act. Enter your zip code.',
+    enter_zip:'What\'s your zip code?', load_btn:'Show Me',
+    dash_title:'Our Neighborhood',
+    dom_survival:'Do People Have What They Need?', dom_connection:'Are Neighbors Talking?',
+    dom_governance:'Are Leaders Doing Their Jobs?', dom_knowledge:'Do We Know Our Rights?',
+    actions_title:'What Needs Attention', tools_title:'Do Something About It',
+    pressure_title:'Civic Pressure', pressure_desc:'How responsive is the system to this neighborhood? Based on unmet needs, unresolved escalations, and accountability scores.',
+    tl_discuss:'Start a Conversation', tl_discuss_d:'Talk with your neighbors',
+    tl_needs:'Help or Get Help', tl_needs_d:'Share what you have or need',
+    tl_eval:'Score Your Leader', tl_eval_d:'5 simple questions',
+    tl_audit:'Check Their Promises', tl_audit_d:'Did they do what they said?',
+    tl_knowledge:'Share What You Know', tl_knowledge_d:'Write a guide for neighbors',
+    tl_assess:'Is That Program Working?', tl_assess_d:'Green / yellow / red'
+  },
+  es: {
+    arc_label:'Gobernar', title:'¿Cómo Va Nuestro Vecindario?',
+    subtitle:'Verde significa que las cosas funcionan. Amarillo significa que algo necesita atención. Rojo significa que es hora de actuar. Ingresa tu código postal.',
+    enter_zip:'¿Cuál es tu código postal?', load_btn:'Mostrar',
+    dash_title:'Nuestro Vecindario',
+    dom_survival:'¿La Gente Tiene Lo Que Necesita?', dom_connection:'¿Los Vecinos Están Hablando?',
+    dom_governance:'¿Los Líderes Están Haciendo Su Trabajo?', dom_knowledge:'¿Conocemos Nuestros Derechos?',
+    actions_title:'Qué Necesita Atención', tools_title:'Haz Algo al Respecto',
+    pressure_title:'Presión Cívica', pressure_desc:'¿Qué tan receptivo es el sistema con este vecindario? Basado en necesidades no satisfechas, escalaciones sin resolver y puntajes de rendición de cuentas.',
+    tl_discuss:'Inicia una Conversación', tl_discuss_d:'Habla con tus vecinos',
+    tl_needs:'Ayuda o Pide Ayuda', tl_needs_d:'Comparte lo que tienes o necesitas',
+    tl_eval:'Califica a Tu Líder', tl_eval_d:'5 preguntas simples',
+    tl_audit:'Revisa Sus Promesas', tl_audit_d:'¿Hicieron lo que dijeron?',
+    tl_knowledge:'Comparte Lo Que Sabes', tl_knowledge_d:'Escribe una guía para vecinos',
+    tl_assess:'¿Ese Programa Funciona?', tl_assess_d:'Verde / amarillo / rojo'
+  }
+}, { footer: true, alertPage: 'dashboard' });
+</script>
+</body>
+</html>

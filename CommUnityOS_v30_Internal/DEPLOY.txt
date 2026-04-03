@@ -1,0 +1,194 @@
+╔══════════════════════════════════════════════════════════════╗
+║  CommUnity OS v30 — Complete Deployment Guide                ║
+║  March 30, 2026                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+This zip contains EVERYTHING. Follow these steps in order.
+Estimated time: 20 minutes.
+
+
+═══════════════════════════════════════════
+STEP 1: APPS SCRIPT (stops the error emails)
+═══════════════════════════════════════════
+
+Open your Google Sheet → Extensions → Apps Script
+
+A. DELETE ALL TRIGGERS FIRST
+   - Click the clock icon (Triggers) in the left sidebar
+   - Delete every trigger (trash icon on each one)
+   - This stops the failing fetch311Data immediately
+
+B. REPLACE ALL 7 FILES
+   The files are in the /apps-script/ folder in this zip.
+   For each file below, click the matching tab in the
+   Script Editor, select all (Ctrl+A), delete, and paste
+   the new contents:
+
+   Tab name              File to paste
+   ─────────────────     ──────────────────────────────
+   Code.gs               apps-script/Code.gs         (1,742 lines)
+   CivicDataHub.gs       apps-script/CivicDataHub.gs (605 lines)
+   CivicEscalation.gs    apps-script/CivicEscalation.gs (563 lines)
+   CommunityRegistry.gs  apps-script/CommunityRegistry.gs (200 lines)
+   CommunityReporter.gs  apps-script/CommunityReporter.gs (325 lines)
+   CommunityHealthPulse.gs apps-script/CommunityHealthPulse.gs (318 lines)
+   MasterFeed.gs         apps-script/MasterFeed.gs   (711 lines)
+
+   If a tab doesn't exist yet, click "+" to add a new
+   script file and name it (without the .gs extension).
+
+C. RUN initializeCommunity() ONCE
+   - Select "initializeCommunity" from the function dropdown
+   - Click Run
+   - Authorize when prompted
+   - This creates any missing Sheet tabs
+
+D. UPDATE THE EXISTING DEPLOYMENT (keeps same URL)
+   ⚠ IMPORTANT: Do NOT create a new deployment.
+   19 HTML pages hardcode your current URL.
+
+   - Click Deploy → Manage Deployments
+   - Click the pencil icon on your existing deployment
+   - Change "Version" to "New version"
+   - Click Deploy
+
+   Your URL stays the same. All pages keep working.
+
+E. SET NEW TRIGGERS
+   - Click the clock icon (Triggers) → Add Trigger
+
+   Function              Event source    Type      Time
+   ─────────────────     ──────────     ─────     ────────
+   fetch311Data          Time-driven     Day       9-10 AM
+   expireListings        Time-driven     Day       Midnight-1 AM
+   recalcStats           Time-driven     Week      Sunday midnight
+   checkAllResources     Time-driven     Week      Sunday 2-3 AM
+
+   That's it. Error emails stop. 311 data fetches in
+   30 seconds instead of timing out at 6 minutes.
+
+
+═══════════════════════════════════════════
+STEP 2: DEPLOY WEBSITE (Netlify or Cloudflare Pages)
+═══════════════════════════════════════════
+
+Everything EXCEPT the /apps-script/ folder goes to
+your hosting provider. The site root contains:
+
+   22 HTML pages
+   js/shared.js          (1,758 lines)
+   css/shared.css        (503 lines)
+   data/                 (knowledge_guides.json + 3 others)
+   _headers              (CSP + security headers)
+
+Option A: Netlify (current)
+   - Go to app.netlify.com → your site → Deploys
+   - Drag and drop the site files (NOT the apps-script folder)
+   - The _headers file is picked up automatically
+
+Option B: Cloudflare Pages (unlimited bandwidth, free)
+   - Go to dash.cloudflare.com → Workers & Pages → Create
+   - Upload the same files
+   - _headers format works on Cloudflare Pages too
+   - Custom domain: comm-unity-os.org → DNS settings
+
+
+═══════════════════════════════════════════
+STEP 3: VERIFY
+═══════════════════════════════════════════
+
+After both deploys, check these:
+
+□ Visit comm-unity-os.org — site loads, no console errors
+□ Open discuss.html — enter a zip, posts load
+□ Open DevTools → Application → IndexedDB → "cos-cache"
+    should appear after first page load
+□ Check Response Headers (DevTools → Network → any page
+    → Headers): Content-Security-Policy should be present
+□ Wait for next trigger time — no error email
+□ Open knowledge.html — guides should be shorter, simpler
+
+
+═══════════════════════════════════════════
+WHAT CHANGED IN v30 (vs what's currently live)
+═══════════════════════════════════════════
+
+FRONTEND (22 HTML pages + shared infrastructure):
+  • _headers file — CSP blocks XSS, clickjacking, MIME sniffing
+  • IndexedDB persistent client cache (survives browser restart)
+  • cachedFetch on discuss, needs, propose (70% fewer server reads)
+  • Page-flow tracking for Arnstein arc research (anonymous)
+  • Deliberation template on propose.html (5 Fishkin fields)
+  • 27 knowledge guides rewritten: SMOG 10.1 → 7.1 (3 grade levels)
+  • 27 Spanish translations updated to match simplified English
+  • vitals.html interpretations rewritten: SMOG 8.9 → 6.7
+  • contribute.html (page 22) for open source contributors
+  • setup.sh — interactive setup script for new communities
+  • Accessibility: skip-nav, ARIA, focus-visible, reduced-motion
+  • PWA install prompt, offline detection, API health monitoring
+  • Arc progress indicator, first-visit onboarding overlay
+  • Print CSS, Schema.org, SEO meta on every page
+  • 74 polish items resolved
+
+BACKEND (7 Apps Script files, v1.5):
+  • CacheService read cache — 14+ functions now cache-first
+  • Rate limiting — 6 write functions (20 posts/hr, 10 evals/hr, etc.)
+  • Cache invalidation — 14+ write functions clear cache after writes
+  • fetch311Data fixed (7-day window, 1K limit, batch write)
+  • checkAllResources fixed (fetchAll parallel + 4-min safety timer)
+  • recalcStats bug fixed (was reading Stats twice instead of Users)
+  • expireListings now invalidates cache after expiring
+  • CommunityReporter.gs — 8 reads converted to cachedSheetRead
+  • CivicEscalation weeklyAggregation — cachedSheetRead + batch write
+
+
+═══════════════════════════════════════════
+FILES IN THIS ZIP
+═══════════════════════════════════════════
+
+DEPLOY TO HOSTING (Netlify/Cloudflare):
+  22 HTML pages (index through 404)
+  js/shared.js
+  css/shared.css
+  data/knowledge_guides.json (rewritten EN + ES, SMOG 7.1)
+  data/knowledge_guides_original.json (backup)
+  data/plant_database.json
+  data/audit_templates.json
+  _headers (security headers)
+  setup.sh (interactive setup for new communities)
+
+PASTE INTO APPS SCRIPT:
+  apps-script/Code.gs
+  apps-script/CivicDataHub.gs
+  apps-script/CivicEscalation.gs
+  apps-script/CommunityRegistry.gs
+  apps-script/CommunityReporter.gs
+  apps-script/CommunityHealthPulse.gs
+  apps-script/MasterFeed.gs
+
+REFERENCE (do not deploy):
+  master-plan.html (CommUnity OS Master Plan v5)
+  research-synthesis.md (6 research threads → build actions)
+  DEPLOY.txt (this file)
+
+
+═══════════════════════════════════════════
+FOR NEW COMMUNITIES (not you — the next person)
+═══════════════════════════════════════════
+
+If someone else wants to set up CommUnity OS for their
+own community, they run:
+
+  bash setup.sh
+
+It walks them through every step interactively:
+  - Create a Google Sheet
+  - Paste 7 Apps Script files
+  - Run initializeCommunity()
+  - Deploy the API
+  - Set triggers
+  - Deploy the website
+
+They do not need to contact you. They do not need your
+permission. They do not need to understand the code.
+The setup script IS the builder not operating.

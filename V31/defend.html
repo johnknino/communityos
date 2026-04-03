@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Defend — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Defend — CommUnity OS">
+<meta property="og:description" content="Free dispute letter generator. Fight insurance denials, credit errors, debt collection, tenant screening mistakes, and medical billing problems.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/defend.html">
+<meta name="description" content="Generate free dispute and appeal letters. Insurance denials, credit report errors, debt collection, tenant screening, medical billing, and background check errors. Bilingual English/Spanish.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="canonical" href="https://comm-unity-os.org/defend.html">
+<style>
+.defend-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:16px 0}
+.dt-btn{background:var(--warm);border:1.5px solid var(--sand);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:.25s;font-family:var(--sans)}
+.dt-btn:hover{border-color:var(--sage);transform:translateY(-1px)}
+.dt-btn.active{border-color:var(--forest);background:rgba(45,90,78,.06)}
+.dt-icon{font-size:1.3rem;margin-bottom:4px}
+.dt-name{font-size:.72rem;font-weight:600;color:var(--deep)}
+.dt-stat{font-size:.52rem;color:var(--dim);margin-top:2px}
+.defend-form{background:var(--warm);border-radius:14px;padding:20px;margin:16px 0;border:1px solid var(--sand);display:none}
+.defend-form.active{display:block}
+.defend-form h3{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:4px}
+.defend-form .df-sub{font-size:.75rem;color:var(--dim);margin-bottom:14px;line-height:1.5}
+.df-field{margin-bottom:12px}
+.df-field label{display:block;font-size:.72rem;font-weight:600;color:var(--deep);margin-bottom:3px}
+.df-field input,.df-field textarea,.df-field select{width:100%;font-family:var(--sans);font-size:.85rem;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:#fff;color:var(--ink);transition:.2s}
+.df-field input:focus,.df-field textarea:focus,.df-field select:focus{outline:none;border-color:var(--sage)}
+.df-field textarea{resize:vertical;min-height:60px}
+.df-field .df-hint{font-size:.62rem;color:var(--dim);margin-top:2px}
+.df-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.df-btn{font-family:var(--display);font-size:.75rem;font-weight:600;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;transition:.2s}
+.df-btn-primary{background:var(--forest);color:#fff}.df-btn-primary:hover{background:var(--deep)}
+.df-btn-outline{background:transparent;color:var(--forest);border:1.5px solid var(--sage)}.df-btn-outline:hover{background:rgba(45,90,78,.04)}
+.defend-preview{background:#fff;border:1px solid var(--sand);border-radius:12px;padding:24px;margin:16px 0;display:none;font-family:var(--serif);font-size:.88rem;line-height:1.8;color:var(--ink)}
+.defend-preview.active{display:block}
+.defend-preview .ltr-date{margin-bottom:16px;color:var(--dim)}
+.defend-preview .ltr-to{margin-bottom:16px}
+.defend-preview .ltr-re{font-weight:600;margin-bottom:16px}
+.defend-preview .ltr-body p{margin-bottom:12px}
+.defend-preview .ltr-sig{margin-top:24px;font-weight:600}
+.defend-preview .ltr-enc{margin-top:12px;font-size:.78rem;color:var(--dim);font-style:italic}
+.deadline-calc{background:rgba(212,112,74,.06);border:1px solid rgba(212,112,74,.12);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.78rem}
+.deadline-calc strong{color:var(--coral)}
+.rights-box{background:rgba(91,140,122,.06);border-left:3px solid var(--sage);border-radius:0 10px 10px 0;padding:12px 14px;margin:10px 0;font-size:.75rem;color:var(--body);line-height:1.6}
+.rights-box strong{color:var(--forest)}
+@media print{
+  .site-nav,.defend-types,.defend-form,.df-actions,.page-header,.site-footer,.section-bleed-down,.constellation-section,.cd-prompt,.skip-nav,.rights-box,.deadline-calc,.dt-stat{display:none!important}
+  .defend-preview{display:block!important;border:none;padding:0;margin:0;font-size:11pt}
+  .defend-preview .ltr-body p{margin-bottom:10pt}
+  @page{size:letter;margin:1in}
+  body{background:#fff!important}
+  body::before{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="defend_arc">⚖️ ACT</div>
+    <h1 data-t="defend_title">Defend Yourself</h1>
+    <p class="subtitle" data-t="defend_sub">Free letters to fight errors in insurance, credit, debt, housing, medical bills, and background checks.</p>
+  </div>
+
+  <div class="section fade-in">
+    <p style="font-size:.82rem;color:var(--body);line-height:1.7;margin-bottom:4px" data-t="defend_intro">Choose what you're fighting. Answer a few questions. Get a letter you can print or save as PDF. Everything stays on your phone — nothing is stored or sent anywhere.</p>
+  </div>
+
+  <!-- Type selector -->
+  <div class="defend-types fade-in" id="defendTypes">
+    <div class="dt-btn" data-type="insurance" onclick="selectType('insurance')">
+      <div class="dt-icon">🏥</div>
+      <div class="dt-name" data-t="dt_insurance">Insurance Denial</div>
+      <div class="dt-stat">~45% win on appeal</div>
+    </div>
+    <div class="dt-btn" data-type="credit" onclick="selectType('credit')">
+      <div class="dt-icon">📊</div>
+      <div class="dt-name" data-t="dt_credit">Credit Report Error</div>
+      <div class="dt-stat">30 days to investigate</div>
+    </div>
+    <div class="dt-btn" data-type="debt" onclick="selectType('debt')">
+      <div class="dt-icon">📞</div>
+      <div class="dt-name" data-t="dt_debt">Debt Collection</div>
+      <div class="dt-stat">Must stop if you dispute</div>
+    </div>
+    <div class="dt-btn" data-type="tenant" onclick="selectType('tenant')">
+      <div class="dt-icon">🏠</div>
+      <div class="dt-name" data-t="dt_tenant">Housing Screening</div>
+      <div class="dt-stat">Up to $1,000 per error</div>
+    </div>
+    <div class="dt-btn" data-type="medical" onclick="selectType('medical')">
+      <div class="dt-icon">💊</div>
+      <div class="dt-name" data-t="dt_medical">Medical Bill</div>
+      <div class="dt-stat">50–80% have errors</div>
+    </div>
+    <div class="dt-btn" data-type="background" onclick="selectType('background')">
+      <div class="dt-icon">🔍</div>
+      <div class="dt-name" data-t="dt_background">Background Check</div>
+      <div class="dt-stat">1 in 4 has errors</div>
+    </div>
+  </div>
+
+  <!-- ═══ INSURANCE APPEAL FORM ═══ -->
+  <div class="defend-form" id="form-insurance">
+    <h3>Insurance Claim Appeal</h3>
+    <p class="df-sub">This generates an internal appeal letter. If your internal appeal is denied, you can request an external review — that decision is binding on the insurer.</p>
+    <div class="rights-box"><strong>Your right:</strong> The ACA guarantees a two-stage appeal. Insurers must respond within 30 days (72 hours for urgent care). External review decisions are binding.</div>
+    <div class="df-field"><label>Your full name</label><input id="ins-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="ins-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Insurance company name</label><input id="ins-company" placeholder="Blue Cross Blue Shield"></div>
+    <div class="df-field"><label>Insurance company address (from your EOB or card)</label><input id="ins-coaddr" placeholder="P.O. Box 12345, City, State ZIP"></div>
+    <div class="df-field"><label>Claim or reference number</label><input id="ins-claim" placeholder="CLM-123456789"></div>
+    <div class="df-field"><label>Date of service</label><input id="ins-date" type="date"></div>
+    <div class="df-field"><label>What procedure or service was denied?</label><input id="ins-proc" placeholder="MRI of left knee"></div>
+    <div class="df-field"><label>Why do you believe it should be covered? (in your own words)</label><textarea id="ins-reason" placeholder="My doctor recommended this procedure because..."></textarea></div>
+    <div class="df-field"><label>Date on your denial letter</label><input id="ins-denial-date" type="date"><div class="df-hint">Used to calculate your appeal deadline</div></div>
+    <div id="ins-deadline" class="deadline-calc" style="display:none"></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('insurance')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('insurance')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ CREDIT DISPUTE FORM ═══ -->
+  <div class="defend-form" id="form-credit">
+    <h3>Credit Report Dispute</h3>
+    <p class="df-sub">This generates a dispute letter to a credit bureau. Send it certified mail with return receipt. The bureau has 30 days to investigate.</p>
+    <div class="rights-box"><strong>Your right:</strong> Under the Fair Credit Reporting Act (15 U.S.C. § 1681), credit bureaus must investigate disputes within 30 days and correct confirmed errors.</div>
+    <div class="df-field"><label>Your full name</label><input id="cr-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="cr-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Your date of birth</label><input id="cr-dob" type="date"></div>
+    <div class="df-field"><label>Last 4 digits of SSN (optional — helps identify your file)</label><input id="cr-ssn" maxlength="4" placeholder="1234" inputmode="numeric"></div>
+    <div class="df-field"><label>Which bureau?</label>
+      <select id="cr-bureau">
+        <option value="">Select...</option>
+        <option value="Equifax|P.O. Box 740256, Atlanta, GA 30374|1-866-349-5191">Equifax</option>
+        <option value="Experian|P.O. Box 4500, Allen, TX 75013|1-888-397-3742">Experian</option>
+        <option value="TransUnion|P.O. Box 2000, Chester, PA 19016|1-800-916-8800">TransUnion</option>
+      </select>
+    </div>
+    <div class="df-field"><label>Account name and number with the error</label><input id="cr-account" placeholder="Chase Visa ending in 4567"></div>
+    <div class="df-field"><label>What is wrong?</label><textarea id="cr-error" placeholder="This account is not mine / This was paid in full on 3/15/2024 / The balance is wrong..."></textarea></div>
+    <div class="df-field"><label>What should it say?</label><textarea id="cr-correct" placeholder="This account should be removed / The balance should show $0 / The status should be 'paid'..."></textarea></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('credit')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('credit')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ DEBT DISPUTE FORM ═══ -->
+  <div class="defend-form" id="form-debt">
+    <h3>Debt Collection Dispute</h3>
+    <p class="df-sub">This generates a written dispute. Once sent within 30 days of first contact, the collector must stop all collection until they prove the debt is yours.</p>
+    <div class="rights-box"><strong>Your right:</strong> Under the FDCPA (15 U.S.C. § 1692g), you have 30 days to dispute. The collector must cease collection until they provide verification. They cannot call before 8am or after 9pm.</div>
+    <div class="df-field"><label>Your full name</label><input id="debt-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="debt-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Collection company name</label><input id="debt-company" placeholder="ABC Collections Inc."></div>
+    <div class="df-field"><label>Collection company address</label><input id="debt-coaddr" placeholder="From the letter they sent you"></div>
+    <div class="df-field"><label>Account or reference number (from their letter)</label><input id="debt-ref" placeholder="REF-987654"></div>
+    <div class="df-field"><label>Amount they claim you owe</label><input id="debt-amount" placeholder="$1,234.56"></div>
+    <div class="df-field"><label>Why you dispute this debt</label>
+      <select id="debt-reason">
+        <option value="">Select reason...</option>
+        <option value="not-mine">This debt is not mine</option>
+        <option value="paid">I already paid this debt</option>
+        <option value="wrong-amount">The amount is wrong</option>
+        <option value="too-old">This debt is past the statute of limitations</option>
+        <option value="identity">Someone used my identity — this is fraud</option>
+      </select>
+    </div>
+    <div class="df-field"><label>Date on their first letter to you</label><input id="debt-letter-date" type="date"><div class="df-hint">You have 30 days from this date</div></div>
+    <div id="debt-deadline" class="deadline-calc" style="display:none"></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('debt')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('debt')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ TENANT SCREENING FORM ═══ -->
+  <div class="defend-form" id="form-tenant">
+    <h3>Tenant Screening Dispute</h3>
+    <p class="df-sub">If you were denied housing based on a screening report, the landlord must give you the screening company's name. This letter disputes errors in that report.</p>
+    <div class="rights-box"><strong>Your right:</strong> Under the FCRA, the screening company has 30 days to investigate your dispute. If they reported information they knew was wrong, you can sue for up to $1,000 per violation.</div>
+    <div class="df-field"><label>Your full name</label><input id="ten-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="ten-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Screening company name (from the landlord's denial notice)</label><input id="ten-company" placeholder="CoreLogic / TransUnion / RealPage"></div>
+    <div class="df-field"><label>Screening company address</label><input id="ten-coaddr" placeholder="From the adverse action notice"></div>
+    <div class="df-field"><label>What is wrong in the report?</label><textarea id="ten-error" placeholder="A criminal record that is not mine / An eviction that was dismissed / Records belonging to someone else with a similar name..."></textarea></div>
+    <div class="df-field"><label>Property you were denied at (optional)</label><input id="ten-property" placeholder="123 Main St, Apt 4B"></div>
+    <div class="df-field"><label>Date of denial</label><input id="ten-date" type="date"></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('tenant')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('tenant')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ MEDICAL BILLING FORM ═══ -->
+  <div class="defend-form" id="form-medical">
+    <h3>Medical Billing Dispute</h3>
+    <p class="df-sub">This requests an itemized bill and disputes specific charges. Always get an itemized bill before paying anything over $200.</p>
+    <div class="rights-box"><strong>Your right:</strong> The No Surprises Act protects against out-of-network surprise billing. Uninsured patients get good-faith estimates. Nonprofit hospitals must offer financial assistance. Call 1-800-985-3059 for federal dispute resolution.</div>
+    <div class="df-field"><label>Your full name</label><input id="med-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="med-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Hospital or provider name</label><input id="med-provider" placeholder="Rush University Medical Center"></div>
+    <div class="df-field"><label>Provider billing address</label><input id="med-provaddr" placeholder="Billing Department, 1234 Hospital Dr, Chicago, IL 60612"></div>
+    <div class="df-field"><label>Account or invoice number</label><input id="med-account" placeholder="ACCT-12345"></div>
+    <div class="df-field"><label>Date of service</label><input id="med-date" type="date"></div>
+    <div class="df-field"><label>What charges are wrong? (be specific)</label><textarea id="med-error" placeholder="Charged for a procedure I didn't receive / Duplicate charge for same service / Billed at out-of-network rate but doctor was in-network..."></textarea></div>
+    <div class="df-field"><label>Total amount billed</label><input id="med-amount" placeholder="$3,456.00"></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('medical')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('medical')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ BACKGROUND CHECK FORM ═══ -->
+  <div class="defend-form" id="form-background">
+    <h3>Employment Background Check Dispute</h3>
+    <p class="df-sub">If you were denied a job based on a background check, the employer must have given you a copy of the report and time to dispute it BEFORE making a final decision.</p>
+    <div class="rights-box"><strong>Your right:</strong> Under the FCRA, employers must give you the report and 5+ business days to dispute BEFORE rejecting you. In Illinois, employers with 15+ employees cannot ask about criminal history on applications.</div>
+    <div class="df-field"><label>Your full name</label><input id="bg-name" placeholder="Maria Garcia"></div>
+    <div class="df-field"><label>Your address</label><input id="bg-addr" placeholder="1234 S. Main St, Chicago, IL 60609"></div>
+    <div class="df-field"><label>Screening company name (from employer's notice)</label><input id="bg-company" placeholder="Sterling / First Advantage / Checkr"></div>
+    <div class="df-field"><label>Screening company address</label><input id="bg-coaddr" placeholder="From the adverse action notice"></div>
+    <div class="df-field"><label>What is wrong in the report?</label><textarea id="bg-error" placeholder="A criminal record that belongs to someone else / A charge that was dismissed / A record that was sealed or expunged..."></textarea></div>
+    <div class="df-field"><label>Employer who used the report (optional)</label><input id="bg-employer" placeholder="Company name"></div>
+    <div class="df-actions">
+      <button class="df-btn df-btn-primary" onclick="generateLetter('background')">Generate Letter</button>
+      <button class="df-btn df-btn-outline" onclick="clearForm('background')">Clear</button>
+    </div>
+  </div>
+
+  <!-- ═══ LETTER PREVIEW ═══ -->
+  <div class="defend-preview" id="letterPreview"></div>
+
+<p style="font-size:.6rem;color:var(--dim);text-align:center;margin:20px 0;line-height:1.5;padding-top:12px;border-top:1px solid var(--sand)">This tool provides general information, not legal, medical, or financial advice. Consult a professional for your specific situation. This tool collects, stores, and transmits zero data. <em>Esta herramienta proporciona información general, no asesoramiento legal, médico o financiero. Consulta a un profesional para tu situación específica. Esta herramienta no recopila, almacena ni transmite ningún dato.</em></p>
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+EQ.init({
+  defend_arc: '⚖️ ACTÚA',
+  defend_title: 'Defiéndete',
+  defend_sub: 'Cartas gratuitas para pelear errores en seguros, crédito, deudas, vivienda, facturas médicas y verificaciones de antecedentes.',
+  defend_intro: 'Elige lo que estás peleando. Responde unas preguntas. Obtén una carta que puedes imprimir o guardar como PDF. Todo queda en tu teléfono — nada se almacena ni se envía.',
+  dt_insurance: 'Negación de Seguro',
+  dt_credit: 'Error de Crédito',
+  dt_debt: 'Cobro de Deudas',
+  dt_tenant: 'Evaluación de Vivienda',
+  dt_medical: 'Factura Médica',
+  dt_background: 'Verificación de Antecedentes'
+});
+
+var _activeType = '';
+
+// Auto-select letter type from URL parameter (e.g., ?type=insurance from knowledge guide link)
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var preselect = params.get('type');
+  if (preselect && document.querySelector('[data-type="' + preselect + '"]')) {
+    setTimeout(function() { selectType(preselect); }, 100);
+  }
+})();
+
+function selectType(type) {
+  _activeType = type;
+  // Toggle buttons
+  document.querySelectorAll('.dt-btn').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-type') === type);
+  });
+  // Show correct form
+  document.querySelectorAll('.defend-form').forEach(function(f) {
+    f.classList.toggle('active', f.id === 'form-' + type);
+  });
+  // Hide preview
+  document.getElementById('letterPreview').classList.remove('active');
+}
+
+function clearForm(type) {
+  var form = document.getElementById('form-' + type);
+  if (form) {
+    form.querySelectorAll('input, textarea, select').forEach(function(el) { el.value = ''; });
+  }
+  document.getElementById('letterPreview').classList.remove('active');
+}
+
+function calcDeadline(dateStr, days) {
+  if (!dateStr) return null;
+  var d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function today() {
+  return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function v(id) { return (document.getElementById(id) || {}).value || ''; }
+
+function generateLetter(type) {
+  var html = '';
+  var t = today();
+
+  if (type === 'insurance') {
+    var deadline = calcDeadline(v('ins-denial-date'), 180);
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + v('ins-company') + '<br>' + v('ins-coaddr') + '</div>' +
+      '<div class="ltr-re">Re: Appeal of Claim Denial — Claim #' + v('ins-claim') + '</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear Claims Review Department,</p>' +
+      '<p>I am writing to formally appeal the denial of my claim #' + v('ins-claim') + ' for services received on ' + v('ins-date') + ' (' + v('ins-proc') + '). I received your denial notice' + (v('ins-denial-date') ? ' dated ' + v('ins-denial-date') : '') + '.</p>' +
+      '<p>I believe this claim should be covered for the following reasons:</p>' +
+      '<p>' + v('ins-reason') + '</p>' +
+      '<p>Under the Affordable Care Act (42 U.S.C. § 300gg-19), I have the right to a full and fair internal review of this denial. I request that you reconsider this claim based on the medical necessity of the services provided. If this internal appeal is denied, I intend to exercise my right to an independent external review.</p>' +
+      '<p>Please respond within 30 days as required by law, or within 72 hours if this involves urgent care.</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('ins-name') + '<br>' + v('ins-addr') + '</div>' +
+      '<div class="ltr-enc">Enclosures: Copy of denial letter, relevant medical records</div>';
+    if (deadline) {
+      var el = document.getElementById('ins-deadline');
+      el.innerHTML = '<strong>Your appeal deadline (180 days):</strong> ' + deadline + '. Send this letter before then.';
+      el.style.display = 'block';
+    }
+  }
+
+  else if (type === 'credit') {
+    var parts = v('cr-bureau').split('|');
+    var bureau = parts[0] || 'Credit Bureau';
+    var baddr = parts[1] || '';
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + bureau + '<br>' + baddr + '</div>' +
+      '<div class="ltr-re">Re: Dispute of Inaccurate Information — Request for Investigation Under FCRA § 611</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear ' + bureau + ' Dispute Department,</p>' +
+      '<p>I am writing to dispute inaccurate information on my credit report. Under the Fair Credit Reporting Act (15 U.S.C. § 1681i), I am requesting that you investigate and correct the following error.</p>' +
+      '<p><strong>My information:</strong><br>Name: ' + v('cr-name') + '<br>Address: ' + v('cr-addr') + (v('cr-dob') ? '<br>Date of birth: ' + v('cr-dob') : '') + (v('cr-ssn') ? '<br>Last 4 SSN: ' + v('cr-ssn') : '') + '</p>' +
+      '<p><strong>Account with error:</strong> ' + v('cr-account') + '</p>' +
+      '<p><strong>What is wrong:</strong> ' + v('cr-error') + '</p>' +
+      '<p><strong>What it should say:</strong> ' + v('cr-correct') + '</p>' +
+      '<p>Under FCRA § 611, you are required to investigate this dispute within 30 days and provide me with written results, including a free updated credit report if changes are made. Please forward this dispute to the data furnisher as required.</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('cr-name') + '<br>' + v('cr-addr') + '</div>' +
+      '<div class="ltr-enc">Enclosures: Copy of credit report with errors highlighted, supporting documentation<br>Sent via certified mail, return receipt requested</div>';
+  }
+
+  else if (type === 'debt') {
+    var reasons = { 'not-mine': 'I do not owe this debt. This account does not belong to me.',
+      'paid': 'I have already paid this debt in full.',
+      'wrong-amount': 'The amount claimed is incorrect.',
+      'too-old': 'This debt is past the statute of limitations and is no longer legally enforceable.',
+      'identity': 'This debt resulted from identity theft. I did not authorize this account.' };
+    var reason = reasons[v('debt-reason')] || 'I dispute the validity of this debt.';
+    var deadline = calcDeadline(v('debt-letter-date'), 30);
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + v('debt-company') + '<br>' + v('debt-coaddr') + '</div>' +
+      '<div class="ltr-re">Re: Written Dispute of Alleged Debt — Ref #' + v('debt-ref') + '</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear ' + v('debt-company') + ',</p>' +
+      '<p>I am writing in response to your communication regarding an alleged debt of ' + v('debt-amount') + ' (Reference: ' + v('debt-ref') + '). Pursuant to my rights under the Fair Debt Collection Practices Act (15 U.S.C. § 1692g), I am formally disputing this debt.</p>' +
+      '<p><strong>Reason for dispute:</strong> ' + reason + '</p>' +
+      '<p>Under the FDCPA, you are required to cease all collection activity on this account until you have provided me with adequate verification of the debt, including: the original creditor name, the amount owed with an itemized accounting, and proof that I am the person who owes this debt.</p>' +
+      '<p>Do not contact me by telephone regarding this matter. All future communication must be in writing.</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('debt-name') + '<br>' + v('debt-addr') + '</div>' +
+      '<div class="ltr-enc">Sent via certified mail, return receipt requested</div>';
+    if (deadline) {
+      var el = document.getElementById('debt-deadline');
+      el.innerHTML = '<strong>Your dispute deadline (30 days):</strong> ' + deadline + '. Send this letter before then — they must stop collecting until they prove the debt.';
+      el.style.display = 'block';
+    }
+  }
+
+  else if (type === 'tenant') {
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + v('ten-company') + '<br>' + v('ten-coaddr') + '</div>' +
+      '<div class="ltr-re">Re: Dispute of Inaccurate Consumer Report Under FCRA § 611</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear Dispute Department,</p>' +
+      '<p>I was denied housing' + (v('ten-property') ? ' at ' + v('ten-property') : '') + (v('ten-date') ? ' on ' + v('ten-date') : '') + ' based on a consumer report generated by your company. Under the Fair Credit Reporting Act (15 U.S.C. § 1681i), I am disputing inaccurate information in my file.</p>' +
+      '<p><strong>Errors in the report:</strong> ' + v('ten-error') + '</p>' +
+      '<p>I request that you investigate this dispute within 30 days as required by law. Please provide me with a complete copy of my file and written results of your investigation. If the disputed information cannot be verified, it must be deleted.</p>' +
+      '<p>Please be advised that reporting information you know or should know is inaccurate constitutes a willful violation of the FCRA, subject to statutory damages of up to $1,000 per violation plus attorney\'s fees.</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('ten-name') + '<br>' + v('ten-addr') + '</div>' +
+      '<div class="ltr-enc">Enclosures: Copy of adverse action notice, supporting documentation<br>Sent via certified mail, return receipt requested</div>';
+  }
+
+  else if (type === 'medical') {
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + v('med-provider') + '<br>Billing Department<br>' + v('med-provaddr') + '</div>' +
+      '<div class="ltr-re">Re: Dispute of Charges — Account #' + v('med-account') + '</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear Billing Department,</p>' +
+      '<p>I am writing to dispute charges on my account #' + v('med-account') + ' for services dated ' + v('med-date') + '. The total amount billed is ' + v('med-amount') + '.</p>' +
+      '<p><strong>Specific charges I am disputing:</strong> ' + v('med-error') + '</p>' +
+      '<p>I request the following: (1) A complete itemized bill with CPT and diagnosis codes for every charge, (2) A hold on all collection activity while this dispute is under review, and (3) Information about your financial assistance or charity care programs.</p>' +
+      '<p>If applicable, please be advised that the No Surprises Act prohibits balance billing for emergency services and out-of-network providers at in-network facilities.</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('med-name') + '<br>' + v('med-addr') + '</div>' +
+      '<div class="ltr-enc">Enclosures: Copy of bill showing disputed charges</div>';
+  }
+
+  else if (type === 'background') {
+    html = '<div class="ltr-date">' + t + '</div>' +
+      '<div class="ltr-to">' + v('bg-company') + '<br>' + v('bg-coaddr') + '</div>' +
+      '<div class="ltr-re">Re: Dispute of Inaccurate Background Check Report Under FCRA § 611</div>' +
+      '<div class="ltr-body">' +
+      '<p>Dear Dispute Department,</p>' +
+      '<p>I recently applied for employment' + (v('bg-employer') ? ' with ' + v('bg-employer') : '') + ' and was provided a copy of a background check report generated by your company. This report contains inaccurate information that I am formally disputing under the Fair Credit Reporting Act (15 U.S.C. § 1681i).</p>' +
+      '<p><strong>Errors in the report:</strong> ' + v('bg-error') + '</p>' +
+      '<p>I request that you investigate this dispute within 30 days, correct any inaccurate information, and provide me with an updated report. Please also send the corrected report to any employer who received the inaccurate version within the last two years, as required under FCRA § 611(d).</p>' +
+      '</div>' +
+      '<div class="ltr-sig">' + v('bg-name') + '<br>' + v('bg-addr') + '</div>' +
+      '<div class="ltr-enc">Enclosures: Copy of report with errors highlighted, supporting documentation<br>Sent via certified mail, return receipt requested</div>';
+  }
+
+  var preview = document.getElementById('letterPreview');
+  preview.innerHTML = html;
+  preview.classList.add('active');
+  preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Add print button after preview
+  if (!document.getElementById('printBtn')) {
+    var printRow = document.createElement('div');
+    printRow.className = 'df-actions';
+    printRow.id = 'printBtn';
+    printRow.innerHTML = '<button class="df-btn df-btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>' +
+      '<button class="df-btn df-btn-outline" onclick="copyLetter()">📋 Copy Text</button>';
+    preview.parentNode.insertBefore(printRow, preview.nextSibling);
+  }
+}
+
+function copyLetter() {
+  var el = document.getElementById('letterPreview');
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() { alert('Letter copied to clipboard.'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Letter copied to clipboard.');
+  }
+}
+</script>
+</body>
+</html>

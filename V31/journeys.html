@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Life Guides — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Step-by-step guides for life transitions: new to the US, lost a job, had a baby, turning 18, senior planning. Each links to the right tools in order.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.lj-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+.lj-tab{font-family:var(--display);font-size:.68rem;font-weight:600;padding:10px 14px;border-radius:10px;border:1.5px solid var(--sand);background:#fff;color:var(--dim);cursor:pointer;transition:.2s}
+.lj-tab:hover{border-color:var(--sage)}
+.lj-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.lj-panel{display:none}.lj-panel.active{display:block}
+.lj-step{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--sand)}
+.lj-step:last-child{border:none}
+.lj-num{width:32px;height:32px;border-radius:50%;background:var(--forest);color:#fff;font-family:var(--display);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lj-step .lj-info{flex:1}
+.lj-step .lj-title{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:3px}
+.lj-step .lj-desc{font-size:.75rem;color:var(--body);line-height:1.6}
+.lj-step a{display:inline-block;font-size:.7rem;font-weight:600;color:var(--forest);margin-top:4px;text-decoration:none;border-bottom:1px solid var(--sage)}
+.lj-card{background:var(--warm);border-radius:14px;padding:18px;margin:12px 0;border:1px solid var(--sand)}
+.lj-card h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.lj-card>p{font-size:.78rem;color:var(--dim);margin-bottom:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="arc-label">NAVIGATE</div>
+    <h1 data-t="lj_title">Life Guides</h1>
+    <p class="subtitle" data-t="lj_sub">Going through a transition? Here's every tool you need, in order.</p>
+  </div>
+
+  <div class="lj-tabs">
+    <div class="lj-tab active" onclick="showLJ('newus')">🌎 New to the US</div>
+    <div class="lj-tab" onclick="showLJ('lostjob')">💼 Lost a Job</div>
+    <div class="lj-tab" onclick="showLJ('baby')">👶 Just Had a Baby</div>
+    <div class="lj-tab" onclick="showLJ('eighteen')">🎓 Turning 18</div>
+    <div class="lj-tab" onclick="showLJ('senior')">🏥 Senior Check-In</div>
+  </div>
+
+  <!-- #74 NEW TO THE US -->
+  <div class="lj-panel active" id="lj-newus">
+    <div class="lj-card">
+      <h3>New to the US</h3>
+      <p>Six steps to navigate the systems that affect you most.</p>
+      <div class="lj-step"><div class="lj-num">1</div><div class="lj-info"><div class="lj-title">Check which benefits are safe</div><div class="lj-desc">Before using any government program, know which ones affect your immigration case and which don't.</div><a href="/benefits-check.html">Benefit Safety Check →</a></div></div>
+      <div class="lj-step"><div class="lj-num">2</div><div class="lj-info"><div class="lj-title">Screen for benefits you qualify for</div><div class="lj-desc">Even non-citizens qualify for emergency Medicaid, WIC (for US-born children), and school meals.</div><a href="/benefits-screener.html">Benefit Screener →</a></div></div>
+      <div class="lj-step"><div class="lj-num">3</div><div class="lj-info"><div class="lj-title">Know your worker rights</div><div class="lj-desc">Minimum wage, overtime, and protection from wage theft apply regardless of immigration status. The DOL investigates complaints confidentially.</div><a href="/worker-rights.html">Worker Rights →</a></div></div>
+      <div class="lj-step"><div class="lj-num">4</div><div class="lj-info"><div class="lj-title">Enroll your children in school</div><div class="lj-desc">Every child can attend public school regardless of immigration status. Schools cannot ask about status. Your children have rights to bilingual services.</div><a href="/school-rights.html">School Rights →</a></div></div>
+      <div class="lj-step"><div class="lj-num">5</div><div class="lj-info"><div class="lj-title">Find a health center</div><div class="lj-desc">HRSA-funded community health centers serve everyone regardless of insurance or immigration status. Sliding scale fees.</div><a href="/neighborhood.html">Find Health Centers →</a></div></div>
+      <div class="lj-step"><div class="lj-num">6</div><div class="lj-info"><div class="lj-title">Know your rights if ICE comes</div><div class="lj-desc">You have the right to remain silent. You do not have to open the door without a judicial warrant (signed by a judge, not just ICE). Call ICIRR at 1-855-435-7693.</div><a href="/knowledge.html">Read Immigration Guides →</a></div></div>
+    </div>
+  </div>
+
+  <!-- #75 LOST A JOB -->
+  <div class="lj-panel" id="lj-lostjob">
+    <div class="lj-card">
+      <h3>Just Lost a Job</h3>
+      <p>Five steps to stabilize immediately.</p>
+      <div class="lj-step"><div class="lj-num">1</div><div class="lj-info"><div class="lj-title">Screen for benefits now</div><div class="lj-desc">Job loss changes your eligibility. You may now qualify for SNAP, Medicaid, LIHEAP, and housing assistance. Check today.</div><a href="/benefits-screener.html">Benefit Screener →</a></div></div>
+      <div class="lj-step"><div class="lj-num">2</div><div class="lj-info"><div class="lj-title">Check your final paycheck</div><div class="lj-desc">Your employer must pay all wages owed including unused PTO (in some states). If they shorted you, that's wage theft.</div><a href="/worker-rights.html">Worker Rights →</a></div></div>
+      <div class="lj-step"><div class="lj-num">3</div><div class="lj-info"><div class="lj-title">File for the EITC</div><div class="lj-desc">Even with partial-year income, you may qualify for the Earned Income Tax Credit — worth up to $7,830. File free at myfreetaxes.com.</div><a href="https://www.myfreetaxes.com" target="_blank" rel="noopener">File Taxes Free →</a></div></div>
+      <div class="lj-step"><div class="lj-num">4</div><div class="lj-info"><div class="lj-title">Get health coverage</div><div class="lj-desc">Job loss is a qualifying life event — you can enroll in marketplace insurance within 60 days. If income dropped, check Medicaid.</div><a href="https://www.healthcare.gov/screener/" target="_blank" rel="noopener">Healthcare.gov →</a></div></div>
+      <div class="lj-step"><div class="lj-num">5</div><div class="lj-info"><div class="lj-title">Check your neighborhood resources</div><div class="lj-desc">Food pantries, community health centers, legal aid, and utility assistance near you.</div><a href="/neighborhood.html">My Neighborhood →</a></div></div>
+    </div>
+  </div>
+
+  <!-- #76 JUST HAD A BABY -->
+  <div class="lj-panel" id="lj-baby">
+    <div class="lj-card">
+      <h3>Just Had a Baby</h3>
+      <p>Five programs most new parents don't know about.</p>
+      <div class="lj-step"><div class="lj-num">1</div><div class="lj-info"><div class="lj-title">Apply for WIC immediately</div><div class="lj-desc">WIC provides food, formula, and nutrition support for pregnant/postpartum people and children under 5. Fully funded — the only barrier is applying. Income limit: 185% FPL.</div><a href="/benefits-screener.html">Check Eligibility →</a></div></div>
+      <div class="lj-step"><div class="lj-num">2</div><div class="lj-info"><div class="lj-title">Enroll baby in Medicaid/CHIP</div><div class="lj-desc">Newborns get automatic Medicaid coverage if the mother was covered. If not, CHIP covers children at higher income levels than adult Medicaid.</div><a href="https://www.insurekidsnow.gov/" target="_blank" rel="noopener">InsureKidsNow →</a></div></div>
+      <div class="lj-step"><div class="lj-num">3</div><div class="lj-info"><div class="lj-title">Check childcare subsidies</div><div class="lj-desc">Only 13% of eligible children receive childcare subsidies. Apply early — waitlists exist but they move. Contact your state childcare assistance office.</div><a href="https://www.childcare.gov/" target="_blank" rel="noopener">Childcare.gov →</a></div></div>
+      <div class="lj-step"><div class="lj-num">4</div><div class="lj-info"><div class="lj-title">Check all other benefits</div><div class="lj-desc">A new baby changes your household size, which changes eligibility for SNAP, EITC (Child Tax Credit!), LIHEAP, and housing.</div><a href="/benefits-screener.html">Full Benefit Screen →</a></div></div>
+      <div class="lj-step"><div class="lj-num">5</div><div class="lj-info"><div class="lj-title">Know your maternity/parental leave rights</div><div class="lj-desc">FMLA provides 12 weeks unpaid leave (employers with 50+ employees). Some states and cities have paid leave. Your job must be held.</div><a href="/worker-rights.html">Worker Rights →</a></div></div>
+    </div>
+  </div>
+
+  <!-- #77 TURNING 18 -->
+  <div class="lj-panel" id="lj-eighteen">
+    <div class="lj-card">
+      <h3>Turning 18</h3>
+      <p>Five things no one tells you about becoming a legal adult.</p>
+      <div class="lj-step"><div class="lj-num">1</div><div class="lj-info"><div class="lj-title">Register for Selective Service</div><div class="lj-desc">All males 18-25 must register — including undocumented immigrants. Failing to register blocks financial aid, government jobs, and citizenship. Takes 2 minutes.</div><a href="https://www.sss.gov/register/" target="_blank" rel="noopener">Register Now →</a></div></div>
+      <div class="lj-step"><div class="lj-num">2</div><div class="lj-info"><div class="lj-title">Register to vote</div><div class="lj-desc">If you're a US citizen, register to vote. In most states you can register online. Some states have same-day registration.</div><a href="https://vote.gov/" target="_blank" rel="noopener">Vote.gov →</a></div></div>
+      <div class="lj-step"><div class="lj-num">3</div><div class="lj-info"><div class="lj-title">Check your credit report</div><div class="lj-desc">You now have a credit file. Check it for free at annualcreditreport.com. If someone used your SSN as a child, errors may already be there. Dispute them now.</div><a href="https://www.annualcreditreport.com" target="_blank" rel="noopener">Free Credit Report →</a></div></div>
+      <div class="lj-step"><div class="lj-num">4</div><div class="lj-info"><div class="lj-title">Apply for financial aid</div><div class="lj-desc">FAFSA opens October 1 each year. Even if you think you won't qualify, file — many grants are need-based and go unclaimed.</div><a href="https://studentaid.gov/h/apply-for-aid/fafsa" target="_blank" rel="noopener">FAFSA →</a></div></div>
+      <div class="lj-step"><div class="lj-num">5</div><div class="lj-info"><div class="lj-title">Know your worker rights</div><div class="lj-desc">Minimum wage applies to you. Overtime applies to you. Tip theft is illegal. If an employer calls you a "contractor" but controls your schedule, you may be misclassified.</div><a href="/worker-rights.html">Worker Rights →</a></div></div>
+    </div>
+  </div>
+
+  <!-- #78 SENIOR CHECK-IN -->
+  <div class="lj-panel" id="lj-senior">
+    <div class="lj-card">
+      <h3>Senior Check-In (65+)</h3>
+      <p>Five things to check or revisit.</p>
+      <div class="lj-step"><div class="lj-num">1</div><div class="lj-info"><div class="lj-title">Compare Medicare plans</div><div class="lj-desc">Plans change every year. During open enrollment (Oct 15 - Dec 7), compare plans by your specific medications and doctors.</div><a href="https://www.medicare.gov/plan-compare/" target="_blank" rel="noopener">Medicare Plan Compare →</a></div></div>
+      <div class="lj-step"><div class="lj-num">2</div><div class="lj-info"><div class="lj-title">Check medication prices</div><div class="lj-desc">The same pill can cost 10x more at one pharmacy than another. Compare prices, and ask about Cost Plus Drugs for generics.</div><a href="/drug-prices.html">Drug Price Check →</a></div></div>
+      <div class="lj-step"><div class="lj-num">3</div><div class="lj-info"><div class="lj-title">Screen for LIHEAP and SSI</div><div class="lj-desc">Seniors qualify for heating/cooling assistance (LIHEAP) and Supplemental Security Income (SSI) at different thresholds. Only 17% of eligible households apply for LIHEAP.</div><a href="/benefits-screener.html">Benefit Screener →</a></div></div>
+      <div class="lj-step"><div class="lj-num">4</div><div class="lj-info"><div class="lj-title">Check your health risk numbers</div><div class="lj-desc">Heart disease risk increases with age. Knowing your 10-year ASCVD risk helps you and your doctor make medication decisions.</div><a href="/health-calc.html">Health Risk Check →</a></div></div>
+      <div class="lj-step"><div class="lj-num">5</div><div class="lj-info"><div class="lj-title">Know your neighborhood resources</div><div class="lj-desc">Community health centers, legal aid, food assistance, and utility help near you. Many have senior-specific programs.</div><a href="/neighborhood.html">My Neighborhood →</a></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function showLJ(id) {
+  document.querySelectorAll('.lj-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.lj-tab').forEach(function(t){t.classList.remove('active')});
+  document.getElementById('lj-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+EQ.init({
+  lj_title:'Life Guides',
+  lj_title_es:'Guías de Vida',
+  lj_sub:'Going through a transition? Here\'s every tool you need, in order.',
+  lj_sub_es:'¿Pasando por una transición? Aquí están todas las herramientas que necesitas, en orden.'
+},{closingKey:'footer_closing_understand'});
+</script>
+</body>
+</html>

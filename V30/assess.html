@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Assessment — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="Is that program working? Traffic-light assessment across 6 community dimensions.">
+<meta property="og:title" content="Community Assessment — CommUnity OS">
+<meta property="og:description" content="Is that program working? Traffic-light assessment across 6 community dimensions.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/assess.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.assess-intro{background:var(--warm);border-radius:14px;padding:24px;margin-bottom:24px}
+.assess-intro p{font-size:.9rem;color:var(--body);line-height:1.8;margin-bottom:10px}
+.assess-intro p:last-child{margin-bottom:0}
+
+.program-setup{background:var(--warm);border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid var(--sand)}
+.program-setup label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;margin-top:12px}
+.program-setup label:first-child{margin-top:0}
+.program-setup input,.program-setup textarea{font-family:var(--sans);font-size:.9rem;width:100%;padding:10px 12px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);color:var(--ink);resize:vertical}
+.program-setup input:focus,.program-setup textarea:focus{outline:none;border-color:var(--sage)}
+.program-setup button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border:none;border-radius:10px;background:var(--forest);color:var(--cream);cursor:pointer;margin-top:16px;transition:.2s}
+.program-setup button:hover{background:var(--deep)}
+
+.traffic-card{background:var(--warm);border-radius:14px;padding:20px;margin-bottom:14px;border:1px solid var(--sand)}
+.traffic-card h3{font-family:var(--sans);font-size:.9rem;font-weight:600;color:var(--deep);margin-bottom:6px}
+.traffic-card .question{font-size:.85rem;color:var(--dim);margin-bottom:14px;font-style:italic}
+.traffic-lights{display:flex;gap:8px;margin-bottom:12px}
+.light{flex:1;padding:12px 8px;border-radius:10px;border:2px solid transparent;cursor:pointer;text-align:center;transition:.25s;font-size:.72rem;line-height:1.4}
+.light:hover{transform:translateY(-1px)}
+.light.red{background:rgba(196,101,74,.06);color:var(--coral);border-color:rgba(196,101,74,.15)}
+.light.red.on{background:rgba(196,101,74,.15);border-color:var(--coral);box-shadow:0 0 12px rgba(196,101,74,.12)}
+.light.yellow{background:rgba(184,150,62,.06);color:var(--gold);border-color:rgba(184,150,62,.15)}
+.light.yellow.on{background:rgba(184,150,62,.15);border-color:var(--gold);box-shadow:0 0 12px rgba(184,150,62,.12)}
+.light.green{background:rgba(45,90,78,.04);color:var(--forest);border-color:rgba(45,90,78,.1)}
+.light.green.on{background:rgba(45,90,78,.12);border-color:var(--forest);box-shadow:0 0 12px rgba(45,90,78,.1)}
+.light .icon{font-size:1.4rem;display:block;margin-bottom:4px}
+.light .label{font-weight:600;font-size:.65rem;letter-spacing:.04em;text-transform:uppercase}
+.evidence-box{margin-top:10px}
+.evidence-box textarea{font-family:var(--sans);font-size:.82rem;width:100%;padding:8px 10px;border:1.5px solid var(--sand);border-radius:8px;background:var(--cream);resize:vertical;min-height:50px;color:var(--ink)}
+.evidence-box textarea:focus{outline:none;border-color:var(--sage)}
+.evidence-box label{font-size:.65rem;color:var(--dim);margin-bottom:4px;display:block}
+
+.summary-bar{background:var(--deep);color:var(--cream);border-radius:12px;padding:16px 20px;margin:24px 0;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:12px}
+.summary-item{text-align:center}
+.summary-item .count{font-size:1.8rem;font-weight:700}
+.summary-item .count.red{color:#e88070}
+.summary-item .count.yellow{color:#d4b85a}
+.summary-item .count.green{color:var(--mint)}
+.summary-item .lbl{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-top:2px}
+
+.nbf-explainer{background:var(--warm);border-radius:12px;padding:20px;margin:24px 0;border-left:4px solid var(--sage)}
+.nbf-explainer h3{font-family:var(--display);font-size:1rem;font-weight:600;color:var(--deep);margin-bottom:8px}
+.nbf-explainer p{font-size:.85rem;color:var(--body);line-height:1.7;margin-bottom:8px}
+.nbf-explainer p:last-child{margin-bottom:0}
+
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.action-row button{font-family:var(--sans);font-size:.78rem;font-weight:500;padding:10px 24px;border-radius:10px;border:1.5px solid var(--sand);background:var(--warm);color:var(--body);cursor:pointer;transition:.2s}
+.action-row button:hover{border-color:var(--sage);color:var(--forest)}
+.action-row button.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.action-row button.primary:hover{background:var(--deep)}
+
+.hidden{display:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:var(--cream);padding:10px 24px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300}
+.toast.show{opacity:1}
+
+@media print{.site-nav,.action-row,.program-setup button,.evidence-box{display:none}.summary-bar{position:relative}}
+</style>
+<link rel="canonical" href="https://comm-unity-os.org/assess.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Community Assessment — CommUnity OS", "url": "https://comm-unity-os.org/assess.html", "description": "Is that program working? 6-dimension traffic-light scoring with evidence notes. Simple enough for a block club meeting.", "inLanguage": ["en", "es"], "applicationCategory": "Civic Technology", "isAccessibleForFree": true}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Govern</div>
+    <h1 data-t="title">Is What We're Doing Actually Working?</h1>
+    <div class="subtitle" data-t="subtitle">When a community puts effort into something, this tool helps see whether it's making a difference. The answers go back to the community, not up to an office.</div>
+  </div>
+
+  <div class="nbf-explainer fade-in fade-in-1">
+    <h3 data-t="how_title">How this works — the four-question cycle</h3>
+    <p data-t="how_p1">This tool runs on a cycle. Each time you assess a program, you're answering one of four questions:</p>
+    <p data-t="how_p2"><strong style="color:var(--forest)">1. Plan</strong> — What was this supposed to accomplish?<br>
+    <strong style="color:var(--gold)">2. Measure</strong> — What's actually happening? (Traffic lights make this visible.)<br>
+    <strong style="color:var(--coral)">3. Improve</strong> — What should change? (Your evidence notes capture this.)<br>
+    <strong style="color:var(--sage)">4. Verify</strong> — Did it change? (Come back in 3 months and assess again. Compare.)</p>
+    <p data-t="how_p3">Green = working. Yellow = needs attention. Red = action needed. The same program assessed twice shows whether anything changed.</p>
+  </div>
+
+  <!-- SETUP -->
+  <div class="program-setup fade-in fade-in-1" id="setup">
+    <label data-t="program_label">What are you assessing?</label>
+    <input type="text" id="programName" placeholder="Name of the program, project, or initiative">
+    <label data-t="purpose_label">What was it supposed to accomplish?</label>
+    <textarea id="programPurpose" rows="2" placeholder="In one or two sentences — what was the goal?"></textarea>
+    <label data-t="evaluator_label">Your name or zip code</label>
+    <input type="text" id="assessorId" placeholder="Optional — for tracking who contributed">
+    <button onclick="startAssessment()" data-t="start_btn">Start Assessment</button>
+  </div>
+
+  <!-- ASSESSMENT (hidden until started) -->
+  <div class="hidden" id="assessmentPanel">
+
+    <div class="summary-bar" id="summaryBar">
+      <div class="summary-item"><div class="count red" id="redCount">0</div><div class="lbl" data-t="lbl_action">Action Needed</div></div>
+      <div class="summary-item"><div class="count yellow" id="yellowCount">0</div><div class="lbl" data-t="lbl_attention">Needs Attention</div></div>
+      <div class="summary-item"><div class="count green" id="greenCount">0</div><div class="lbl" data-t="lbl_working">Working</div></div>
+    </div>
+
+    <div id="cardsContainer"></div>
+
+    <div class="action-row">
+      <button onclick="window.print()" data-t="print_btn">🖨 Print Assessment</button>
+      <button onclick="resetAssessment()" data-t="reset_btn">Reset</button>
+      <button class="primary" onclick="submitAssessment()" data-t="submit_btn">Submit Assessment</button>
+    </div>
+
+    <!-- LONGITUDINAL — previous assessments of same program -->
+    <div id="assessHistory" class="hidden" style="margin-top:24px">
+      <div class="section-head"><h2 data-t="history_title">📈 Previous Assessments — Is Anything Changing?</h2></div>
+      <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px" data-t="history_desc">Previous traffic-light assessments of this program. Compare to see whether red areas turned yellow or green.</p>
+      <div id="historyGrid"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+var DIMENSIONS = [
+  { id:'reach', name:'Reach', question:'Is it reaching the people it was meant to serve?' },
+  { id:'quality', name:'Quality', question:'When people use it, is the experience good?' },
+  { id:'outcomes', name:'Outcomes', question:'Is it actually producing the results it promised?' },
+  { id:'fairness', name:'Fairness', question:'Are the benefits reaching those who need them most?' },
+  { id:'sustainability', name:'Sustainability', question:'Can this keep going without burning people out or running out of money?' },
+  { id:'community_voice', name:'Community Voice', question:'Do the people it serves have a say in how it runs?' }
+];
+
+function startAssessment() {
+  var name = document.getElementById('programName').value.trim();
+  if (!name) { showToast('Name what you\'re assessing'); return; }
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('assessmentPanel').classList.remove('hidden');
+  buildCards();
+}
+
+function buildCards() {
+  var container = document.getElementById('cardsContainer');
+  var html = '';
+  DIMENSIONS.forEach(function(d) {
+    html += '<div class="traffic-card" data-dim="'+d.id+'">' +
+      '<h3>'+d.name+'</h3>' +
+      '<div class="question">'+d.question+'</div>' +
+      '<div class="traffic-lights">' +
+        '<div class="light red" onclick="pickLight(this,\'red\')" data-color="red"><span class="icon">🔴</span><span class="label">Action Needed</span><div style="margin-top:4px">Not working. Needs immediate change.</div></div>' +
+        '<div class="light yellow" onclick="pickLight(this,\'yellow\')" data-color="yellow"><span class="icon">🟡</span><span class="label">Needs Attention</span><div style="margin-top:4px">Partially working. Could improve.</div></div>' +
+        '<div class="light green" onclick="pickLight(this,\'green\')" data-color="green"><span class="icon">🟢</span><span class="label">Working</span><div style="margin-top:4px">On track. Keep doing this.</div></div>' +
+      '</div>' +
+      '<div class="evidence-box">' +
+        '<label>What evidence supports your rating? What should change?</label>' +
+        '<textarea rows="2" placeholder="What did you see, hear, or experience?"></textarea>' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function pickLight(el, color) {
+  var card = el.closest('.traffic-card');
+  card.querySelectorAll('.light').forEach(function(l){l.classList.remove('on');});
+  el.classList.add('on');
+  updateSummary();
+}
+
+function updateSummary() {
+  var r=0, y=0, g=0;
+  document.querySelectorAll('.light.on').forEach(function(l){
+    var c = l.dataset.color;
+    if(c==='red')r++; else if(c==='yellow')y++; else if(c==='green')g++;
+  });
+  document.getElementById('redCount').textContent = r;
+  document.getElementById('yellowCount').textContent = y;
+  document.getElementById('greenCount').textContent = g;
+}
+
+function resetAssessment() {
+  document.querySelectorAll('.light.on').forEach(function(l){l.classList.remove('on');});
+  document.querySelectorAll('.evidence-box textarea').forEach(function(t){t.value='';});
+  updateSummary();
+}
+
+async function submitAssessment() {
+  var programName = document.getElementById('programName').value.trim();
+  var programPurpose = document.getElementById('programPurpose').value.trim();
+  var assessor = document.getElementById('assessorId').value.trim();
+  var ratings = {};
+  var evidence = {};
+  var complete = true;
+
+  DIMENSIONS.forEach(function(d){
+    var card = document.querySelector('[data-dim="'+d.id+'"]');
+    var selected = card.querySelector('.light.on');
+    if(!selected) { complete = false; return; }
+    ratings[d.id] = selected.dataset.color;
+    evidence[d.id] = card.querySelector('.evidence-box textarea').value.trim();
+  });
+
+  if (!complete) { showToast('Rate all ' + DIMENSIONS.length + ' areas before submitting'); return; }
+
+  if (!API) {
+    showToast('Assessment recorded (demo mode)');
+    renderDemoHistory();
+    return;
+  }
+
+  try {
+    await fetch(API, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action:'submit_assessment',
+        program_name: programName,
+        program_purpose: programPurpose,
+        assessor: assessor,
+        ratings: ratings,
+        evidence: evidence,
+        timestamp: new Date().toISOString()
+      })
+    });
+    showToast('Assessment submitted!');
+    loadAssessmentHistory(programName);
+  } catch(e) { showToast('Error — try again'); }
+}
+
+async function loadAssessmentHistory(programName) {
+  if (!API) { renderDemoHistory(); return; }
+  try {
+    var url = API + '?action=get_assessments&program=' + encodeURIComponent(programName);
+    var res = await fetch(url, { redirect:'follow' });
+    var data = await res.json();
+    if (data.status === 'ok' && data.assessments && data.assessments.length > 1) {
+      renderHistory(data.assessments);
+    }
+  } catch(e) {}
+}
+
+function renderHistory(assessments) {
+  document.getElementById('assessHistory').classList.remove('hidden');
+  var grid = document.getElementById('historyGrid');
+  assessments.sort(function(a,b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+
+  var colorMap = { green:'🟢', yellow:'🟡', red:'🔴' };
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:.75rem">';
+  html += '<thead><tr><th style="text-align:left;padding:6px;border-bottom:2px solid var(--sand);font-size:.65rem;color:var(--dim)">Date</th>';
+  DIMENSIONS.forEach(function(d) {
+    html += '<th style="text-align:center;padding:6px;border-bottom:2px solid var(--sand);font-size:.6rem;color:var(--dim)">' + d.name + '</th>';
+  });
+  html += '</tr></thead><tbody>';
+
+  assessments.forEach(function(a,i) {
+    var ratings = typeof a.ratings === 'string' ? JSON.parse(a.ratings) : a.ratings;
+    var date = a.timestamp ? new Date(a.timestamp).toLocaleDateString() : '—';
+    html += '<tr><td style="padding:6px;border-bottom:1px solid var(--sand);color:var(--dim)">' + date + '</td>';
+    DIMENSIONS.forEach(function(d) {
+      var color = ratings[d.id] || '—';
+      var icon = colorMap[color] || '—';
+      var prev = i > 0 ? (typeof assessments[i-1].ratings === 'string' ? JSON.parse(assessments[i-1].ratings) : assessments[i-1].ratings) : null;
+      var changed = prev && prev[d.id] !== color;
+      html += '<td style="text-align:center;padding:6px;border-bottom:1px solid var(--sand);' + (changed ? 'font-weight:700' : '') + '">' + icon + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  grid.innerHTML = html;
+}
+
+function renderDemoHistory() {
+  var demo = [
+    { timestamp:'2025-12-15T12:00:00Z', ratings:{reach:'yellow',quality:'green',outcomes:'red',fairness:'red',sustainability:'yellow',community_voice:'red'} },
+    { timestamp:'2026-03-15T12:00:00Z', ratings:{reach:'green',quality:'green',outcomes:'yellow',fairness:'yellow',sustainability:'yellow',community_voice:'yellow'} }
+  ];
+  renderHistory(demo);
+}
+
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+
+EQ.init({
+  en:{
+    arc_label:'Govern',title:'Is What We\'re Doing Actually Working?',
+    subtitle:'When a community puts effort into something, this tool helps see whether it\'s making a difference. The answers go back to the community, not up to an office.',
+    how_title:'How this works',
+    how_p1:'Name what you\'re assessing — a program, a project, a plan. For each area, consider:',
+    how_p2:'<strong style="color:var(--forest)">What were the goals?</strong> (What was this supposed to accomplish?)<br><strong style="color:var(--gold)">What\'s actually happening?</strong> (What\'s falling short?)<br><strong style="color:var(--coral)">What should change?</strong> (What would make it better?)',
+    how_p3:'Traffic lights make the answer visible. Green = working. Yellow = needs attention. Red = action needed.',
+    program_label:'What are you assessing?',purpose_label:'What was it supposed to accomplish?',evaluator_label:'Your name or zip code',
+    start_btn:'Start Assessment',lbl_action:'Action Needed',lbl_attention:'Needs Attention',lbl_working:'Working',
+    print_btn:'🖨 Print Assessment',reset_btn:'Reset',submit_btn:'Submit Assessment'
+  },
+  es:{
+    arc_label:'Gobernar',title:'¿Lo Que Estamos Haciendo Realmente Funciona?',
+    subtitle:'Cuando una comunidad se esfuerza en algo, esta herramienta ayuda a ver si está haciendo una diferencia. Las respuestas van a la comunidad, no a una oficina.',
+    how_title:'Cómo funciona',
+    how_p1:'Nombra lo que estás evaluando — un programa, un proyecto, un plan. Para cada área, considera:',
+    how_p2:'<strong style="color:var(--forest)">¿Cuáles eran los objetivos?</strong> (¿Qué se suponía que lograra?)<br><strong style="color:var(--gold)">¿Qué está pasando realmente?</strong> (¿Qué falta?)<br><strong style="color:var(--coral)">¿Qué debería cambiar?</strong> (¿Qué lo haría mejor?)',
+    how_p3:'Los semáforos hacen visible la respuesta. Verde = funciona. Amarillo = necesita atención. Rojo = se necesita acción.',
+    program_label:'¿Qué estás evaluando?',purpose_label:'¿Qué se suponía que lograra?',evaluator_label:'Tu nombre o código postal',
+    start_btn:'Iniciar Evaluación',lbl_action:'Acción Necesaria',lbl_attention:'Necesita Atención',lbl_working:'Funcionando',
+    print_btn:'🖨 Imprimir Evaluación',reset_btn:'Reiniciar',submit_btn:'Enviar Evaluación'
+  }
+}, { footer: true, alertPage: 'assess' });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "community_name": "CommUnity OS — Chicago",
+  "community_id": "chicago-60608",
+  "zip": "60608",
+  "state": "IL",
+  "backend_url": "https://communityos-backend.john-k-nino.workers.dev/api",
+  "backend_type": "cloudflare",
+  "features": {
+    "discuss": true,
+    "needs": true,
+    "propose": true,
+    "evaluate": true,
+    "connect": true,
+    "govern": true,
+    "dashboard": true,
+    "grow": true
+  },
+  "moderators": [],
+  "local_resources": {
+    "legal_aid": [
+      {"name": "Legal Aid Chicago", "phone": "312-341-1070"},
+      {"name": "CARPLS", "phone": "312-738-9200"}
+    ],
+    "immigration": [
+      {"name": "ICIRR", "phone": "1-855-435-7693"},
+      {"name": "MALDEF", "phone": "312-427-0701"}
+    ],
+    "tenant_rights": [
+      {"name": "Metropolitan Tenants Organization", "phone": "773-292-4988"}
+    ],
+    "food": [
+      {"name": "Greater Chicago Food Depository", "phone": "773-247-3663"}
+    ]
+  }
+}

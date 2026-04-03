@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CommUnity OS — Free Tools for Neighborhoods</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1a3c34">
+<meta name="description" content="CommUnity OS builds free tools that help communities take care of themselves — from finding food to governing themselves. In English and Spanish.">
+<meta property="og:title" content="CommUnity OS — Free Tools for Neighborhoods">
+<meta property="og:description" content="Free tools that help communities take care of themselves. In English and Spanish.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="canonical" href="https://comm-unity-os.org/">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org", "description": "Free bilingual civic platform with 17 tools for survival needs, civic literacy, community connection, and democratic governance. Built for neighborhoods. Costs $7/year to operate.", "applicationCategory": "Civic Technology", "operatingSystem": "Web browser", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": ["en", "es"], "author": {"@type": "Person", "name": "John K. Nino, Sr., MD", "jobTitle": "Assistant Professor of Biology", "affiliation": {"@type": "CollegeOrUniversity", "name": "Richard J. Daley College", "description": "Hispanic-Serving Institution, City Colleges of Chicago"}}, "funder": {"@type": "Organization", "name": "NinoTech LLC", "description": "Technology practice providing platform infrastructure"}, "isAccessibleForFree": true, "featureList": "Discussion board, Needs and offers, Leadership evaluation, Community assessment, Promise tracker, Neighborhood dashboard, Neighbor guides, Civic learning, Community stories, Bilingual English/Spanish, 10 community languages invited"}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="page-header fade-in">
+    <img src="/icon-192.png" alt="CommUnity OS" style="width:56px;height:56px;border-radius:14px;margin:0 auto 24px;display:block;filter:drop-shadow(0 2px 12px rgba(26,60,52,.1))">
+    <div class="arc-label" data-t="tagline">Free Tools for Neighborhoods</div>
+    <h1 data-t="title">The Strongest Infrastructure<br>Is the Kind No One<br>Can Take Away</h1>
+    <div class="subtitle" data-t="subtitle">Communities already have the capacity to take care of themselves. They just need the structure to exercise it.</div>
+  </div>
+
+  <!-- ZIP CODE — the entry point. First interactive element. -->
+  <div class="section fade-in fade-in-1" id="zipSection" style="text-align:center;padding:28px 0 20px;background:var(--warm);border-radius:16px;margin:10px 0 24px;border:1px solid var(--sand)">
+    <h2 style="font-family:var(--display);font-size:1.4rem;font-weight:600;color:var(--deep);margin-bottom:6px" data-t="zip_title">What's your zip code?</h2>
+    <p style="font-size:.88rem;color:var(--dim);max-width:400px;margin:0 auto 18px;line-height:1.5" data-t="zip_desc">See who's nearby, what they need, and what they're saying. Everything starts here.</p>
+    <div style="display:flex;gap:10px;max-width:340px;margin:0 auto;justify-content:center;flex-wrap:wrap">
+      <input type="text" id="homeZip" maxlength="5" pattern="[0-9]{5}" placeholder="60608" inputmode="numeric" style="font-family:var(--sans);font-size:1.3rem;padding:14px 18px;border:2.5px solid var(--sage);border-radius:14px;background:var(--cream);color:var(--ink);text-align:center;width:130px;font-weight:500">
+      <button onclick="goToNeighborhood()" style="font-family:var(--sans);font-size:.92rem;font-weight:600;padding:14px 32px;border:none;border-radius:14px;background:var(--forest);color:var(--cream);cursor:pointer;transition:.15s;box-shadow:0 2px 8px rgba(26,60,52,.15)" data-t="zip_btn">Go →</button>
+    </div>
+    <p style="font-size:.72rem;color:var(--light);margin-top:12px" data-t="zip_note">No account. No data collected. Just your zip code.</p>
+  </div>
+
+  <div class="divider fade-in fade-in-1"></div>
+
+  <div class="section fade-in fade-in-1">
+    <div class="narrative" style="border-left-color:var(--gold)">
+      <p data-t="intro"><span class="narrative-name">Maria</span> works the 6am shift. Her kids eat at school but dinner is a gap. She qualifies for help she's never applied for. Her landlord raised the rent and she doesn't know her rights. Her neighbor Ana has food, legal connections, and time to share — but they've never met. Their alderman hasn't fixed the streetlights he promised eight months ago.</p>
+      <p data-t="intro2">Everything on this platform was built for Maria, for Ana, and for the neighborhood they share. Follow their story through the four pages below — or start with whatever you need right now.</p>
+    </div>
+  </div>
+
+  <!-- ARC -->
+  <div class="arc-strip fade-in fade-in-2">
+    <a href="/survive.html" class="arc-card">
+      <div class="arc-label" data-t="arc_survive_label">Survive</div>
+      <h3 data-t="arc_survive_title">Find what you need right now</h3>
+      <p data-t="arc_survive_desc">Food near you. Health information in your language. Emergency contacts. Benefits screening. Preservation skills for when food is cheap.</p>
+    </a>
+    <a href="/understand.html" class="arc-card">
+      <div class="arc-label" data-t="arc_understand_label">Understand</div>
+      <h3 data-t="arc_understand_title">Know how the systems around you work</h3>
+      <p data-t="arc_understand_desc">Where your money goes. What your employer can and can't do. What you're entitled to as a tenant, a worker, and a patient.</p>
+    </a>
+    <a href="/connect.html" class="arc-card">
+      <div class="arc-label" data-t="arc_connect_label">Connect</div>
+      <h3 data-t="arc_connect_title">Find your neighbors</h3>
+      <p data-t="arc_connect_desc">See who nearby can help and what you can offer. Help reading a lease. Extra tomatoes from a garden. Your community has more than you think.</p>
+    </a>
+    <a href="/govern.html" class="arc-card">
+      <div class="arc-label" data-t="arc_govern_label">Govern</div>
+      <h3 data-t="arc_govern_title">Are your leaders doing what they said?</h3>
+      <p data-t="arc_govern_desc">Clear criteria. Real evidence. Tools that let any group look at what its leaders actually did — owned by the people asking the questions.</p>
+    </a>
+    <a href="/learn.html" class="arc-card" style="border-left-color:var(--sage)">
+      <div class="arc-label" data-t="arc_learn_label">Learn</div>
+      <h3 data-t="arc_learn_title">Build your capacity</h3>
+      <p data-t="arc_learn_desc">Health. Money. Rights. Power. Free bilingual education from basics to action — organized so each level makes the next one possible.</p>
+    </a>
+  </div>
+
+
+  <!-- Civic Loop injected by shared.js -->
+
+
+  <div class="divider fade-in fade-in-3"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section fade-in fade-in-3">
+    <div class="section-head">
+      <h2 data-t="how_title">How it works</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:10px 0">
+      <div style="background:var(--warm);border-radius:14px;padding:20px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:8px">📍</div>
+        <h3 style="font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--deep);margin-bottom:6px" data-t="how1_title">Enter your zip code</h3>
+        <p style="font-size:.75rem;color:var(--dim);line-height:1.5" data-t="how1_desc">No account. No email. No password. Just your zip code and a name you choose. That's all it takes to see what's happening near you.</p>
+      </div>
+      <div style="background:var(--warm);border-radius:14px;padding:20px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:8px">🤝</div>
+        <h3 style="font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--deep);margin-bottom:6px" data-t="how2_title">Find your neighbors</h3>
+        <p style="font-size:.75rem;color:var(--dim);line-height:1.5" data-t="how2_desc">See discussions, needs, and offers in your area. Post what you need or what you can share. Someone nearby might have exactly what you're looking for.</p>
+      </div>
+      <div style="background:var(--warm);border-radius:14px;padding:20px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:8px">💪</div>
+        <h3 style="font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--deep);margin-bottom:6px" data-t="how3_title">Build something together</h3>
+        <p style="font-size:.75rem;color:var(--dim);line-height:1.5" data-t="how3_desc">Evaluate your leaders. Assess your programs. Organize your block. The tools belong to you — and they work better the more neighbors use them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider fade-in fade-in-3"></div>
+
+  <!-- Live tools -->
+  <div class="section fade-in fade-in-3">
+    <div class="section-head">
+      <h2 data-t="live_title">Live now</h2>
+    </div>
+    <div class="resource-card">
+      <h3><a href="https://feedyours.netlify.app" target="_blank" rel="noopener" data-t="fy_name">FeedYours</a> <span class="badge badge-live" data-t="badge_live">Live</span></h3>
+      <p data-t="fy_desc">Find food near you. Compare what's in it. Plan meals for the week. Scan a barcode and know what you're buying. Works on any phone. Works without internet. No account. No data collected.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="https://secretsofcanning.netlify.app" target="_blank" rel="noopener" data-t="canning_name">The Science of Safe Canning</a> <span class="badge badge-live" data-t="badge_live2">Live</span></h3>
+      <p data-t="canning_desc">Learn to preserve food safely. When it's cheap and in season, put it away for when it's not. Grounded in science. Three levels so you can start wherever you are.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/discuss.html" data-t="discuss_name">Community Discussion Board</a> <span class="badge badge-live" data-t="badge_live3">Live</span></h3>
+      <p data-t="discuss_desc">Talk about what's happening in your neighborhood. Threaded conversations. Upvoting. Community moderation. Just your zip code and a name you choose.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/needs.html" data-t="needs_name">Needs & Offers</a> <span class="badge badge-live" data-t="badge_live4">Live</span></h3>
+      <p data-t="needs_desc">Post what you need. Share what you can offer. Your community has more than you think. Posts expire after 30 days.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/evaluate.html" data-t="eval_name">Leadership Evaluation</a> <span class="badge badge-live" data-t="badge_live5">Live</span></h3>
+      <p data-t="eval_desc">Score your alderperson, board member, or program director on 5 plain-language criteria. Printable scorecard for your next meeting.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/assess.html" data-t="assess_name">Community Assessment</a> <span class="badge badge-live" data-t="badge_live6">Live</span></h3>
+      <p data-t="assess_desc">Is that program actually working? Traffic-light scoring across 6 dimensions. Reach, quality, outcomes, fairness, sustainability, community voice.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/audit.html" data-t="audit_name">Community Accountability Audit</a> <span class="badge badge-live" data-t="badge_live7">Live</span></h3>
+      <p data-t="audit_desc">Track commitments domain by domain with evidence. Templates for alderpersons, schools, and programs. The same accountability framework institutions use — now in community hands.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/knowledge.html" data-t="knowledge_name">Community Knowledge</a> <span class="badge badge-live" data-t="badge_live8">Live</span></h3>
+      <p data-t="knowledge_desc">Guides written by neighbors: how systems are supposed to work, where they fail, and what you can do. Prescriptions, overdrafts, rent, ICE rights, council meetings — real knowledge for real situations.</p>
+    </div>
+    <div class="resource-card">
+      <h3><a href="/dashboard.html" data-t="dashboard_name">Community Dashboard</a> <span class="badge badge-live" data-t="badge_live9">Live</span></h3>
+      <p data-t="dashboard_desc">Traffic-light view of your neighborhood across four domains. Enter your zip code. See what's working. See what needs action. Simple enough for a block club meeting.</p>
+    </div>
+  </div>
+
+  <!-- Dynamic Alerts -->
+  <div id="alertsContainer"></div>
+
+  <!-- Community Pulse — aggregate needs data -->
+  <div class="section fade-in fade-in-4" id="communityPulse" style="display:none">
+    <div class="section-head">
+      <h2 data-t="pulse_title">What neighborhoods are telling us</h2>
+    </div>
+    <div id="pulseContent" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:10px 0">
+      <!-- Populated by JS from NeedsOffers data -->
+    </div>
+    <p style="font-size:.68rem;color:var(--light);text-align:center;margin-top:12px" data-t="pulse_note">Updated from community posts. No personal data collected.</p>
+  </div>
+
+  <!-- Closing -->
+  <div class="section fade-in fade-in-4" style="text-align:center;margin:40px 0">
+    <p style="font-family:var(--display);font-style:italic;color:var(--forest);font-size:1rem;line-height:1.6;margin-bottom:20px" data-t="closing">Every tool on this page is free, bilingual, and built for neighbors helping neighbors.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="/discuss.html" style="font-family:var(--sans);font-size:.82rem;font-weight:500;padding:12px 24px;border-radius:12px;background:var(--forest);color:var(--cream);text-decoration:none;transition:.15s" data-t="cta_join">Join the conversation →</a>
+      <a href="/support.html" style="font-family:var(--sans);font-size:.82rem;font-weight:500;padding:12px 24px;border-radius:12px;background:transparent;color:var(--forest);border:2px solid var(--forest);text-decoration:none;transition:.15s" data-t="cta_support">Support this platform ♡</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+
+function goToNeighborhood() {
+  var zip = document.getElementById('homeZip').value.trim();
+  if (!/^\d{5}$/.test(zip)) return;
+  localStorage.setItem('eqos-zip', zip);
+  window.location.href = '/discuss.html';
+}
+document.getElementById('homeZip').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') goToNeighborhood();
+});
+
+// Community Pulse — live closed loop: needs + governance data
+(async function loadPulse() {
+  try {
+    // Fetch community needs data
+    var needsRes = await fetch(API + '?action=get_listings&type=all&limit=200');
+    var needsData = await needsRes.json();
+
+    // Fetch governance aggregate data (evaluations + assessments + audits)
+    var govRes = await fetch(API + '?action=get_governance_pulse');
+    var govData = await govRes.json();
+
+    var hasNeeds = needsData.listings && needsData.listings.length >= 2;
+    var hasGov = govData.status === 'ok' && (govData.evaluations > 0 || govData.assessments > 0 || govData.audits > 0);
+
+    if (!hasNeeds && !hasGov) return;
+
+    var html = '';
+
+    // Needs categories
+    if (hasNeeds) {
+      var cats = {};
+      var zips = {};
+      needsData.listings.forEach(function(l) {
+        var c = l.category || 'other';
+        cats[c] = (cats[c] || 0) + 1;
+        if (l.zip) zips[l.zip] = true;
+      });
+      var catLabels = { food:'🍎 Food', health:'🏥 Health', housing:'🏠 Housing', legal:'⚖️ Legal', childcare:'👶 Childcare', work:'💼 Work', other:'📋 Other' };
+      var sorted = Object.entries(cats).sort(function(a,b) { return b[1]-a[1]; });
+      sorted.slice(0,4).forEach(function(entry) {
+        var pct = Math.round(entry[1] / needsData.listings.length * 100);
+        html += '<div style="background:var(--warm);border-radius:12px;padding:16px;text-align:center">' +
+          '<div style="font-size:1.4rem;margin-bottom:4px">' + (catLabels[entry[0]] || entry[0]) + '</div>' +
+          '<div style="font-family:var(--display);font-size:1.5rem;color:var(--forest);font-weight:600">' + entry[1] + '</div>' +
+          '<div style="font-size:.65rem;color:var(--light)">' + pct + '% of posts</div></div>';
+      });
+      var zipCount = Object.keys(zips).length;
+      html += '<div style="background:var(--warm);border-radius:12px;padding:16px;text-align:center">' +
+        '<div style="font-size:1.4rem;margin-bottom:4px">📍</div>' +
+        '<div style="font-family:var(--display);font-size:1.5rem;color:var(--forest);font-weight:600">' + zipCount + '</div>' +
+        '<div style="font-size:.65rem;color:var(--light)">zip codes active</div></div>';
+    }
+
+    // Governance data — the closed loop
+    if (hasGov) {
+      if (govData.evaluations > 0) {
+        var avgScore = govData.avgEvalScore || 0;
+        var grade = avgScore >= 86.5 ? 'A' : avgScore >= 73 ? 'B' : avgScore >= 60 ? 'C' : avgScore >= 47 ? 'D' : 'F';
+        var gColor = grade === 'A' || grade === 'B' ? 'var(--forest)' : grade === 'C' ? 'var(--gold)' : 'var(--coral)';
+        html += '<div style="background:var(--warm);border-radius:12px;padding:16px;text-align:center">' +
+          '<div style="font-size:1.4rem;margin-bottom:4px">📋</div>' +
+          '<div style="font-family:var(--display);font-size:1.5rem;color:'+gColor+';font-weight:600">' + grade + '</div>' +
+          '<div style="font-size:.65rem;color:var(--light)">' + govData.evaluations + ' leader evals</div></div>';
+      }
+      if (govData.assessments > 0) {
+        var gPct = govData.greenPct || 0;
+        var tColor = gPct >= 60 ? 'var(--forest)' : gPct >= 30 ? 'var(--gold)' : 'var(--coral)';
+        html += '<div style="background:var(--warm);border-radius:12px;padding:16px;text-align:center">' +
+          '<div style="font-size:1.4rem;margin-bottom:4px">🔍</div>' +
+          '<div style="font-family:var(--display);font-size:1.5rem;color:'+tColor+';font-weight:600">' + gPct + '%</div>' +
+          '<div style="font-size:.65rem;color:var(--light)">' + govData.assessments + ' programs green</div></div>';
+      }
+      if (govData.audits > 0) {
+        var aScore = govData.avgAuditScore || 0;
+        var aColor = aScore >= 70 ? 'var(--forest)' : aScore >= 40 ? 'var(--gold)' : 'var(--coral)';
+        html += '<div style="background:var(--warm);border-radius:12px;padding:16px;text-align:center">' +
+          '<div style="font-size:1.4rem;margin-bottom:4px">🔎</div>' +
+          '<div style="font-family:var(--display);font-size:1.5rem;color:'+aColor+';font-weight:600">' + aScore + '%</div>' +
+          '<div style="font-size:.65rem;color:var(--light)">' + govData.audits + ' audits completed</div></div>';
+      }
+    }
+
+    document.getElementById('pulseContent').innerHTML = html;
+    document.getElementById('communityPulse').style.display = '';
+  } catch(e) { /* silently skip if no data yet */ }
+})();
+
+EQ.init({
+  en: {
+    tagline: 'Free Tools for Neighborhoods',
+    title: 'The Strongest Infrastructure<br>Is the Kind No One<br>Can Take Away',
+    subtitle: 'Communities already have the capacity to take care of themselves. They just need the structure to exercise it.',
+    intro: '<span class="narrative-name">Maria</span> works the 6am shift. Her kids eat at school but dinner is a gap. She qualifies for help she\'s never applied for. Her landlord raised the rent and she doesn\'t know her rights. Her neighbor Ana has food, legal connections, and time to share — but they\'ve never met. Their alderman hasn\'t fixed the streetlights he promised eight months ago.',
+    intro2: 'Everything on this platform was built for Maria, for Ana, and for the neighborhood they share. Follow their story through the four pages below — or start with whatever you need right now.',
+    arc_survive_label: 'Survive',
+    arc_survive_title: 'Find what you need right now',
+    arc_survive_desc: 'Food near you. Health information in your language. Emergency contacts. Benefits screening. Preservation skills for when food is cheap.',
+    arc_understand_label: 'Understand',
+    arc_understand_title: 'Know how the systems around you work',
+    arc_understand_desc: 'Where your money goes. What your employer can and can\'t do. What you\'re entitled to as a tenant, a worker, and a patient.',
+    arc_connect_label: 'Connect',
+    arc_connect_title: 'Find your neighbors',
+    arc_connect_desc: 'See who nearby can help and what you can offer. Help reading a lease. Extra tomatoes from a garden. Your community has more than you think.',
+    arc_govern_label: 'Govern',
+    arc_govern_title: 'Are your leaders doing what they said?',
+    arc_govern_desc: 'Clear criteria. Real evidence. Tools that let any group look at what its leaders actually did — owned by the people asking the questions.',
+    live_title: 'Live now',
+    badge_live: 'Live', badge_live2: 'Live', badge_live3: 'Live', badge_live4: 'Live', badge_live5: 'Live', badge_live6: 'Live',
+    fy_name: 'FeedYours',
+    fy_desc: 'Find food near you. Compare what\'s in it. Plan meals for the week. Scan a barcode and know what you\'re buying. Works on any phone. Works without internet. No account. No data collected.',
+    canning_name: 'The Science of Safe Canning',
+    canning_desc: 'Learn to preserve food safely. When it\'s cheap and in season, put it away for when it\'s not. Grounded in science. Three levels so you can start wherever you are.',
+    discuss_name: 'Community Discussion Board',
+    discuss_desc: 'Talk about what\'s happening in your neighborhood. Threaded conversations. Upvoting. Community moderation. Just your zip code and a name you choose.',
+    needs_name: 'Needs & Offers',
+    needs_desc: 'Post what you need. Share what you can offer. Your community has more than you think. Posts expire after 30 days.',
+    eval_name: 'Leadership Evaluation',
+    eval_desc: 'Score your alderperson, board member, or program director on 5 plain-language criteria. Printable scorecard for your next meeting.',
+    assess_name: 'Community Assessment',
+    assess_desc: 'Is that program actually working? Traffic-light scoring across 6 dimensions. Reach, quality, outcomes, fairness, sustainability, community voice.',
+    audit_name: 'Are They Keeping Their Promises?',
+    audit_desc: 'Pick a leader or program. Go through the list. Check what they said against what happened. Write down what you saw. Bring it to the meeting.',
+    badge_live7: 'Live',
+    knowledge_name: 'Things Your Neighbors Figured Out',
+    knowledge_desc: 'Guides written by people who\'ve been through it. Prescriptions, overdrafts, rent, immigration, council meetings — how it works, where it breaks, what to do.',
+    badge_live8: 'Live',
+    dashboard_name: 'How\'s Our Neighborhood?',
+    dashboard_desc: 'Enter your zip code. See what\'s working and what needs attention — green, yellow, red. Simple enough for a block club meeting.',
+    badge_live9: 'Live',
+    closing: 'Every tool on this page is free, bilingual, and built for neighbors helping neighbors.',
+    zip_title: 'What\'s your zip code?',
+    zip_desc: 'See who\'s nearby, what they need, and what they\'re saying. Everything starts here.',
+    zip_btn: 'Go →',
+    zip_note: 'No account. No data collected. Just your zip code.',
+    svg_your: 'your neighborhood',
+    loop_title: 'The Civic Loop',
+    loop_subtitle: 'Every tool connects. Click any stage to go there.',
+    ln_survive: 'Survive', ln_survive_d: 'Find food, health, emergency help',
+    ln_understand: 'Understand', ln_understand_d: 'Know how systems work',
+    ln_connect: 'Connect', ln_connect_d: 'Find and help neighbors',
+    ln_govern: 'Govern', ln_govern_d: 'Hold leaders accountable',
+    ln_audit: 'Audit', ln_audit_d: 'Track promises with evidence',
+    loop_return: 'Audit scores feed Community Pulse — the loop closes when governance data improves survival resources',
+    how_title: 'How it works',
+    how1_title: 'Enter your zip code',
+    how1_desc: 'No account. No email. No password. Just your zip code and a name you choose. That\'s all it takes to see what\'s happening near you.',
+    how2_title: 'Find your neighbors',
+    how2_desc: 'See discussions, needs, and offers in your area. Post what you need or what you can share. Someone nearby might have exactly what you\'re looking for.',
+    how3_title: 'Build something together',
+    how3_desc: 'Evaluate your leaders. Assess your programs. Organize your block. The tools belong to you — and they work better the more neighbors use them.',
+    pulse_title: 'What neighborhoods are telling us',
+    pulse_note: 'Updated from community posts. No personal data collected.',
+    cta_join: 'Join the conversation →',
+    cta_support: 'Support this platform ♡'
+  },
+  es: {
+    tagline: 'Herramientas Gratuitas para Vecindarios',
+    title: 'La Infraestructura Más Fuerte<br>Es la Que Nadie<br>Te Puede Quitar',
+    subtitle: 'Las comunidades ya tienen la capacidad de cuidar de sí mismas. Solo necesitan la estructura para ejercerla.',
+    intro: '<span class="narrative-name">María</span> trabaja el turno de las 6am. Sus hijos comen en la escuela pero la cena es un vacío. Califica para ayuda que nunca ha solicitado. Su casero subió la renta y no conoce sus derechos. Su vecina Ana tiene comida, conexiones legales y tiempo para compartir — pero nunca se han conocido. Su concejal no ha arreglado las luces de la calle que prometió hace ocho meses.',
+    intro2: 'Todo en esta plataforma fue construido para María, para Ana, y para el vecindario que comparten. Sigue su historia a través de las cuatro páginas abajo — o empieza con lo que necesites ahora.',
+    arc_survive_label: 'Sobrevivir',
+    arc_survive_title: 'Encuentra lo que necesitas ahora',
+    arc_survive_desc: 'Comida cerca de ti. Información de salud en tu idioma. Contactos de emergencia. Evaluación de beneficios. Conservación de alimentos cuando están baratos.',
+    arc_understand_label: 'Comprender',
+    arc_understand_title: 'Conoce cómo funcionan los sistemas a tu alrededor',
+    arc_understand_desc: 'A dónde va tu dinero. Lo que tu empleador puede y no puede hacer. Tus derechos como inquilino, trabajador y paciente.',
+    arc_connect_label: 'Conectar',
+    arc_connect_title: 'Encuentra a tus vecinos',
+    arc_connect_desc: 'Mira quién cerca puede ayudar y qué puedes ofrecer tú. Ayuda leyendo un contrato. Tomates del jardín. Tu comunidad tiene más de lo que crees.',
+    arc_govern_label: 'Gobernar',
+    arc_govern_title: '¿Tus líderes están cumpliendo lo que prometieron?',
+    arc_govern_desc: 'Criterios claros. Evidencia real. Herramientas que permiten a cualquier grupo ver lo que sus líderes realmente hicieron — en manos de quienes hacen las preguntas.',
+    live_title: 'Activas ahora',
+    badge_live: 'Activa', badge_live2: 'Activa', badge_live3: 'Activa', badge_live4: 'Activa', badge_live5: 'Activa', badge_live6: 'Activa',
+    fy_name: 'FeedYours',
+    fy_desc: 'Encuentra comida cerca de ti. Compara lo que contiene. Planifica comidas de la semana. Escanea un código de barras y sabe qué estás comprando. Funciona en cualquier teléfono. Funciona sin internet. Sin cuenta. Sin datos recopilados.',
+    canning_name: 'La Ciencia de la Conservación Segura',
+    canning_desc: 'Aprende a conservar alimentos de forma segura. Cuando están baratos y en temporada, guárdalos para cuando no lo estén. Basado en ciencia. Tres niveles para que empieces donde quieras.',
+    discuss_name: 'Foro de Discusión Comunitario',
+    discuss_desc: 'Habla sobre lo que pasa en tu barrio. Conversaciones organizadas. Votos. Moderación comunitaria. Solo tu código postal y un nombre que elijas.',
+    needs_name: 'Necesidades y Ofertas',
+    needs_desc: 'Publica lo que necesitas. Comparte lo que puedes ofrecer. Tu comunidad tiene más de lo que crees. Las publicaciones expiran en 30 días.',
+    eval_name: 'Evaluación de Liderazgo',
+    eval_desc: 'Evalúa a tu concejal, miembro de junta o director de programa con 5 criterios en lenguaje claro. Tarjeta de puntaje imprimible para tu próxima reunión.',
+    assess_name: 'Evaluación Comunitaria',
+    assess_desc: '¿Ese programa realmente funciona? Puntaje de semáforo en 6 dimensiones. Alcance, calidad, resultados, justicia, sostenibilidad, voz comunitaria.',
+    audit_name: '¿Están Cumpliendo Sus Promesas?',
+    audit_desc: 'Elige un líder o programa. Revisa la lista. Compara lo que dijeron con lo que pasó. Anota lo que viste. Llévalo a la reunión.',
+    badge_live7: 'Activa',
+    knowledge_name: 'Cosas Que Tus Vecinos Descubrieron',
+    knowledge_desc: 'Guías escritas por personas que ya pasaron por eso. Recetas, sobregiros, renta, inmigración, reuniones del consejo — cómo funciona, dónde falla, qué hacer.',
+    badge_live8: 'Activa',
+    dashboard_name: '¿Cómo Va Nuestro Vecindario?',
+    dashboard_desc: 'Ingresa tu código postal. Ve qué funciona y qué necesita atención — verde, amarillo, rojo. Simple para una reunión de cuadra.',
+    badge_live9: 'Activa',
+    closing: 'Cada herramienta en esta página es gratuita, bilingüe, y hecha para vecinos ayudando a vecinos.',
+    zip_title: '¿Cuál es tu código postal?',
+    zip_desc: 'Ve quién está cerca, qué necesitan y qué están diciendo. Todo empieza aquí.',
+    zip_btn: 'Ir →',
+    zip_note: 'Sin cuenta. Sin datos recopilados. Solo tu código postal.',
+    svg_your: 'tu vecindario',
+    loop_title: 'El Ciclo Cívico',
+    loop_subtitle: 'Cada herramienta se conecta. Haz clic en cualquier etapa para ir allí.',
+    ln_survive: 'Sobrevivir', ln_survive_d: 'Comida, salud, ayuda de emergencia',
+    ln_understand: 'Comprender', ln_understand_d: 'Cómo funcionan los sistemas',
+    ln_connect: 'Conectar', ln_connect_d: 'Encuentra y ayuda a vecinos',
+    ln_govern: 'Gobernar', ln_govern_d: 'Exige rendición de cuentas',
+    ln_audit: 'Auditar', ln_audit_d: 'Rastrea promesas con evidencia',
+    loop_return: 'Las auditorías alimentan el Pulso Comunitario — el ciclo se cierra cuando los datos de gobernanza mejoran los recursos de sobrevivencia',
+    how_title: 'Cómo funciona',
+    how1_title: 'Ingresa tu código postal',
+    how1_desc: 'Sin cuenta. Sin correo electrónico. Sin contraseña. Solo tu código postal y un nombre que elijas. Eso es todo lo que necesitas para ver lo que pasa cerca de ti.',
+    how2_title: 'Encuentra a tus vecinos',
+    how2_desc: 'Ve discusiones, necesidades y ofertas en tu área. Publica lo que necesitas o lo que puedes compartir. Alguien cerca podría tener exactamente lo que buscas.',
+    how3_title: 'Construyan algo juntos',
+    how3_desc: 'Evalúa a tus líderes. Evalúa tus programas. Organiza tu cuadra. Las herramientas te pertenecen — y funcionan mejor cuando más vecinos las usan.',
+    pulse_title: 'Lo que los vecindarios nos dicen',
+    pulse_note: 'Actualizado desde publicaciones comunitarias. No se recopilan datos personales.',
+    cta_join: 'Únete a la conversación →',
+    cta_support: 'Apoya esta plataforma ♡'
+  }
+}, { closingKey: null, footer: true, alertPage: 'home' });
+</script>
+</body>
+</html>

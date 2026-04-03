@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Civic Diagnostics — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#12201E">
+<meta name="description" content="Adaptive civic health diagnostics. The platform watches for civic failure patterns and recommends interventions — no individual data, only deidentified community signals.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.dx-hero{text-align:center;padding:28px 16px 14px}
+.dx-hero h1{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--deep);margin-bottom:4px}
+.dx-hero p{font-size:.78rem;color:var(--body);line-height:1.6;max-width:520px;margin:0 auto 8px}
+.dx-method{font-size:.62rem;color:var(--dim);line-height:1.5;max-width:440px;margin:0 auto 16px;font-style:italic}
+
+/* Health Score Ring */
+.dx-score{display:flex;justify-content:center;gap:24px;align-items:center;flex-wrap:wrap;margin:20px 0}
+.dx-ring{position:relative;width:140px;height:140px}
+.dx-ring svg{transform:rotate(-90deg)}
+.dx-ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.dx-ring-num{font-family:var(--display);font-size:2rem;font-weight:800;color:var(--deep);line-height:1}
+.dx-ring-grade{font-family:var(--display);font-size:.9rem;font-weight:700;margin-top:2px}
+.dx-ring-sub{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.dx-trend{font-family:var(--display);font-size:.72rem;font-weight:700;padding:6px 14px;border-radius:20px;display:inline-block}
+.dx-trend-up{background:#dcfce7;color:#166534}
+.dx-trend-stable{background:#fef9c3;color:#854d0e}
+.dx-trend-down{background:#fecaca;color:#991b1b}
+.dx-trend-baseline{background:#f0f4ff;color:#3730a3}
+
+/* Dimension bars */
+.dx-dims{max-width:400px;margin:16px auto}
+.dx-dim{margin:8px 0}
+.dx-dim-label{display:flex;justify-content:space-between;font-size:.65rem;font-weight:600;color:var(--deep);margin-bottom:3px}
+.dx-dim-bar{height:8px;background:var(--sand);border-radius:4px;overflow:hidden}
+.dx-dim-fill{height:100%;border-radius:4px;transition:width .6s ease}
+
+/* Failpoints & Strengths */
+.dx-section{margin:24px 16px;max-width:680px;margin-left:auto;margin-right:auto}
+.dx-section h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--deep);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.dx-card{padding:14px;margin:8px 0;border-radius:10px;border-left:4px solid;font-size:.75rem;line-height:1.6;background:var(--warm)}
+.dx-card-crit{border-color:#ef4444}
+.dx-card-high{border-color:#f97316}
+.dx-card-med{border-color:#eab308}
+.dx-card-low{border-color:#22c55e}
+.dx-card-strength{border-color:#22c55e;background:#f0fdf4}
+.dx-card .dx-type{font-family:var(--display);font-weight:700;color:var(--deep);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em}
+.dx-card .dx-signal{color:var(--body);margin:4px 0}
+.dx-card .dx-sev{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:10px;display:inline-block}
+.dx-sev-critical{background:#fecaca;color:#991b1b}
+.dx-sev-high{background:#fed7aa;color:#9a3412}
+.dx-sev-medium{background:#fef9c3;color:#854d0e}
+.dx-card .dx-conv{font-size:.65rem;color:#166534;background:#dcfce7;padding:6px 10px;border-radius:6px;margin-top:6px}
+.dx-card .dx-action{font-size:.65rem;color:var(--forest);margin-top:6px;font-style:italic}
+
+/* Actions */
+.dx-action-list{list-style:none;padding:0}
+.dx-action-list li{padding:10px 14px;margin:6px 0;border-radius:8px;font-size:.72rem;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.dx-action-list li.act-platform{background:#eff6ff;border-left:3px solid #3b82f6}
+.dx-action-list li.act-community{background:#fef3c7;border-left:3px solid #f59e0b}
+.dx-action-list li.act-upgrade{background:#faf5ff;border-left:3px solid #8b5cf6}
+.dx-action-tag{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.tag-platform{background:#dbeafe;color:#1e40af}
+.tag-community{background:#fde68a;color:#92400e}
+.tag-upgrade{background:#e9d5ff;color:#6b21a8}
+
+/* Cross-reference */
+.dx-xref{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.dx-xref-card{padding:12px;background:var(--warm);border-radius:8px;font-size:.7rem}
+.dx-xref-card h4{font-family:var(--display);font-size:.68rem;font-weight:700;color:var(--deep);margin-bottom:6px}
+.dx-xref-card .xv{font-family:var(--display);font-weight:800;font-size:1rem;color:var(--deep)}
+.dx-xref-card .xl{font-size:.55rem;color:var(--dim)}
+
+/* Empty state */
+.dx-empty{text-align:center;padding:40px 20px;color:var(--dim);font-size:.8rem;line-height:1.6}
+.dx-empty p{max-width:380px;margin:0 auto 12px}
+
+/* Admin trigger */
+.dx-admin{text-align:center;margin:20px 0;padding:16px;background:var(--warm);border-radius:10px}
+.dx-admin button{font-family:var(--display);font-size:.72rem;font-weight:700;padding:10px 20px;border-radius:8px;border:none;background:var(--forest);color:#fff;cursor:pointer}
+.dx-admin input{font-family:var(--display);font-size:.72rem;padding:8px 12px;border:1px solid var(--sand);border-radius:6px;width:140px;margin-right:6px}
+
+.dx-deident{text-align:center;font-size:.55rem;color:var(--dim);margin:20px 0;padding:10px;border-top:1px solid var(--sand)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="dx-hero">
+    <h1>Civic Diagnostics</h1>
+    <p>The platform watches for civic failure patterns and adapts. No individual data — only deidentified community signals.</p>
+    <p class="dx-method">Method: Normal→Broken→Fix diagnostic reasoning applied at community scale. How is the civic system functioning? Where is it failing? What addresses it?</p>
+  </div>
+
+  <div id="dxContent">
+    <div class="dx-empty">
+      <p>Diagnostic reports are generated weekly from community activity data. When enough community members participate, the system begins detecting patterns — unmet needs, accountability gaps, engagement trends, and resource mismatches.</p>
+      <p>All analysis uses deidentified aggregates with k≥11 suppression. No individual contributions are identifiable.</p>
+      <p style="font-weight:600;color:var(--deep);margin-top:16px">The system needs community activity to diagnose. Start by posting a discussion, sharing a need, or submitting a proposal.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+        <a href="/discuss.html" style="font-family:var(--display);font-size:.65rem;font-weight:600;padding:8px 14px;border-radius:7px;border:1px solid var(--sage);color:var(--forest);text-decoration:none">Start a Discussion</a>
+        <a href="/needs.html" style="font-family:var(--display);font-size:.65rem;font-weight:600;padding:8px 14px;border-radius:7px;border:1px solid var(--sage);color:var(--forest);text-decoration:none">Share a Need</a>
+        <a href="/propose.html" style="font-family:var(--display);font-size:.65rem;font-weight:600;padding:8px 14px;border-radius:7px;border:1px solid var(--sage);color:var(--forest);text-decoration:none">Submit a Proposal</a>
+      </div>
+    </div>
+    <!-- Sample preview -->
+    <div style="margin-top:24px;opacity:0.5;pointer-events:none">
+      <p style="font-family:var(--display);font-size:.72rem;font-weight:700;color:var(--dim);text-align:center;margin-bottom:12px">Preview: what a diagnostic report looks like</p>
+      <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+        <div style="text-align:center;background:var(--warm);border-radius:12px;padding:14px 20px;border:1px solid var(--sand)">
+          <div style="font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--deep)">72</div>
+          <div style="font-size:.55rem;color:var(--dim);text-transform:uppercase">Health Score (C)</div>
+        </div>
+        <div style="text-align:center;background:var(--warm);border-radius:12px;padding:14px 20px;border:1px solid var(--sand)">
+          <div style="font-family:var(--display);font-size:.9rem;font-weight:700;color:#166534">↑ Strengthening</div>
+          <div style="font-size:.55rem;color:var(--dim);text-transform:uppercase">Trajectory</div>
+        </div>
+      </div>
+      <div style="max-width:400px;margin:12px auto 0;font-size:.68rem;color:var(--dim);line-height:1.6;text-align:center">
+        <span style="background:#fef2f2;border-left:2px solid #ef4444;padding:4px 8px;display:inline-block;margin:3px;border-radius:4px">⚠️ 8 housing needs unmet</span>
+        <span style="background:#f0fdf4;border-left:2px solid #22c55e;padding:4px 8px;display:inline-block;margin:3px;border-radius:4px">✅ 91% food needs matched</span>
+        <span style="background:#fef9c3;border-left:2px solid #eab308;padding:4px 8px;display:inline-block;margin:3px;border-radius:4px">📊 Census: poverty 22% confirms signal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dx-section" id="dxAdmin" style="display:none">
+    <div class="dx-admin">
+      <p style="font-size:.68rem;color:var(--dim);margin-bottom:8px">Admin: Run diagnostics manually</p>
+      <input type="password" id="adminKey" placeholder="Admin key">
+      <button onclick="runManual()">Run Diagnostics</button>
+      <div id="adminResult" style="margin-top:8px;font-size:.65rem;color:var(--dim)"></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:16px 0">
+    <button onclick="exportReport()" style="background:var(--forest);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-size:.8rem;font-weight:600;cursor:pointer">📄 Export Stakeholder Report</button>
+    <p style="font-size:.58rem;color:var(--dim);margin-top:6px">One-page print-ready report for elected officials, grant applications, or community meetings</p>
+  </div>
+
+  <div class="dx-deident">
+    All data in this report is deidentified and aggregated. Individual contributions are never displayed.<br>
+    k-anonymity threshold: k≥11. Counts below 11 are suppressed.<br>
+    CARE/OCAP principles applied: community data belongs to the community.
+  </div>
+
+  <div class="constellation-section" style="text-align:center;padding:24px 16px;margin-top:20px">
+    <p style="font-size:.85rem;font-weight:600;margin-bottom:6px">The Diagnostic Loop</p>
+    <p style="font-size:.72rem;line-height:1.7;max-width:460px;margin:0 auto">
+      Community activity → Pattern detection → Failpoint diagnosis → Convergence with federal data → Recommended actions → Platform adaptation → Better community outcomes → Community activity
+    </p>
+    <p style="font-size:.62rem;margin-top:10px;font-style:italic">The scaffold doesn't change. The content changes. The community is the patient.</p>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script src="/js/community-api.js"></script>
+<script>
+CommunityAPI.init();
+
+CommunityAPI.onReady(function() {
+  var api = CommunityAPI.endpoint();
+  var zip = CommunityAPI.zip ? CommunityAPI.zip() : '';
+  if (!api) return;
+
+  // Show admin section if ?admin in URL
+  if (location.search.indexOf('admin') !== -1) {
+    document.getElementById('dxAdmin').style.display = '';
+  }
+
+  // Fetch latest diagnostic report
+  fetch(api + '/diagnostics/latest?community=' + zip)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.report) return; // No reports yet — empty state stays
+      renderReport(data.report);
+    })
+    .catch(function() {});
+});
+
+function renderReport(r) {
+  var h = '';
+
+  // ═══ HEALTH SCORE RING ═══
+  var pct = Math.min(r.health_score, 100);
+  var circumference = 2 * Math.PI * 60;
+  var offset = circumference - (pct / 100) * circumference;
+  var color = pct >= 80 ? '#22c55e' : pct >= 60 ? '#eab308' : '#ef4444';
+  var trendClass = r.trend === 'strengthening' ? 'dx-trend-up' : r.trend === 'weakening' ? 'dx-trend-down' : r.trend === 'baseline' ? 'dx-trend-baseline' : 'dx-trend-stable';
+  var trendIcon = r.trend === 'strengthening' ? '↑' : r.trend === 'weakening' ? '↓' : r.trend === 'baseline' ? '◆' : '→';
+
+  h += '<div class="dx-score">';
+  h += '<div class="dx-ring"><svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7eb" stroke-width="10"/>';
+  h += '<circle cx="70" cy="70" r="60" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '"/>';
+  h += '</svg><div class="dx-ring-label"><div class="dx-ring-num">' + Math.round(pct) + '</div>';
+  h += '<div class="dx-ring-grade" style="color:' + color + '">Grade ' + r.health_grade + '</div>';
+  h += '<div class="dx-ring-sub">Civic Health</div></div></div>';
+  h += '<div><div class="dx-trend ' + trendClass + '">' + trendIcon + ' ' + (r.trend || 'baseline') + '</div>';
+  h += '<div style="font-size:.6rem;color:var(--dim);margin-top:6px">Period: ' + r.period + '</div></div>';
+  h += '</div>';
+
+  // ═══ DIMENSION BARS ═══
+  h += '<div class="dx-dims">';
+  var dims = [
+    { label: 'Participation', score: r.participation_score, weight: '30%' },
+    { label: 'Responsiveness', score: r.responsiveness_score, weight: '25%' },
+    { label: 'Accountability', score: r.accountability_score, weight: '25%' },
+    { label: 'Solidarity', score: r.solidarity_score, weight: '20%' }
+  ];
+  dims.forEach(function(d) {
+    var c = d.score >= 70 ? '#22c55e' : d.score >= 40 ? '#eab308' : '#ef4444';
+    h += '<div class="dx-dim"><div class="dx-dim-label"><span>' + d.label + ' (' + d.weight + ')</span><span>' + Math.round(d.score) + '%</span></div>';
+    h += '<div class="dx-dim-bar"><div class="dx-dim-fill" style="width:' + d.score + '%;background:' + c + '"></div></div></div>';
+  });
+  h += '</div>';
+
+  // ═══ FAILPOINTS ═══
+  var fps = r.failpoints || [];
+  if (fps.length > 0) {
+    h += '<div class="dx-section"><h3>⚠️ Detected Failpoints (' + fps.length + ')</h3>';
+    fps.forEach(function(fp) {
+      var sevClass = fp.severity === 'critical' ? 'dx-card-crit' : fp.severity === 'high' ? 'dx-card-high' : 'dx-card-med';
+      var sevLabel = fp.severity === 'critical' ? 'dx-sev-critical' : fp.severity === 'high' ? 'dx-sev-high' : 'dx-sev-medium';
+      h += '<div class="dx-card ' + sevClass + '">';
+      h += '<div class="dx-type">' + (fp.type || '').replace(/_/g, ' ') + '</div>';
+      h += '<div class="dx-signal">' + fp.signal + '</div>';
+      h += '<span class="dx-sev ' + sevLabel + '">' + fp.severity + '</span>';
+      if (fp.category) h += ' <span style="font-size:.6rem;color:var(--dim)">Category: ' + fp.category + '</span>';
+      if (fp.convergence) h += '<div class="dx-conv">📊 Convergence: ' + fp.convergence + '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+
+  // ═══ STRENGTHS ═══
+  var sts = r.strengths || [];
+  if (sts.length > 0) {
+    h += '<div class="dx-section"><h3>✅ Community Strengths (' + sts.length + ')</h3>';
+    sts.forEach(function(s) {
+      h += '<div class="dx-card dx-card-strength">';
+      h += '<div class="dx-type">' + (s.type || '').replace(/_/g, ' ') + '</div>';
+      h += '<div class="dx-signal">' + s.signal + '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+
+  // ═══ RECOMMENDED ACTIONS ═══
+  var acts = r.recommended_actions || [];
+  if (acts.length > 0) {
+    h += '<div class="dx-section"><h3>🔧 Recommended Actions (' + acts.length + ')</h3>';
+    h += '<ul class="dx-action-list">';
+    acts.forEach(function(a) {
+      var cls = a.target === 'platform' ? 'act-platform' : a.target === 'upgrade' ? 'act-upgrade' : 'act-community';
+      var tag = a.target === 'platform' ? 'tag-platform' : a.target === 'upgrade' ? 'tag-upgrade' : 'tag-community';
+      h += '<li class="' + cls + '"><span class="dx-action-tag ' + tag + '">' + a.target + '</span><span>' + a.action + '</span></li>';
+    });
+    h += '</ul></div>';
+  }
+
+  // ═══ CENSUS / CDC CROSS-REFERENCE ═══
+  var census = r.census_crossref;
+  var cdc = r.cdc_crossref;
+  if (census || cdc) {
+    h += '<div class="dx-section"><h3>📊 Federal Data Context</h3>';
+    h += '<div class="dx-xref">';
+    if (census) {
+      if (census.median_income) h += '<div class="dx-xref-card"><div class="xl">Median Income</div><div class="xv">$' + Number(census.median_income).toLocaleString() + '</div><div class="xl">Census ACS 5-Year</div></div>';
+      if (census.poverty_rate) h += '<div class="dx-xref-card"><div class="xl">Poverty Rate</div><div class="xv">' + census.poverty_rate + '%</div><div class="xl">Census ACS 5-Year</div></div>';
+      if (census.population) h += '<div class="dx-xref-card"><div class="xl">Population</div><div class="xv">' + Number(census.population).toLocaleString() + '</div><div class="xl">Census ACS 5-Year</div></div>';
+    }
+    if (cdc && typeof cdc === 'object') {
+      var cdcKeys = Object.keys(cdc);
+      cdcKeys.slice(0, 4).forEach(function(k) {
+        h += '<div class="dx-xref-card"><div class="xl">' + k + '</div><div class="xv">' + cdc[k] + '%</div><div class="xl">CDC PLACES</div></div>';
+      });
+    }
+    h += '</div></div>';
+  }
+
+  document.getElementById('dxContent').innerHTML = h;
+}
+
+// ═══ STAKEHOLDER EXPORT — One-page report for alderman, clinic director, grant application ═══
+function exportReport() {
+  var content = document.getElementById('dxContent');
+  if (!content.innerHTML || content.innerHTML.indexOf('dx-score') === -1) {
+    alert('Load a diagnostic report first.'); return;
+  }
+  var zip = (typeof CommunityAPI !== 'undefined' && CommunityAPI.zip) ? CommunityAPI.zip() : '';
+  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  
+  var win = window.open('', '_blank');
+  win.document.write('<!DOCTYPE html><html><head><title>Community Civic Health Report — ' + zip + '</title>');
+  win.document.write('<style>');
+  win.document.write('*{margin:0;padding:0;box-sizing:border-box}');
+  win.document.write('body{font-family:Arial,Helvetica,sans-serif;padding:40px 50px;color:#1a1a1a;max-width:800px;margin:0 auto;font-size:11pt;line-height:1.5}');
+  win.document.write('h1{font-size:18pt;margin-bottom:4px;color:#2D5016}');
+  win.document.write('.subtitle{font-size:10pt;color:#666;margin-bottom:20px}');
+  win.document.write('.score-box{display:inline-block;background:#f5f0e8;border-radius:8px;padding:12px 24px;text-align:center;margin:12px 12px 12px 0}');
+  win.document.write('.score-num{font-size:28pt;font-weight:800;color:#2D5016}');
+  win.document.write('.score-label{font-size:8pt;color:#666;text-transform:uppercase;letter-spacing:.05em}');
+  win.document.write('h2{font-size:13pt;margin:18px 0 8px;color:#2D5016;border-bottom:1px solid #ddd;padding-bottom:4px}');
+  win.document.write('.fp{background:#fef2f2;border-left:3px solid #ef4444;padding:8px 12px;margin:6px 0;font-size:10pt}');
+  win.document.write('.fp-crit{border-color:#991b1b;background:#fecaca}');
+  win.document.write('.st{background:#f0fdf4;border-left:3px solid #22c55e;padding:8px 12px;margin:6px 0;font-size:10pt}');
+  win.document.write('.act{font-size:10pt;margin:4px 0;padding-left:16px;text-indent:-16px}');
+  win.document.write('.act:before{content:"→ ";font-weight:bold;color:#2D5016}');
+  win.document.write('.dims{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0}');
+  win.document.write('.dim{flex:1;min-width:120px;text-align:center;padding:8px;background:#fafafa;border-radius:4px}');
+  win.document.write('.dim-score{font-size:16pt;font-weight:700}');
+  win.document.write('.dim-label{font-size:8pt;color:#666}');
+  win.document.write('.footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd;font-size:8pt;color:#999}');
+  win.document.write('.deident{background:#fffbeb;padding:8px 12px;font-size:8pt;border-radius:4px;margin:12px 0;color:#854d0e}');
+  win.document.write('@media print{body{padding:20px 30px}}');
+  win.document.write('</style></head><body>');
+  
+  win.document.write('<h1>Community Civic Health Report</h1>');
+  win.document.write('<div class="subtitle">ZIP ' + zip + ' — Generated ' + date + ' — CommUnity OS Adaptive Diagnostics</div>');
+  win.document.write('<div class="deident">⚠️ This report contains only deidentified aggregate data. No individual information is collected, stored, or reported. All counts are suppressed below k=11 threshold.</div>');
+
+  // Extract data from the rendered page
+  var scoreEl = content.querySelector('.dx-ring-num');
+  var gradeEl = content.querySelector('.dx-ring-grade');
+  var trendEl = content.querySelector('.dx-trend');
+  if (scoreEl) {
+    win.document.write('<div class="score-box"><div class="score-num">' + scoreEl.textContent + '</div><div class="score-label">Health Score (' + (gradeEl ? gradeEl.textContent : '') + ')</div></div>');
+  }
+  if (trendEl) {
+    win.document.write('<div class="score-box"><div class="score-num" style="font-size:14pt">' + trendEl.textContent + '</div><div class="score-label">Trajectory</div></div>');
+  }
+
+  // Dimensions
+  var dimEls = content.querySelectorAll('.dx-dim');
+  if (dimEls.length > 0) {
+    win.document.write('<div class="dims">');
+    dimEls.forEach(function(d) {
+      var parts = d.querySelector('.dx-dim-label');
+      if (parts) {
+        var spans = parts.querySelectorAll('span');
+        win.document.write('<div class="dim"><div class="dim-score">' + (spans[1] ? spans[1].textContent : '') + '</div><div class="dim-label">' + (spans[0] ? spans[0].textContent : '') + '</div></div>');
+      }
+    });
+    win.document.write('</div>');
+  }
+
+  // Failpoints
+  var fpEls = content.querySelectorAll('.dx-card-crit, .dx-card-high, .dx-card-med');
+  if (fpEls.length > 0) {
+    win.document.write('<h2>Detected Civic Failure Points</h2>');
+    fpEls.forEach(function(fp) {
+      var type = fp.querySelector('.dx-type');
+      var signal = fp.querySelector('.dx-signal');
+      var sev = fp.querySelector('.dx-sev');
+      var conv = fp.querySelector('.dx-conv');
+      var cls = sev && sev.textContent === 'critical' ? ' fp-crit' : '';
+      win.document.write('<div class="fp' + cls + '"><strong>' + (type ? type.textContent : '') + '</strong>');
+      if (sev) win.document.write(' [' + sev.textContent + ']');
+      win.document.write('<br>' + (signal ? signal.textContent : ''));
+      if (conv) win.document.write('<br><em>' + conv.textContent + '</em>');
+      win.document.write('</div>');
+    });
+  }
+
+  // Strengths
+  var stEls = content.querySelectorAll('.dx-card-strength');
+  if (stEls.length > 0) {
+    win.document.write('<h2>Community Strengths</h2>');
+    stEls.forEach(function(s) {
+      var type = s.querySelector('.dx-type');
+      var signal = s.querySelector('.dx-signal');
+      win.document.write('<div class="st"><strong>' + (type ? type.textContent : '') + '</strong><br>' + (signal ? signal.textContent : '') + '</div>');
+    });
+  }
+
+  // Actions
+  var actEls = content.querySelectorAll('.dx-action-list li');
+  if (actEls.length > 0) {
+    win.document.write('<h2>Recommended Actions</h2>');
+    actEls.forEach(function(a) {
+      win.document.write('<div class="act">' + a.textContent.trim() + '</div>');
+    });
+  }
+
+  win.document.write('<div class="footer">');
+  win.document.write('Generated by CommUnity OS Adaptive Civic Diagnostics · comm-unity-os.org · $7/year civic infrastructure<br>');
+  win.document.write('Methodology: Normal→Broken→Fix diagnostic reasoning applied to civic systems. Community data cross-referenced with Census ACS 5-Year and CDC PLACES.<br>');
+  win.document.write('Data sovereignty: All data is community-owned. No individual data collected. CARE/OCAP principles applied. Platform code: MIT License.</div>');
+  win.document.write('</body></html>');
+  win.document.close();
+  setTimeout(function() { win.print(); }, 500);
+}
+
+function runManual() {
+  var api = CommunityAPI.endpoint();
+  var zip = CommunityAPI.zip ? CommunityAPI.zip() : '';
+  var key = document.getElementById('adminKey').value;
+  var result = document.getElementById('adminResult');
+  result.textContent = 'Running diagnostics...';
+
+  fetch(api + '/diagnostics/run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ admin_key: key, community: zip })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { result.textContent = 'Error: ' + data.error; return; }
+    result.textContent = 'Report generated. Health score: ' + (data.health_score || 'N/A') + ' (' + (data.health_grade || '?') + '). ' + (data.failpoints || []).length + ' failpoints detected.';
+    renderReport(data);
+  })
+  .catch(function(e) { result.textContent = 'Error: ' + e.message; });
+}
+</script>
+</body>
+</html>

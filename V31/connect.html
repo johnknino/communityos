@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Connect — CommUnity OS</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Find Your Neighbors — CommUnity OS">
+<meta property="og:description" content="Find your neighbors. Needs and offers. Discussion boards. Secure communication. Mutual aid.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://comm-unity-os.org/connect.html">
+<meta name="description" content="Find your neighbors. See who nearby can help and what you can offer. Secure communication guides for community organizing.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="canonical" href="https://comm-unity-os.org/connect.html">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Connect — CommUnity OS", "url": "https://comm-unity-os.org/connect.html", "description": "Chicago Southwest Side community organizations: Resurrection Project, Enlace Chicago, Brighton Park Neighborhood Council, Greater Chicago Food Depository.", "inLanguage": ["en", "es"], "isPartOf": {"@type": "WebApplication", "name": "CommUnity OS", "url": "https://comm-unity-os.org"}}
+</script>
+</head>
+<body>
+
+<div class="page">
+
+  <div id="alertsContainer"></div>
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Connect</div>
+    <h1 data-t="title">Find Your Neighbors</h1>
+    <div class="subtitle" data-t="subtitle">Your community already has more than you think. Help reading a lease. Extra tomatoes from a garden. The problem isn't scarcity — it's visibility. These tools make it visible.</div>
+  </div>
+
+  <!-- NARRATIVE -->
+  <div class="narrative fade-in fade-in-1">
+    <p data-t="story"><span class="narrative-name">Ana</span> lives three blocks from Maria. She grows tomatoes, peppers, and cilantro in her backyard — more than her family can eat. She knows a lawyer at the legal aid clinic who helps with leases. On Thursdays she watches her grandchildren and could easily watch one or two more. She has time. She has knowledge. She has food to share. But she doesn't know Maria exists.</p>
+    <p data-t="story2"><span class="narrative-name">Maria</span> needs food, legal help, and childcare. Ana has all three. They live in the same zip code. The gap between them isn't distance — it's that no one built the bridge.</p>
+    <p data-t="story3">These tools are the bridge.</p>
+  </div>
+
+  <!-- WHAT'S COMING -->
+  <div class="section fade-in fade-in-1">
+    <div class="section-head">
+      <span class="section-icon">🏘️</span>
+      <h2 data-t="coming_title">Community Tools</h2>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="/needs.html" data-t="needs_link">Needs & Offers Board</a> <span class="badge badge-live" data-t="bl1">Live</span></h3>
+      <p data-t="needs_desc">Put in your zip code. See who nearby needs something and what people can offer. A ride to WIC. Help with a form. Childcare for a Thursday appointment. Posts expire after 30 days. No real names required. No data sold. Just people finding each other.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="/discuss.html" data-t="discuss_link">Community Discussion Board</a> <span class="badge badge-live" data-t="bl2">Live</span></h3>
+      <p data-t="discuss_desc">A place to talk about what's happening in your neighborhood. Threaded conversations tagged by topic — food, housing, safety, governance. Upvoting. Community moderation. No login required — just your zip code and a name you choose.</p>
+    </div>
+  </div>
+
+  <!-- SECURE COMMUNICATION -->
+  <div class="section fade-in fade-in-2">
+    <div class="section-head">
+      <span class="section-icon">🔒</span>
+      <h2 data-t="secure_title">Communicate Securely</h2>
+    </div>
+    <p style="margin-bottom:20px" data-t="secure_intro">If you're organizing in your community, secure communication protects everyone.</p>
+
+    <!-- SIGNAL — PRIMARY -->
+    <div class="resource-card" style="border-left:4px solid var(--sage)">
+      <h3><a href="https://signal.org" target="_blank" rel="noopener">Signal</a> <span class="badge badge-free" data-t="bf1">Free</span> <span style="font-size:.65rem;color:var(--sage);font-weight:600" data-t="signal_rec">— Our recommendation</span></h3>
+      <p data-t="signal_desc">End-to-end encrypted messaging. Open source. Run by a nonprofit. 70 million users. Even Signal itself cannot read your messages. Groups up to 1,000 members. Voice and video calls. This is what you should use.</p>
+      <div style="background:var(--cream);border-radius:8px;padding:14px;margin-top:12px;font-size:.82rem;color:var(--body);line-height:1.7">
+        <strong data-t="signal_tips_title">After you install it:</strong>
+        <span data-t="signal_tips"> Use a username instead of your phone number. Enable disappearing messages. Disable link previews. Turn off AI notification summaries on your phone.</span>
+      </div>
+    </div>
+
+    <!-- WHY SIGNAL -->
+    <div style="background:var(--warm);border-radius:10px;padding:16px;margin:14px 0;font-size:.82rem;line-height:1.7;color:var(--body)">
+      <strong style="color:var(--deep)" data-t="why_title">Wasn't Signal in the news?</strong>
+      <span data-t="why_body"> In 2025, Trump administration officials used Signal to discuss classified military strike plans and accidentally added a journalist. The media called it "Signalgate." But here's what matters: Signal's encryption was never broken. The technology worked exactly as designed. The failure was a person adding the wrong contact to a group chat — the same mistake you could make with a text message or email. Security experts universally called the incident an endorsement of Signal's security. If it's trusted enough for war plans, it's strong enough for a neighborhood organizing group.</span>
+    </div>
+
+    <!-- COLLAPSIBLE ALTERNATIVES -->
+    <div style="margin:14px 0">
+      <button onclick="toggleAlts()" id="altsToggle" style="font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--dim);background:none;border:1.5px solid var(--sand);border-radius:10px;padding:8px 18px;cursor:pointer;transition:.2s;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center" data-t="alts_toggle">
+        <span data-t="alts_label">Other secure options (if Signal doesn't fit your situation)</span>
+        <span id="altsChevron" style="transition:transform .3s">▼</span>
+      </button>
+      <div id="altsPanel" style="max-height:0;overflow:hidden;transition:max-height .4s ease-out">
+        <div style="padding-top:12px">
+
+          <div class="resource-card">
+            <h3><a href="https://getsession.org" target="_blank" rel="noopener">Session</a> <span class="badge badge-free" data-t="bf_session">Free</span></h3>
+            <p><strong style="color:var(--deep)" data-t="session_best">Best for: maximum anonymity.</strong> <span data-t="session_desc">No phone number. No email. No identity required. Messages route through a decentralized network. Slower than Signal, but leaves no trace. Use this when being identified as a member of a group could put someone at risk.</span></p>
+          </div>
+
+          <div class="resource-card">
+            <h3><a href="https://element.io" target="_blank" rel="noopener">Element (Matrix)</a> <span class="badge badge-free" data-t="bf_element">Free</span></h3>
+            <p><strong style="color:var(--deep)" data-t="element_best">Best for: community ownership.</strong> <span data-t="element_desc">Decentralized and open source. Communities can run their own server. End-to-end encrypted. Used by the French government. Steeper learning curve, but the community owns the infrastructure — no company can shut it down.</span></p>
+          </div>
+
+          <div class="resource-card">
+            <h3><a href="https://briarproject.org" target="_blank" rel="noopener">Briar</a> <span class="badge badge-free" data-t="bf_briar">Free</span></h3>
+            <p><strong style="color:var(--deep)" data-t="briar_best">Best for: no internet.</strong> <span data-t="briar_desc">Connects devices directly via Bluetooth or Wi-Fi when nearby. All messages stored locally. Built-in forums for group organizing. Android only. Use this when cell service is unreliable.</span></p>
+          </div>
+
+          <div class="resource-card">
+            <h3><a href="https://threema.ch" target="_blank" rel="noopener">Threema</a> <span class="badge" style="background:var(--gold-soft);color:var(--gold)">~$5 once</span></h3>
+            <p><strong style="color:var(--deep)" data-t="threema_best">Best for: no phone number.</strong> <span data-t="threema_desc">Swiss-based. Uses a random ID instead of your number. Protected by Swiss privacy law. One-time purchase. Use this if you want encrypted messaging with zero connection to your phone number.</span></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUTUAL AID RESOURCES -->
+  <div class="section fade-in fade-in-3">
+    <div class="section-head">
+      <span class="section-icon">🤝</span>
+      <h2 data-t="mutual_title">Mutual Aid Near You</h2>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.mutualaidhub.org" target="_blank" rel="noopener" data-t="mah_name">Mutual Aid Hub</a> <span class="badge badge-free" data-t="bf3">Free</span></h3>
+      <p data-t="mah_desc">Searchable directory and map of mutual aid networks across the United States. Find groups already active in your area.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.hourworld.org" target="_blank" rel="noopener" data-t="hour_name">hOurworld — Timebanking</a> <span class="badge badge-free" data-t="bf4">Free</span></h3>
+      <p data-t="hour_desc">Free timebanking platform used by 225+ communities. Give an hour of what you can do, earn an hour of what you need. Free software, hosting, and training.</p>
+    </div>
+
+    <div class="video-card">
+      <h4>📺 <a href="https://www.youtube.com/watch?v=_k2KZwKgtzI" target="_blank" rel="noopener">Watch: Mutual Aid 101 — "We're All We've Got"</a></h4>
+      <p>What mutual aid is, why it works, and how to start in your neighborhood. With Dean Spade, hosted by Shareable.</p>
+      <span class="vc-meta">Shareable · Chaptered session</span>
+      <a href="/discuss.html?topic=connect" class="vc-discuss">💬 Discuss mutual aid →</a>
+    </div>
+
+    <div class="video-card">
+      <h4>📺 <a href="https://www.youtube.com/watch?v=Fii0yvJ4fMc" target="_blank" rel="noopener">Watch: How Timebanking Works</a></h4>
+      <p>Animated explainer — give an hour of what you can do, get an hour of what you need. No money changes hands.</p>
+      <span class="vc-meta">Warwickshire Council · 3 min</span>
+      <a href="/discuss.html?topic=connect" class="vc-discuss">💬 Discuss community organizing →</a>
+    </div>
+  </div>
+
+  <!-- CHICAGO ORGANIZATIONS -->
+  <div class="section fade-in fade-in-3">
+    <div class="section-head">
+      <span class="section-icon">🏙️</span>
+      <h2 data-t="chi_title">Chicago Southwest Side Organizations</h2>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://resurrectionproject.org" target="_blank" rel="noopener" data-t="trp_name">The Resurrection Project</a> <span class="badge badge-es">Español</span></h3>
+      <p data-t="trp_desc">Housing, financial education, immigration services, early childhood — Pilsen since 1990. Over $1 billion in community wealth built. 1805 S. Paulina, 60608.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.enlacechicago.org" target="_blank" rel="noopener" data-t="enlace_name">Enlace Chicago</a> <span class="badge badge-es">Español</span></h3>
+      <p data-t="enlace_desc">Education, health, immigration, violence prevention in Little Village. 8,000+ youth and adults served. 60623.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.pilsenneighbors.org" target="_blank" rel="noopener" data-t="pncc_name">Pilsen Neighbors Community Council</a> <span class="badge badge-es">Español</span></h3>
+      <p data-t="pncc_desc">Leadership development, DACA renewal clinic, Latino Legal Institute, business incubator. 2026 S. Blue Island Ave, 60608.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.bpncchicago.org" target="_blank" rel="noopener" data-t="bpnc_name">Brighton Park Neighborhood Council</a> <span class="badge badge-es">Español</span></h3>
+      <p data-t="bpnc_desc">Organizing, immigration, financial well-being, promotoras health program. Part of a network of 80+ member organizations. 60632.</p>
+    </div>
+
+    <div class="resource-card">
+      <h3><a href="https://www.chicagosfoodbank.org/find-food/" target="_blank" rel="noopener" data-t="gcfd_find">Find a Food Pantry — Food Depository</a></h3>
+      <p data-t="gcfd_find_desc">Searchable pantry finder for all of Cook County. Call (773) 247-3663 for help in English or Spanish.</p>
+    </div>
+  </div>
+
+  <!-- FIND NEAR YOU -->
+  <div class="section fade-in fade-in-3">
+    <div class="section-head">
+      <span class="section-icon">📍</span>
+      <h2 data-t="find_title">Find Near You</h2>
+    </div>
+    <p style="font-size:.82rem;color:var(--dim);margin-bottom:14px" data-t="find_desc">Libraries, parks, schools, community organizations, transit — all by zip code.</p>
+    <div id="connectData">
+      <div class="resource-card">
+        <h3><a href="https://www.chipublib.org/locations/" target="_blank" rel="noopener" data-t="find_lib">Chicago Public Libraries</a></h3>
+        <p data-t="find_lib_desc">Find your nearest branch. Free internet, meeting rooms, job help, children's programs, and now food pantries at select locations.</p>
+      </div>
+      <div class="resource-card">
+        <h3><a href="https://www.chicagoparkdistrict.com/parks-facilities" target="_blank" rel="noopener" data-t="find_park">Chicago Park District</a></h3>
+        <p data-t="find_park_desc">Parks, fieldhouses, pools, programs. Search by zip code or address. Most programs are free or low-cost.</p>
+      </div>
+      <div class="resource-card">
+        <h3><a href="https://www.cps.edu/schools/" target="_blank" rel="noopener" data-t="find_school">CPS School Finder</a></h3>
+        <p data-t="find_school_desc">Find your neighborhood school, options, and programs. School locator by address.</p>
+      </div>
+      <div class="resource-card">
+        <h3><a href="https://www.transitchicago.com/planatrip/" target="_blank" rel="noopener" data-t="find_transit">CTA Trip Planner</a></h3>
+        <p data-t="find_transit_desc">Plan your route on the L or bus. Real-time arrival tracking. Ventra card info.</p>
+      </div>
+      <div class="resource-card">
+        <h3><a href="https://www.chicagosfoodbank.org/find-food/" target="_blank" rel="noopener" data-t="find_pantry">Find a Food Pantry</a></h3>
+        <p data-t="find_pantry_desc">Greater Chicago Food Depository partner network. Search by zip. Call <a href="tel:7732473663">(773) 247-3663</a> for help in English or Spanish.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIFFHANGER -->
+  <div class="cliffhanger">
+    <p data-t="cliff">Maria and Ana found each other. The block is organizing. But the alderman who promised to fix the streetlights eight months ago still hasn't done it. The community center's after-school program lost funding and nobody explained why. The budget meeting is next Tuesday and nobody on the block has ever gone. They have the tools now. They have each other. The question is: are their leaders doing what they said?</p>
+    <a href="/govern.html" data-t="cliff_cta">Are they? →</a>
+  </div>
+
+  <div class="section text-center" style="margin:20px 0">
+    <p style="font-size:.72rem;color:var(--light)" data-t="bottom_note">Every tool on this page is free. No account. No email or tracking. Posts you share are visible to neighbors.</p>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+function toggleAlts() {
+  var panel = document.getElementById('altsPanel');
+  var chevron = document.getElementById('altsChevron');
+  if (panel.style.maxHeight === '0px' || panel.style.maxHeight === '') {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    chevron.style.transform = 'rotate(180deg)';
+  } else {
+    panel.style.maxHeight = '0px';
+    chevron.style.transform = 'rotate(0deg)';
+  }
+}
+
+var API = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+EQ.init({
+  en: {
+    arc_label: 'Connect',
+    title: 'Find Your Neighbors',
+    subtitle: 'Your community already has more than you think. A ride to a clinic. Help reading a lease. Extra tomatoes from a garden. The problem isn\'t scarcity — it\'s visibility. These tools make it visible.',
+    coming_title: 'Community Tools',
+    bl1: 'Live', bl2: 'Live',
+    needs_link: 'Needs & Offers Board',
+    needs_desc: 'Put in your zip code. See who nearby needs something and what people can offer. A ride to WIC. Help with a form. Childcare for a Thursday appointment. Posts expire after 30 days. No real names required. No data sold. Just people finding each other.',
+    discuss_link: 'Community Discussion Board',
+    discuss_desc: 'A place to talk about what\'s happening in your neighborhood. Threaded conversations tagged by topic — food, housing, safety, governance. Upvoting. Community moderation. No login required — just your zip code and a name you choose.',
+    secure_title: 'Communicate Securely',
+    secure_intro: 'If you\'re organizing in your community, secure communication protects everyone.',
+    bf1:'Free',bf2:'Free',bf_session:'Free',bf_element:'Free',bf_briar:'Free',
+    signal_rec: '— Our recommendation',
+    signal_desc: 'End-to-end encrypted messaging. Open source. Run by a nonprofit. 70 million users. Even Signal itself cannot read your messages. Groups up to 1,000 members. Voice and video calls. This is what you should use.',
+    signal_tips_title: 'After you install it:',
+    signal_tips: ' Use a username instead of your phone number. Enable disappearing messages. Disable link previews. Turn off AI notification summaries on your phone.',
+    why_title: 'Wasn\'t Signal in the news?',
+    why_body: ' In 2025, Trump administration officials used Signal to discuss classified military strike plans and accidentally added a journalist. The media called it "Signalgate." But here\'s what matters: Signal\'s encryption was never broken. The technology worked exactly as designed. The failure was a person adding the wrong contact to a group chat — the same mistake you could make with a text message or email. Security experts universally called the incident an endorsement of Signal\'s security. If it\'s trusted enough for war plans, it\'s strong enough for a neighborhood organizing group.',
+    alts_label: 'Other secure options (if Signal doesn\'t fit your situation)',
+    session_best: 'Best for: maximum anonymity.',
+    session_desc: 'No phone number. No email. No identity required. Messages route through a decentralized network. Slower than Signal, but leaves no trace. Use this when being identified as a member of a group could put someone at risk.',
+    element_best: 'Best for: community ownership.',
+    element_desc: 'Decentralized and open source. Communities can run their own server. End-to-end encrypted. Used by the French government. Steeper learning curve, but the community owns the infrastructure — no company can shut it down.',
+    briar_best: 'Best for: no internet.',
+    briar_desc: 'Connects devices directly via Bluetooth or Wi-Fi when nearby. All messages stored locally. Built-in forums for group organizing. Android only. Use this when cell service is unreliable.',
+    threema_best: 'Best for: no phone number.',
+    threema_desc: 'Swiss-based. Uses a random ID instead of your number. Protected by Swiss privacy law. One-time purchase. Use this if you want encrypted messaging with zero connection to your phone number.',
+    mutual_title: 'Mutual Aid Near You',
+    bf3:'Free',bf4:'Free',
+    mah_name: 'Mutual Aid Hub',
+    mah_desc: 'Searchable directory and map of mutual aid networks across the United States. Find groups already active in your area.',
+    hour_name: 'hOurworld — Timebanking',
+    hour_desc: 'Free timebanking platform used by 225+ communities. Give an hour of what you can do, earn an hour of what you need. Free software, hosting, and training.',
+    closing: 'The strongest communities aren\'t the ones with the most resources. They\'re the ones where people can find each other.',
+    story: '<span class="narrative-name">Ana</span> lives three blocks from Maria. She grows tomatoes, peppers, and cilantro in her backyard — more than her family can eat. She knows a lawyer at the legal aid clinic who helps with leases. On Thursdays she watches her grandchildren and could easily watch one or two more. She has time. She has knowledge. She has food to share. But she doesn\'t know Maria exists.',
+    story2: '<span class="narrative-name">Maria</span> needs food, legal help, and childcare. Ana has all three. They live in the same zip code. The gap between them isn\'t distance — it\'s that no one built the bridge.',
+    story3: 'These tools are the bridge.',
+    cliff: 'Maria and Ana found each other. The block is organizing. But the alderman who promised to fix the streetlights eight months ago still hasn\'t done it. The community center\'s after-school program lost funding and nobody explained why. The budget meeting is next Tuesday and nobody on the block has ever gone. They have the tools now. They have each other. The question is: are their leaders doing what they said?',
+    cliff_cta: 'Are they? →',
+    bottom_note: 'Every tool on this page is free. No account. No email or tracking. Posts you share are visible to neighbors.'
+  },
+  es: {
+    arc_label: 'Conectar',
+    title: 'Encuentra a Tus Vecinos',
+    subtitle: 'Tu comunidad ya tiene más de lo que crees. Un viaje a la clínica. Ayuda leyendo un contrato. Tomates extra del jardín. El problema no es la escasez — es la visibilidad. Estas herramientas la hacen visible.',
+    coming_title: 'Herramientas Comunitarias',
+    bl1: 'Activa', bl2: 'Activa',
+    needs_link: 'Tablero de Necesidades y Ofertas',
+    needs_desc: 'Pon tu código postal. Mira quién cerca necesita algo y qué pueden ofrecer. Un viaje a WIC. Ayuda con un formulario. Cuidado de niños para una cita del jueves. Las publicaciones expiran en 30 días. Sin nombres reales. Sin datos vendidos. Solo personas encontrándose.',
+    discuss_link: 'Foro de Discusión Comunitario',
+    discuss_desc: 'Un lugar para hablar sobre lo que pasa en tu barrio. Conversaciones organizadas por tema — comida, vivienda, seguridad, gobernanza. Votos. Moderación comunitaria. Sin cuenta necesaria — solo tu código postal y un nombre que elijas.',
+    secure_title: 'Comunícate de Forma Segura',
+    secure_intro: 'Si estás organizando en tu comunidad, la comunicación segura protege a todos.',
+    bf1:'Gratis',bf2:'Gratis',bf_session:'Gratis',bf_element:'Gratis',bf_briar:'Gratis',
+    signal_rec: '— Nuestra recomendación',
+    signal_desc: 'Mensajería cifrada de extremo a extremo. Código abierto. Operada por una organización sin fines de lucro. 70 millones de usuarios. Ni siquiera Signal puede leer tus mensajes. Grupos de hasta 1,000 miembros. Llamadas de voz y video. Esto es lo que deberías usar.',
+    signal_tips_title: 'Después de instalarlo:',
+    signal_tips: ' Usa un nombre de usuario en vez de tu número de teléfono. Activa mensajes que desaparecen. Desactiva las vistas previas de enlaces. Apaga los resúmenes de IA en las notificaciones de tu teléfono.',
+    why_title: '¿No salió Signal en las noticias?',
+    why_body: ' En 2025, funcionarios de la administración Trump usaron Signal para discutir planes de ataque militar clasificados y accidentalmente agregaron a un periodista. Los medios lo llamaron "Signalgate." Pero esto es lo que importa: el cifrado de Signal nunca se rompió. La tecnología funcionó exactamente como fue diseñada. La falla fue una persona que agregó el contacto equivocado a un grupo — el mismo error que podrías cometer con un mensaje de texto o correo electrónico. Los expertos en seguridad llamaron al incidente un respaldo de la seguridad de Signal. Si es confiable para planes de guerra, es suficiente para un grupo organizador de barrio.',
+    alts_label: 'Otras opciones seguras (si Signal no se ajusta a tu situación)',
+    session_best: 'Mejor para: máximo anonimato.',
+    session_desc: 'Sin número de teléfono. Sin correo electrónico. Sin identidad requerida. Los mensajes se enrutan por una red descentralizada. Más lento que Signal, pero no deja rastro. Úsalo cuando ser identificado como miembro de un grupo podría poner a alguien en riesgo.',
+    element_best: 'Mejor para: propiedad comunitaria.',
+    element_desc: 'Descentralizado y de código abierto. Las comunidades pueden tener su propio servidor. Cifrado de extremo a extremo. Usado por el gobierno francés. Curva de aprendizaje más pronunciada, pero la comunidad es dueña de la infraestructura — ninguna empresa puede cerrarlo.',
+    briar_best: 'Mejor para: sin internet.',
+    briar_desc: 'Conecta dispositivos directamente por Bluetooth o Wi-Fi cuando están cerca. Todos los mensajes se almacenan localmente. Foros integrados para organización grupal. Solo Android. Úsalo cuando el servicio celular no sea confiable.',
+    threema_best: 'Mejor para: sin número de teléfono.',
+    threema_desc: 'Con sede en Suiza. Usa un ID aleatorio en vez de tu número. Protegido por la ley de privacidad suiza. Compra única. Úsalo si quieres mensajería cifrada con cero conexión a tu número de teléfono.',
+    mutual_title: 'Ayuda Mutua Cerca de Ti',
+    bf3:'Gratis',bf4:'Gratis',
+    mah_name: 'Mutual Aid Hub',
+    mah_desc: 'Directorio y mapa de redes de ayuda mutua en Estados Unidos. Encuentra grupos ya activos en tu área.',
+    hour_name: 'hOurworld — Banco de Tiempo',
+    hour_desc: 'Plataforma gratuita de banco de tiempo usada por 225+ comunidades. Da una hora de lo que puedes hacer, gana una hora de lo que necesitas. Software, hospedaje y capacitación gratuitos.',
+    closing: 'Las comunidades más fuertes no son las que tienen más recursos. Son las que permiten que las personas se encuentren.',
+    story: '<span class="narrative-name">Ana</span> vive a tres cuadras de María. Cultiva tomates, chiles y cilantro en su patio — más de lo que su familia puede comer. Conoce a un abogado en la clínica de ayuda legal que ayuda con contratos de renta. Los jueves cuida a sus nietos y podría cuidar uno o dos más fácilmente. Tiene tiempo. Tiene conocimiento. Tiene comida para compartir. Pero no sabe que María existe.',
+    story2: '<span class="narrative-name">María</span> necesita comida, ayuda legal y cuidado de niños. Ana tiene las tres cosas. Viven en el mismo código postal. La distancia entre ellas no es geográfica — es que nadie construyó el puente.',
+    story3: 'Estas herramientas son el puente.',
+    cliff: 'María y Ana se encontraron. La cuadra se está organizando. Pero el concejal que prometió arreglar las luces de la calle hace ocho meses todavía no lo ha hecho. El programa después de escuela del centro comunitario perdió fondos y nadie explicó por qué. La reunión del presupuesto es el martes y nadie de la cuadra ha ido nunca. Tienen las herramientas. Se tienen las unas a las otras. La pregunta es: ¿sus líderes están haciendo lo que dijeron?',
+    cliff_cta: '¿Lo están haciendo? →',
+    bottom_note: 'Cada herramienta en esta página es gratuita. Sin cuenta. Sin correo ni rastreo. Lo que compartas es visible para tus vecinos.'
+  }
+}, { footer: true, alertPage: 'connect' });
+</script>
+</body>
+</html>

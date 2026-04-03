@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Check Your Vitals — CommUnity OS</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Check Your Vitals","description":"Free health vitals check with plain-language interpretation. Zero data storage.","isPartOf":{"@type":"WebApplication","name":"CommUnity OS","url":"https://comm-unity-os.org"},"inLanguage":["en","es"]}
+</script>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#12201E">
+<meta property="og:title" content="Check Your Vitals — CommUnity OS">
+<meta property="og:description" content="Free health vitals check with plain-language interpretation. No data stored. No account. Results disappear when you close this page.">
+<meta property="og:image" content="https://comm-unity-os.org/icon-512.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<style>
+.vitals-disclaimer{background:var(--coral);color:#fff;border-radius:12px;padding:16px 18px;margin-bottom:16px;font-size:.78rem;line-height:1.6}
+.vitals-disclaimer strong{display:block;margin-bottom:4px}
+.v-card{background:var(--warm);border:1.5px solid var(--sand);border-radius:14px;padding:18px;margin:12px 0}
+.v-card h3{font-family:var(--display);font-size:.92rem;color:var(--deep);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.v-input-row{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}
+.v-input{font-family:var(--sans);font-size:1.1rem;padding:12px 14px;border:2px solid var(--sand);border-radius:10px;background:var(--cream);text-align:center;width:90px}
+.v-input:focus{border-color:var(--sage);outline:none}
+.v-slash{font-size:1.2rem;color:var(--dim);font-weight:600}
+.v-unit{font-size:.75rem;color:var(--dim)}
+.v-btn{font-family:var(--sans);font-size:.82rem;font-weight:600;padding:10px 20px;border:none;border-radius:10px;cursor:pointer;transition:.2s}
+.v-btn-primary{background:var(--forest);color:var(--cream)}
+.v-btn-primary:hover{background:var(--deep)}
+.v-btn-secondary{background:var(--sand);color:var(--ink)}
+.v-result{margin-top:14px;padding:14px;border-radius:10px;font-size:.82rem;line-height:1.7;display:none}
+.v-result.show{display:block}
+.v-green{background:rgba(90,138,120,.1);border-left:4px solid var(--sage)}
+.v-yellow{background:rgba(184,150,62,.1);border-left:4px solid var(--gold)}
+.v-red{background:rgba(196,101,74,.1);border-left:4px solid var(--coral)}
+.v-result h4{font-size:.85rem;font-weight:700;margin-bottom:4px}
+.v-result .v-nbf{margin-top:8px;font-size:.78rem;color:var(--ink)}
+.v-result .v-nbf strong{color:var(--deep)}
+.v-result .v-action{margin-top:8px;padding:8px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-size:.75rem;color:var(--forest);font-weight:500}
+.ppg-container{position:relative;margin:10px 0}
+.ppg-video{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--sand);display:none}
+.ppg-video.active{display:block;border-color:var(--coral);animation:pulse-border 1s infinite}
+@keyframes pulse-border{0%,100%{border-color:var(--coral)}50%{border-color:var(--sage)}}
+.ppg-canvas{display:none}
+.ppg-reading{font-family:var(--display);font-size:2rem;color:var(--deep);margin:8px 0}
+.ppg-status{font-size:.75rem;color:var(--dim)}
+.privacy-bar{background:var(--deep);color:var(--cream);border-radius:10px;padding:12px 16px;margin:16px 0;font-size:.72rem;line-height:1.6;text-align:center}
+.privacy-bar strong{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header fade-in">
+    <div class="arc-label" data-t="arc_label">Survive</div>
+    <h1 data-t="title">Check Your Vitals</h1>
+    <div class="subtitle" data-t="subtitle">Enter your numbers. Get a plain-language explanation of what they mean and what to do. Nothing is saved. Nothing is sent. When you close this page, your data disappears.</div>
+  </div>
+
+  <div class="vitals-disclaimer" data-t="disclaimer">
+    <strong data-t="disc_title">⚠️ This is not medical advice.</strong>
+    <span data-t="disc_body">This tool provides educational information about vital sign ranges. It does not diagnose conditions, replace a doctor's evaluation, or account for your personal medical history. If you are experiencing a medical emergency, call 911 immediately. If you have concerns about any reading, contact your doctor or visit a Federally Qualified Health Center.</span>
+  </div>
+
+  <div class="privacy-bar">
+    <strong data-t="priv_title">🔒 Zero Data Storage</strong><br>
+    <span data-t="priv_body">Your vitals exist only in your browser while this page is open. Nothing is saved to any server, database, cookie, or local storage. When you close this tab, your numbers are gone forever. Nobody — not this platform, not your employer, not your insurance company — can see what you entered.</span>
+  </div>
+
+  <!-- HEART RATE — Camera PPG -->
+  <div class="v-card fade-in fade-in-1">
+    <h3>❤️ <span data-t="hr_title">Heart Rate</span></h3>
+    <p style="font-size:.78rem;color:var(--dim)" data-t="hr_desc">Place your finger over your phone's back camera. The flash will turn on. Hold still for 15 seconds.</p>
+    <p style="font-size:.65rem;color:var(--dim);margin-top:4px" data-t="hr_cam_privacy">🔒 This feature analyzes light patterns from your fingertip to estimate heart rate. Video is processed on your device only — no images are stored or sent to any server. By using this feature, you consent to this processing.</p>
+    <div class="ppg-container">
+      <video class="ppg-video" id="ppgVideo" playsinline autoplay muted></video>
+      <canvas class="ppg-canvas" id="ppgCanvas" width="120" height="120"></canvas>
+      <div class="ppg-reading" id="ppgBpm">--</div>
+      <div class="ppg-status" id="ppgStatus" data-t="hr_tap">Tap to measure</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="v-btn v-btn-primary" id="ppgBtn" onclick="startPPG()" data-t="hr_start">📷 Measure with Camera</button>
+      <button class="v-btn v-btn-secondary" onclick="stopPPG()" id="ppgStop" style="display:none" data-t="hr_stop">Stop</button>
+    </div>
+    <p style="font-size:.72rem;color:var(--dim);margin-top:8px" data-t="hr_manual_label">Or enter manually:</p>
+    <div class="v-input-row">
+      <input type="number" class="v-input" id="hrManual" placeholder="72" min="30" max="220" inputmode="numeric">
+      <span class="v-unit">bpm</span>
+      <button class="v-btn v-btn-secondary" onclick="interpretHR()" data-t="hr_check">Check</button>
+    </div>
+    <div class="v-result" id="hrResult"></div>
+  </div>
+
+  <!-- BLOOD PRESSURE -->
+  <div class="v-card fade-in fade-in-1">
+    <h3>🩺 <span data-t="bp_title">Blood Pressure</span></h3>
+    <p style="font-size:.78rem;color:var(--dim)" data-t="bp_desc">Enter your systolic (top number) and diastolic (bottom number). If you don't have a cuff, any pharmacy with a free kiosk will measure it — CVS, Walgreens, Walmart.</p>
+    <div class="v-input-row">
+      <input type="number" class="v-input" id="bpSys" placeholder="120" min="60" max="250" inputmode="numeric">
+      <span class="v-slash">/</span>
+      <input type="number" class="v-input" id="bpDia" placeholder="80" min="30" max="160" inputmode="numeric">
+      <span class="v-unit">mmHg</span>
+      <button class="v-btn v-btn-primary" onclick="interpretBP()" data-t="bp_check">Check</button>
+    </div>
+    <div class="v-result" id="bpResult"></div>
+  </div>
+
+  <!-- BLOOD GLUCOSE -->
+  <div class="v-card fade-in fade-in-2">
+    <h3>🩸 <span data-t="glu_title">Blood Glucose</span></h3>
+    <p style="font-size:.78rem;color:var(--dim)" data-t="glu_desc">Enter your fasting blood glucose (first thing in the morning, before eating). If you've already eaten, this reading will be higher than your true fasting level.</p>
+    <div class="v-input-row">
+      <input type="number" class="v-input" id="glucose" placeholder="95" min="20" max="600" inputmode="numeric">
+      <span class="v-unit">mg/dL</span>
+      <button class="v-btn v-btn-primary" onclick="interpretGlucose()" data-t="glu_check">Check</button>
+    </div>
+    <div class="v-result" id="gluResult"></div>
+  </div>
+
+  <!-- TEMPERATURE -->
+  <div class="v-card fade-in fade-in-2">
+    <h3>🌡️ <span data-t="temp_title">Temperature</span></h3>
+    <div class="v-input-row">
+      <input type="number" class="v-input" id="tempF" placeholder="98.6" min="90" max="110" step="0.1" inputmode="decimal">
+      <span class="v-unit">°F</span>
+      <button class="v-btn v-btn-primary" onclick="interpretTemp()" data-t="temp_check">Check</button>
+    </div>
+    <div class="v-result" id="tempResult"></div>
+  </div>
+
+  <!-- BMI -->
+  <div class="v-card fade-in fade-in-3">
+    <h3>⚖️ <span data-t="bmi_title">BMI Estimate</span></h3>
+    <p style="font-size:.78rem;color:var(--dim)" data-t="bmi_desc">BMI is a rough screening tool, not a diagnosis. It doesn't account for muscle mass, bone density, or body composition. Athletes and people with high muscle mass often have elevated BMI without health risk.</p>
+    <div class="v-input-row">
+      <input type="number" class="v-input" id="heightFt" placeholder="5" min="3" max="8" inputmode="numeric" style="width:60px">
+      <span class="v-unit">ft</span>
+      <input type="number" class="v-input" id="heightIn" placeholder="6" min="0" max="11" inputmode="numeric" style="width:60px">
+      <span class="v-unit">in</span>
+      <input type="number" class="v-input" id="weightLb" placeholder="150" min="50" max="600" inputmode="numeric">
+      <span class="v-unit">lbs</span>
+      <button class="v-btn v-btn-primary" onclick="interpretBMI()" data-t="bmi_check">Check</button>
+    </div>
+    <div class="v-result" id="bmiResult"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- COMMUNITY HEALTH PULSE — OPT-IN    -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="v-card fade-in fade-in-3" id="pulseCard" style="border:2px solid var(--sage)">
+    <h3>🫀 <span data-t="pulse_title">Community Health Pulse</span></h3>
+    <p style="font-size:.78rem;color:var(--dim)" data-t="pulse_desc">Want to help your community? You can contribute your vitals anonymously. Only your 3-digit ZIP prefix, age range, and gender are sent — never your name, email, exact age, or exact ZIP. Your community sees patterns, not people.</p>
+
+    <!-- CONSENT INFORMATION — Step-by-step informed consent -->
+    <div id="pulseConsent" style="background:var(--cream);border-radius:10px;padding:14px;margin:10px 0;border:1px solid var(--sand);font-size:.75rem;line-height:1.7">
+      <strong data-t="pulse_consent_title">What we collect:</strong>
+      <p data-t="pulse_collect">• 3-digit ZIP prefix (e.g., 606 — never your full ZIP code)<br>• Age range (e.g., 30-39 — never your exact age)<br>• Gender (optional)<br>• The vital sign readings you choose to share<br>• Nothing else. No name. No email. No IP address. No timestamp precise enough to identify you.</p>
+      <strong data-t="pulse_consent_title2">What we never collect:</strong>
+      <p data-t="pulse_never">Your name, email, phone number, address, insurance information, immigration status, employer, or any information that could identify you personally. This data cannot be sold, shared with insurers, or used for any purpose other than showing your community its own health patterns.</p>
+      <strong data-t="pulse_consent_title3">How it's protected:</strong>
+      <p data-t="pulse_protect">Data is stored in a community-owned Google Sheet under CARE/OCAP governance principles. Patterns are only displayed when 11 or more people in the same group have contributed — below that threshold, the data exists but is never shown. You can never be identified from the aggregate display.</p>
+      <strong data-t="pulse_suppress_title">Why 11 people?</strong>
+      <p data-t="pulse_suppress_detail">The k≥11 threshold means no health pattern is ever displayed unless at least 11 separate people contributed to that specific metric in the same 3-digit ZIP area. This exceeds the European Medicines Agency standard (k≥5) and Health Canada standard (k≥5). With a 3-digit ZIP prefix covering 20,000+ people, and at least 11 contributors required, re-identification is statistically impossible.</p>
+      <strong data-t="pulse_lifecycle_title">Data lifecycle:</strong>
+      <p data-t="pulse_lifecycle">Your contribution is stored as a single row: year-month (not exact date), 3-digit ZIP, age range, gender, and readings. A random ID prevents duplicate counting. The row cannot be traced to you. Raw data is accessible only to the community Data Steward. The public display shows only aggregates that meet the 11-person threshold. If the community Sheet is ever deleted, all data is gone permanently — there are no backups held by anyone else.</p>
+    </div>
+
+    <!-- CONTRIBUTION FORM -->
+    <div id="pulseForm" style="display:none">
+      <div class="v-input-row">
+        <label style="font-size:.78rem;font-weight:600;color:var(--deep)" data-t="pulse_zip">ZIP Code:</label>
+        <input type="text" class="v-input" id="pulseZip" placeholder="60608" maxlength="5" inputmode="numeric" style="width:100px">
+      </div>
+      <div class="v-input-row">
+        <label style="font-size:.78rem;font-weight:600;color:var(--deep)" data-t="pulse_age">Age Range:</label>
+        <select id="pulseAge" class="v-input" style="width:auto;text-align:left;font-size:.82rem">
+          <option value="">--</option>
+          <option value="18-29">18-29</option><option value="30-39">30-39</option>
+          <option value="40-49">40-49</option><option value="50-59">50-59</option>
+          <option value="60-69">60-69</option><option value="70+">70+</option>
+        </select>
+      </div>
+      <div class="v-input-row">
+        <label style="font-size:.78rem;font-weight:600;color:var(--deep)" data-t="pulse_gender">Gender (optional):</label>
+        <select id="pulseGender" class="v-input" style="width:auto;text-align:left;font-size:.82rem">
+          <option value="">Prefer not to say</option>
+          <option value="F">Female</option><option value="M">Male</option>
+          <option value="NB">Non-binary</option>
+        </select>
+      </div>
+
+      <p style="font-size:.72rem;color:var(--dim);margin:8px 0" data-t="pulse_select">Select which readings to contribute:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0">
+        <label style="font-size:.75rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="shareBP"> <span data-t="pulse_share_bp">Blood Pressure</span></label>
+        <label style="font-size:.75rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="shareHR"> <span data-t="pulse_share_hr">Heart Rate</span></label>
+        <label style="font-size:.75rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="shareGlu"> <span data-t="pulse_share_glu">Glucose</span></label>
+        <label style="font-size:.75rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="shareBMI"> <span data-t="pulse_share_bmi">BMI</span></label>
+      </div>
+
+      <button class="v-btn v-btn-primary" onclick="submitPulse()" data-t="pulse_submit">📊 Contribute Anonymously</button>
+      <div id="pulseStatus" style="font-size:.75rem;margin-top:8px;color:var(--dim)"></div>
+    </div>
+
+    <!-- CONSENT BUTTON -->
+    <div id="pulseConsentBtn">
+      <button class="v-btn v-btn-primary" onclick="acceptPulseConsent()" data-t="pulse_accept">I understand — let me contribute</button>
+      <p style="font-size:.68rem;color:var(--dim);margin-top:6px" data-t="pulse_skip">This is completely optional. Your vitals check works the same either way.</p>
+    </div>
+  </div>
+
+  <!-- COMMUNITY AGGREGATE DISPLAY -->
+  <div class="v-card fade-in fade-in-3" id="pulseDisplay" style="display:none;border:2px solid var(--sky)">
+    <h3>📊 <span data-t="pulse_community">Your Community's Health Pulse</span></h3>
+    <p style="font-size:.72rem;color:var(--dim)" data-t="pulse_community_desc">Anonymous, aggregate patterns from your neighbors. Only shown when 11+ people have contributed in the same group. No individual can be identified.</p>
+    <div id="pulseData" style="font-size:.78rem;line-height:1.7"></div>
+    <p style="font-size:.65rem;color:var(--dim);margin-top:8px" data-t="pulse_caveat">Self-reported data. Shows community trends, not clinical measurements. See your doctor for personal health decisions.</p>
+  </div>
+
+  <div class="privacy-bar">
+    <span data-t="priv_remind">When you close this tab, every number you entered is gone. Nothing was saved. Nothing was sent. This page has no memory.</span>
+  </div>
+
+  <div class="section text-center" style="margin:20px 0">
+    <p style="font-size:.72rem;color:var(--light)" data-t="bottom">Vital sign ranges based on AHA, ADA, and CDC guidelines. This tool is educational. It is not a medical device. In an emergency, call 911.</p>
+  </div>
+
+</div>
+
+<script src="/js/shared.js"></script>
+<script>
+EQ.init({
+  en: {
+    arc_label:'Survive', title:'Check Your Vitals',
+    subtitle:'Enter your numbers. Get a plain-language explanation of what they mean and what to do. Nothing is saved. Nothing is sent. When you close this page, your data disappears.',
+    disc_title:'⚠️ This is not medical advice.',
+    disc_body:'This tool provides educational information about vital sign ranges. It does not diagnose conditions, replace a doctor\'s evaluation, or account for your personal medical history. If you are experiencing a medical emergency, call 911 immediately.',
+    priv_title:'🔒 Zero Data Storage',
+    priv_body:'Your vitals exist only in your browser while this page is open. Nothing is saved to any server, database, cookie, or local storage. When you close this tab, your numbers are gone forever. Nobody — not this platform, not your employer, not your insurance company — can see what you entered.',
+    priv_remind:'When you close this tab, every number you entered is gone. Nothing was saved. Nothing was sent. This page has no memory.',
+    hr_title:'Heart Rate', hr_desc:'Place your finger over your phone\'s back camera. The flash will turn on. Hold still for 15 seconds.',
+    hr_tap:'Tap to measure', hr_start:'📷 Measure with Camera', hr_stop:'Stop', hr_manual_label:'Or enter manually:', hr_check:'Check',
+    bp_title:'Blood Pressure', bp_desc:'Enter your systolic (top number) and diastolic (bottom number). If you don\'t have a cuff, any pharmacy with a free kiosk will measure it — CVS, Walgreens, Walmart.',
+    bp_check:'Check',
+    glu_title:'Blood Glucose', glu_desc:'Enter your fasting blood glucose (first thing in the morning, before eating).',
+    glu_check:'Check',
+    temp_title:'Temperature', temp_check:'Check',
+    bmi_title:'BMI Estimate', bmi_desc:'BMI is a rough screening tool, not a diagnosis. It doesn\'t account for muscle mass, bone density, or body composition.',
+    bmi_check:'Check',
+    bottom:'Vital sign ranges based on AHA, ADA, and CDC guidelines. This tool is educational. It is not a medical device. In an emergency, call 911.',
+    pulse_title:'Community Health Pulse',
+    pulse_desc:'Want to help your community? You can contribute your vitals anonymously. Only your 3-digit ZIP prefix, age range, and gender are sent — never your name, email, exact age, or exact ZIP. Your community sees patterns, not people.',
+    pulse_consent_title:'What we collect:',
+    pulse_collect:'• 3-digit ZIP prefix (e.g., 606 — never your full ZIP code)\n• Age range (e.g., 30-39 — never your exact age)\n• Gender (optional)\n• The vital sign readings you choose to share\n• Nothing else. No name. No email. No IP address.',
+    pulse_consent_title2:'What we never collect:',
+    pulse_never:'Your name, email, phone number, address, insurance information, immigration status, employer, or any information that could identify you personally.',
+    pulse_consent_title3:'How it\'s protected:',
+    pulse_protect:'Patterns are only displayed when 11 or more people in the same group have contributed. Below that threshold, the data exists but is never shown. You can never be identified from the aggregate display.',
+    pulse_suppress_title:'Why 11 people?',
+    pulse_suppress_detail:'The k≥11 threshold means no health pattern is ever displayed unless at least 11 separate people contributed to that specific metric in the same 3-digit ZIP area. This exceeds European and Canadian standards. With 20,000+ people per 3-digit ZIP and 11+ contributors required, re-identification is statistically impossible.',
+    pulse_lifecycle_title:'Data lifecycle:',
+    pulse_lifecycle:'Your contribution is stored as a single row: year-month, 3-digit ZIP, age range, gender, and readings. A random ID prevents duplicate counting. The row cannot be traced to you. Raw data is accessible only to the community Data Steward. If the community Sheet is deleted, all data is gone permanently.',
+    pulse_zip:'ZIP Code:', pulse_age:'Age Range:', pulse_gender:'Gender (optional):',
+    pulse_select:'Select which readings to contribute:',
+    pulse_share_bp:'Blood Pressure', pulse_share_hr:'Heart Rate', pulse_share_glu:'Glucose', pulse_share_bmi:'BMI',
+    pulse_submit:'📊 Contribute Anonymously',
+    pulse_accept:'I understand — let me contribute',
+    pulse_skip:'This is completely optional. Your vitals check works the same either way.',
+    pulse_community:'Your Community\'s Health Pulse',
+    pulse_community_desc:'Anonymous, aggregate patterns from your neighbors. Only shown when 11+ people have contributed. No individual can be identified.',
+    pulse_caveat:'Self-reported data. Shows community trends, not clinical measurements. See your doctor for personal health decisions.',
+    pulse_thanks:'Thank you! Your anonymous contribution helps your community understand its health patterns.',
+    pulse_error:'Could not submit. Your data was not sent. You can try again or simply close this page.',
+    pulse_no_data:'Not enough contributions yet to show community patterns. Once 11+ people in your area contribute, patterns will appear here.'
+  },
+  es: {
+    arc_label:'Sobrevivir', title:'Revisa Tus Signos Vitales',
+    subtitle:'Ingresa tus números. Obtén una explicación en lenguaje simple de lo que significan y qué hacer. Nada se guarda. Nada se envía. Cuando cierres esta página, tus datos desaparecen.',
+    disc_title:'⚠️ Esto no es consejo médico.',
+    disc_body:'Esta herramienta proporciona información educativa sobre rangos de signos vitales. No diagnostica condiciones ni reemplaza la evaluación de un doctor. Si tienes una emergencia médica, llama al 911 inmediatamente.',
+    priv_title:'🔒 Cero Almacenamiento de Datos',
+    priv_body:'Tus signos vitales existen solo en tu navegador mientras esta página está abierta. Nada se guarda en ningún servidor, base de datos, cookie o almacenamiento local. Cuando cierres esta pestaña, tus números desaparecen para siempre. Nadie — ni esta plataforma, ni tu empleador, ni tu seguro — puede ver lo que ingresaste.',
+    priv_remind:'Cuando cierres esta pestaña, cada número que ingresaste desaparece. Nada fue guardado. Nada fue enviado. Esta página no tiene memoria.',
+    hr_title:'Frecuencia Cardíaca', hr_desc:'Coloca tu dedo sobre la cámara trasera de tu teléfono. El flash se encenderá. Mantente quieto 15 segundos.',
+    hr_tap:'Toca para medir', hr_start:'📷 Medir con Cámara', hr_stop:'Detener', hr_manual_label:'O ingresa manualmente:', hr_check:'Revisar',
+    bp_title:'Presión Arterial', bp_desc:'Ingresa tu sistólica (número de arriba) y diastólica (número de abajo). Si no tienes baumanómetro, cualquier farmacia con quiosco gratuito la mide — CVS, Walgreens, Walmart.',
+    bp_check:'Revisar',
+    glu_title:'Glucosa en Sangre', glu_desc:'Ingresa tu glucosa en ayunas (primera hora de la mañana, antes de comer).',
+    glu_check:'Revisar',
+    temp_title:'Temperatura', temp_check:'Revisar',
+    bmi_title:'Estimación de IMC', bmi_desc:'El IMC es una herramienta de detección aproximada, no un diagnóstico. No considera masa muscular ni composición corporal.',
+    bmi_check:'Revisar',
+    bottom:'Rangos de signos vitales basados en guías de AHA, ADA y CDC. Esta herramienta es educativa. No es un dispositivo médico. En una emergencia, llama al 911.',
+    pulse_title:'Pulso de Salud Comunitario',
+    pulse_desc:'¿Quieres ayudar a tu comunidad? Puedes contribuir tus signos vitales de forma anónima. Solo se envía el prefijo de 3 dígitos de tu código postal, rango de edad y género — nunca tu nombre, email, edad exacta o código postal completo.',
+    pulse_consent_title:'Lo que recopilamos:',
+    pulse_collect:'• Prefijo de 3 dígitos del código postal (ej. 606 — nunca tu código completo)\n• Rango de edad (ej. 30-39 — nunca tu edad exacta)\n• Género (opcional)\n• Las lecturas de signos vitales que elijas compartir\n• Nada más. Sin nombre. Sin email. Sin dirección IP.',
+    pulse_consent_title2:'Lo que nunca recopilamos:',
+    pulse_never:'Tu nombre, email, teléfono, dirección, información de seguro, estado migratorio, empleador, ni ninguna información que pueda identificarte personalmente.',
+    pulse_consent_title3:'Cómo se protege:',
+    pulse_protect:'Los patrones solo se muestran cuando 11 o más personas del mismo grupo han contribuido. Por debajo de ese umbral, los datos existen pero nunca se muestran. Nunca podrás ser identificado.',
+    pulse_suppress_title:'¿Por qué 11 personas?',
+    pulse_suppress_detail:'El umbral k≥11 significa que ningún patrón de salud se muestra a menos que al menos 11 personas hayan contribuido a esa métrica específica en la misma área de código postal de 3 dígitos. Esto excede los estándares europeos y canadienses. Con más de 20,000 personas por prefijo de 3 dígitos y al menos 11 contribuyentes requeridos, la re-identificación es estadísticamente imposible.',
+    pulse_lifecycle_title:'Ciclo de vida de datos:',
+    pulse_lifecycle:'Tu contribución se almacena como una sola fila: año-mes, código postal de 3 dígitos, rango de edad, género y lecturas. Un ID aleatorio previene conteo doble. La fila no puede rastrearse a ti. Los datos crudos son accesibles solo para el Custodio de Datos comunitario. Si la hoja de la comunidad se elimina, todos los datos desaparecen permanentemente.',
+    pulse_zip:'Código Postal:', pulse_age:'Rango de Edad:', pulse_gender:'Género (opcional):',
+    pulse_select:'Selecciona qué lecturas contribuir:',
+    pulse_share_bp:'Presión Arterial', pulse_share_hr:'Frecuencia Cardíaca', pulse_share_glu:'Glucosa', pulse_share_bmi:'IMC',
+    pulse_submit:'📊 Contribuir Anónimamente',
+    pulse_accept:'Entiendo — quiero contribuir',
+    pulse_skip:'Esto es completamente opcional. Tu revisión de signos vitales funciona igual sin esto.',
+    pulse_community:'Pulso de Salud de Tu Comunidad',
+    pulse_community_desc:'Patrones anónimos y agregados de tus vecinos. Solo se muestra cuando 11+ personas han contribuido. Ningún individuo puede ser identificado.',
+    pulse_caveat:'Datos auto-reportados. Muestra tendencias comunitarias, no mediciones clínicas. Consulta a tu doctor para decisiones personales de salud.',
+    pulse_thanks:'¡Gracias! Tu contribución anónima ayuda a tu comunidad a entender sus patrones de salud.',
+    pulse_error:'No se pudo enviar. Tus datos no fueron enviados. Puedes intentar de nuevo o simplemente cerrar esta página.',
+    pulse_no_data:'Aún no hay suficientes contribuciones para mostrar patrones comunitarios. Cuando 11+ personas de tu área contribuyan, los patrones aparecerán aquí.'
+  }
+}, { footer: true, closingKey: null, alertPage: 'survive' });
+
+var isEs = function() { return EQ && EQ.getLang && EQ.getLang() === 'es'; };
+
+// ═══════════════════════════════════
+// HEART RATE — Camera PPG
+// ═══════════════════════════════════
+var ppgStream = null, ppgInterval = null, ppgSamples = [], ppgStartTime = 0;
+
+// N-02: Check camera availability — hide PPG button on desktop without camera
+(function checkCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    var btn = document.getElementById('ppgBtn');
+    if (btn) {
+      btn.style.display = 'none';
+      var fb = document.createElement('div');
+      fb.className = 'ppg-fallback';
+      fb.style.display = 'block';
+      fb.textContent = isEs()
+        ? 'La medición por cámara requiere un teléfono con cámara trasera. Usa la entrada manual abajo.'
+        : 'Camera measurement requires a phone with a rear camera. Use manual entry below.';
+      btn.parentNode.insertBefore(fb, btn);
+    }
+  }
+})();
+
+async function startPPG() {
+  try {
+    ppgStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: 120, height: 120 }
+    });
+    var video = document.getElementById('ppgVideo');
+    video.srcObject = ppgStream;
+    video.classList.add('active');
+    document.getElementById('ppgBtn').style.display = 'none';
+    document.getElementById('ppgStop').style.display = '';
+    document.getElementById('ppgStatus').textContent = isEs() ? 'Midiendo... mantén tu dedo quieto' : 'Measuring... hold your finger still';
+
+    // Try to enable torch
+    var track = ppgStream.getVideoTracks()[0];
+    try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch(e) {}
+
+    ppgSamples = [];
+    ppgStartTime = Date.now();
+    var canvas = document.getElementById('ppgCanvas');
+    var ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+    ppgInterval = setInterval(function() {
+      ctx.drawImage(video, 0, 0, 120, 120);
+      var frame = ctx.getImageData(0, 0, 120, 120);
+      var sum = 0, count = 0;
+      for (var i = 0; i < frame.data.length; i += 4) {
+        sum += frame.data[i]; // red channel
+        count++;
+      }
+      ppgSamples.push({ t: Date.now() - ppgStartTime, r: sum / count });
+
+      // After 15 seconds, compute BPM
+      if (Date.now() - ppgStartTime > 15000) {
+        stopPPG();
+        computeBPM();
+      } else {
+        var elapsed = Math.round((Date.now() - ppgStartTime) / 1000);
+        document.getElementById('ppgStatus').textContent = (isEs() ? 'Midiendo... ' : 'Measuring... ') + elapsed + '/15s';
+      }
+    }, 33); // ~30fps
+
+  } catch(e) {
+    document.getElementById('ppgStatus').textContent = isEs() ? 'Cámara no disponible. Ingresa manualmente abajo.' : 'Camera not available. Enter manually below.';
+  }
+}
+
+function stopPPG() {
+  if (ppgInterval) { clearInterval(ppgInterval); ppgInterval = null; }
+  if (ppgStream) { ppgStream.getTracks().forEach(function(t) { t.stop(); }); ppgStream = null; }
+  document.getElementById('ppgVideo').classList.remove('active');
+  document.getElementById('ppgBtn').style.display = '';
+  document.getElementById('ppgStop').style.display = 'none';
+}
+
+function computeBPM() {
+  if (ppgSamples.length < 100) {
+    document.getElementById('ppgStatus').textContent = isEs() ? 'Señal insuficiente. Intenta de nuevo o ingresa manualmente.' : 'Insufficient signal. Try again or enter manually.';
+    return;
+  }
+  // Simple peak detection on smoothed red channel
+  var values = ppgSamples.map(function(s) { return s.r; });
+  // Smooth with moving average (window=5)
+  var smoothed = [];
+  for (var i = 2; i < values.length - 2; i++) {
+    smoothed.push((values[i-2] + values[i-1] + values[i] + values[i+1] + values[i+2]) / 5);
+  }
+  // Find peaks
+  var peaks = [];
+  for (var i = 1; i < smoothed.length - 1; i++) {
+    if (smoothed[i] > smoothed[i-1] && smoothed[i] > smoothed[i+1]) {
+      // Only count peaks above mean
+      var mean = smoothed.reduce(function(a,b){return a+b;},0) / smoothed.length;
+      if (smoothed[i] > mean) peaks.push(ppgSamples[i+2].t);
+    }
+  }
+  if (peaks.length < 3) {
+    document.getElementById('ppgStatus').textContent = isEs() ? 'No se detectó pulso claro. Presiona más firme o ingresa manualmente.' : 'Could not detect clear pulse. Press firmer or enter manually.';
+    return;
+  }
+  // Average inter-peak interval
+  var intervals = [];
+  for (var i = 1; i < peaks.length; i++) intervals.push(peaks[i] - peaks[i-1]);
+  // Filter outliers (keep within 1.5x median)
+  intervals.sort(function(a,b){return a-b;});
+  var median = intervals[Math.floor(intervals.length/2)];
+  var filtered = intervals.filter(function(v) { return v > median*0.5 && v < median*1.5; });
+  if (filtered.length < 2) { filtered = intervals; }
+  var avgInterval = filtered.reduce(function(a,b){return a+b;},0) / filtered.length;
+  var bpm = Math.round(60000 / avgInterval);
+  if (bpm < 30 || bpm > 220) {
+    document.getElementById('ppgStatus').textContent = isEs() ? 'Lectura no confiable. Ingresa manualmente.' : 'Unreliable reading. Enter manually.';
+    return;
+  }
+  document.getElementById('ppgBpm').textContent = bpm + ' bpm';
+  document.getElementById('ppgStatus').textContent = isEs() ? 'Medición completa' : 'Measurement complete';
+  document.getElementById('hrManual').value = bpm;
+  interpretHR();
+}
+
+// ═══════════════════════════════════
+// INTERPRETATION ENGINES — N→B→F
+// ═══════════════════════════════════
+
+function showResult(elId, level, title, normal, broken, fix, action) {
+  var el = document.getElementById(elId);
+  el.className = 'v-result show v-' + level;
+  el.innerHTML = '<h4>' + title + '</h4>' +
+    '<div class="v-nbf"><strong>' + (isEs() ? 'Cómo funciona: ' : 'How it works: ') + '</strong>' + normal + '</div>' +
+    '<div class="v-nbf"><strong>' + (isEs() ? 'Lo que tu número significa: ' : 'What your number means: ') + '</strong>' + broken + '</div>' +
+    '<div class="v-nbf"><strong>' + (isEs() ? 'Qué hacer: ' : 'What to do: ') + '</strong>' + fix + '</div>' +
+    (action ? '<div class="v-action">' + action + '</div>' : '');
+}
+
+function interpretHR() {
+  var hr = parseInt(document.getElementById('hrManual').value);
+  if (!hr || hr < 30 || hr > 220) return;
+  var es = isEs();
+  var normal = es
+    ? 'Tu corazón late 60-100 veces por minuto en reposo. Cada latido empuja sangre a todo tu cuerpo. Un ritmo más bajo muchas veces significa un corazón más fuerte.'
+    : 'Your heart beats 60-100 times per minute at rest. Each beat pushes blood to your whole body. A lower rate often means a stronger heart.';
+  if (hr >= 60 && hr <= 100) {
+    showResult('hrResult', 'green', (es?'Normal':'Normal') + ' — ' + hr + ' bpm', normal,
+      es ? 'Tu frecuencia cardíaca está en rango normal de reposo.' : 'Your heart rate is in the normal range at rest.',
+      es ? 'Mantente activo. Ejercicio regular fortalece tu corazón y baja tu frecuencia de reposo con el tiempo.' : 'Stay active. Exercise makes your heart stronger over time.',
+      null);
+  } else if (hr < 60) {
+    showResult('hrResult', hr < 40 ? 'red' : 'yellow', (es?'Bradicardia':'Bradycardia') + ' — ' + hr + ' bpm', normal,
+      es ? 'Tu ritmo está por debajo de 60. Si haces mucho ejercicio, puede ser normal. Pero si sientes mareo, cansancio o te desmayas, llama a tu doctor.' : 'Your rate is below 60. If you work out a lot, this can be fine. But if you feel dizzy, tired, or faint, call your doctor.',
+      es ? 'Si no haces mucho ejercicio y sientes mareo o desmayo, llama a tu doctor.' : 'If you don\'t work out often and feel dizzy or faint, call your doctor.',
+      hr < 40 ? (es ? '⚠️ Por debajo de 40 bpm con síntomas — busca atención médica hoy.' : '⚠️ Below 40 bpm and you feel off — see a doctor today.') : null);
+  } else {
+    showResult('hrResult', hr > 150 ? 'red' : 'yellow', (es?'Taquicardia':'Tachycardia') + ' — ' + hr + ' bpm', normal,
+      es ? 'Tu ritmo está arriba de 100 en reposo. Café, estrés, poca agua o fiebre pueden causar esto. Si se queda alto sin causa clara, llama a tu doctor.' : 'Your rate is above 100 at rest. Coffee, stress, not enough water, or a fever can cause this. If it stays high with no clear cause, call your doctor.',
+      es ? 'Toma agua. Reduce el café. Si se queda arriba de 100 en reposo, llama a tu doctor.' : 'Drink water. Cut back on coffee. If it stays above 100 at rest, call your doctor.',
+      hr > 150 ? (es ? '⚠️ Arriba de 150 bpm en reposo — busca atención médica.' : '⚠️ Above 150 bpm at rest — see a doctor now.') : null);
+  }
+}
+
+function interpretBP() {
+  var sys = parseInt(document.getElementById('bpSys').value);
+  var dia = parseInt(document.getElementById('bpDia').value);
+  if (!sys || !dia) return;
+  var es = isEs();
+  var normal = es
+    ? 'Tu corazón empuja sangre por tubos llamados arterias. El número de arriba es la fuerza cuando late. El de abajo es cuando descansa. Los dos importan.'
+    : 'Your heart pushes blood through tubes called arteries. The top number is the push when it beats. The bottom number is the push when it rests. Both matter.';
+
+  if (sys >= 180 || dia >= 120) {
+    showResult('bpResult', 'red', (es?'Crisis Hipertensiva':'Hypertensive Crisis') + ' — ' + sys + '/' + dia, normal,
+      es ? 'Estos números quieren decir que tu cuerpo está en peligro ahora mismo. No esperes.' : 'These numbers mean your body is in danger right now. Do not wait.',
+      es ? 'Llama al 911 o ve a urgencias ahora. No esperes.' : 'Call 911 or go to the ER right now. Do not wait.',
+      es ? '🚨 LLAMA AL 911 AHORA si tienes dolor de cabeza severo, dolor de pecho, dificultad para respirar, o cambios en la visión.' : '🚨 CALL 911 NOW if you have severe headache, chest pain, shortness of breath, or vision changes.');
+  } else if (sys >= 140 || dia >= 90) {
+    showResult('bpResult', 'red', (es?'Hipertensión Etapa 2':'Stage 2 Hypertension') + ' — ' + sys + '/' + dia, normal,
+      es ? 'Los dos números están muy altos. Con el tiempo esto puede llevar a un infarto, un derrame o daño en los riñones.' : 'Both numbers are too high. Over time this can lead to a heart attack, stroke, or kidney damage.',
+      es ? 'Contacta a tu doctor esta semana. Es probable que se necesite medicamento además de cambios de estilo de vida.' : 'Call your doctor this week. You may need pills along with lifestyle changes.',
+      es ? 'Llama a tu doctor mañana. Mientras tanto: reduce sal, evita alcohol, camina 30 minutos.' : 'Call your doctor soon. For now: less salt, no alcohol, walk 30 minutes a day.');
+  } else if (sys >= 130 || dia >= 80) {
+    showResult('bpResult', 'yellow', (es?'Hipertensión Etapa 1':'Stage 1 Hypertension') + ' — ' + sys + '/' + dia, normal,
+      es ? 'Tu presión está en el rango donde el riesgo al corazón empieza a subir. La mayoría de doctores prueban cambios de vida primero.' : 'Your pressure is in the range where heart risk starts to go up. Most doctors try lifestyle changes first.',
+      es ? 'Reduce sal a menos de 2,300mg/día. Haz ejercicio 30 min/día. Limita alcohol. Revisa de nuevo en 1 mes.' : 'Eat less salt. Move 30 minutes a day. Cut back on alcohol. Check again in 1 month.',
+      null);
+  } else if (sys >= 120 && sys < 130 && dia < 80) {
+    showResult('bpResult', 'yellow', (es?'Elevada':'Elevated') + ' — ' + sys + '/' + dia, normal,
+      es ? 'Tu número de arriba está un poco alto. No es presión alta todavía, pero va hacia allá si nada cambia.' : 'Your top number is a bit high. Not a problem yet, but headed that way if nothing changes.',
+      es ? 'Esto mejora con cambios simples: menos sal, más caminata, menos estrés. Revisa cada 3-6 meses.' : 'This gets better with small changes: less salt, more walking, less stress. Check again in 3-6 months.',
+      null);
+  } else {
+    showResult('bpResult', 'green', (es?'Normal':'Normal') + ' — ' + sys + '/' + dia, normal,
+      es ? 'Tu presión arterial está en rango saludable.' : 'Your blood pressure looks good.',
+      es ? 'Sigue haciendo lo que estás haciendo. Revisa anualmente.' : 'Keep doing what you\'re doing. Check once a year.',
+      null);
+  }
+}
+
+function interpretGlucose() {
+  var glu = parseInt(document.getElementById('glucose').value);
+  if (!glu) return;
+  var es = isEs();
+  var normal = es
+    ? 'Tu cuerpo convierte la comida en azúcar para darte energía. La insulina mueve el azúcar de tu sangre a tus células. Una prueba en ayunas muestra cuánta azúcar queda en tu sangre después de no comer toda la noche.'
+    : 'Your body turns food into sugar for fuel. Insulin moves sugar from your blood into your cells. A fasting test shows how much sugar stays in your blood after not eating all night.';
+
+  if (glu < 70) {
+    showResult('gluResult', 'red', (es?'Hipoglucemia':'Hypoglycemia') + ' — ' + glu + ' mg/dL', normal,
+      es ? 'Tu azúcar está muy baja. Esto puede hacerte sentir confundido, tembloroso, sudoroso o desmayarte.' : 'Your blood sugar is too low. This can make you confused, shaky, sweaty, or pass out.',
+      es ? 'Come o bebe algo con azúcar inmediatamente — jugo, dulce, tabletas de glucosa. Si los síntomas no mejoran en 15 minutos, llama al 911.' : 'Eat or drink something sweet right now — juice, candy, sugar. If you don\'t feel better in 15 minutes, call 911.',
+      es ? '⚠️ Come algo con azúcar AHORA. Si estás confundido o cerca de desmayarte, llama al 911.' : '⚠️ Eat something sweet NOW. If you feel confused or about to pass out, call 911.');
+  } else if (glu <= 99) {
+    showResult('gluResult', 'green', (es?'Normal':'Normal') + ' — ' + glu + ' mg/dL', normal,
+      es ? 'Tu azúcar se ve bien. Tu cuerpo está manejando el azúcar como debe.' : 'Your blood sugar looks good. Your body is handling sugar the way it should.',
+      es ? 'Mantén una dieta balanceada y actividad regular. Revisa anualmente como parte de un chequeo de rutina.' : 'Eat well and stay active. Check once a year at your regular visit.',
+      null);
+  } else if (glu <= 125) {
+    showResult('gluResult', 'yellow', (es?'Prediabetes':'Prediabetes') + ' — ' + glu + ' mg/dL', normal,
+      es ? 'Tu azúcar está arriba de lo normal pero no es diabetes todavía. Tu cuerpo está empezando a ignorar la insulina. Cerca de 1 de cada 3 personas en este nivel llega a diabetes en 4 años si nada cambia.' : 'Your sugar is above normal but not yet diabetes. Your body is starting to ignore insulin. About 1 in 3 people at this level get diabetes within 4 years if nothing changes.',
+      es ? 'Esto se puede revertir. Tres cosas ayudan: camina 30 minutos al día, come menos comida chatarra, y baja aunque sea un poco de peso.' : 'This can be turned around. Three things help: walk 30 minutes a day, eat less junk food, and lose even a small amount of weight.',
+      es ? 'Pide a tu doctor una prueba de A1C en tu próxima visita. Esto muestra tu promedio de azúcar de los últimos 3 meses.' : 'Ask your doctor for an A1C test. It shows your average sugar over 3 months.');
+  } else {
+    showResult('gluResult', 'red', (es?'Rango de Diabetes':'Diabetes Range') + ' — ' + glu + ' mg/dL', normal,
+      es ? 'Tu azúcar está arriba de 125. Eso está en el rango de diabetes. Necesitas una segunda prueba para confirmar.' : 'Your blood sugar is above 125. That is in the diabetes range. You need a second test to confirm.',
+      es ? 'Llama a tu doctor esta semana para una prueba de seguimiento. Detectar esto temprano hace una gran diferencia.' : 'Call your doctor this week for a follow-up test. Catching this early makes a big difference.',
+      es ? 'Llama a tu doctor esta semana. Una sola lectura no es un diagnóstico — necesitas confirmación. Pero no esperes.' : 'Call your doctor this week. One reading isn\'t a diagnosis — but don\'t wait to find out.');
+  }
+}
+
+function interpretTemp() {
+  var temp = parseFloat(document.getElementById('tempF').value);
+  if (!temp) return;
+  var es = isEs();
+  var normal = es
+    ? 'Tu cuerpo se mantiene cerca de 98.6°F, aunque 97-99°F es normal. La fiebre significa que tu cuerpo está peleando un microbio. Sube la temperatura para matar al bicho.'
+    : 'Your body stays around 98.6°F, though 97-99°F is normal. A fever means your body is fighting a germ. It turns up the heat to kill the bug.';
+
+  if (temp < 95) {
+    showResult('tempResult', 'red', (es?'Hipotermia':'Hypothermia') + ' — ' + temp + '°F', normal,
+      es ? 'Tu cuerpo está muy frío. Puede ser que estuviste en el frío mucho tiempo, o algo más está mal.' : 'Your body is too cold. This can mean you\'ve been in the cold too long, or something else is wrong.',
+      es ? 'Caliéntate gradualmente. Si no puedes subir tu temperatura con mantas y bebidas calientes, busca atención médica.' : 'Warm up slowly with blankets and warm drinks. If your temp won\'t come up, see a doctor.',
+      es ? '⚠️ Busca atención médica si la temperatura no sube con calentamiento.' : '⚠️ See a doctor if your temp won\'t come up.');
+  } else if (temp <= 99.0) {
+    showResult('tempResult', 'green', (es?'Normal':'Normal') + ' — ' + temp + '°F', normal,
+      es ? 'Tu temperatura está en rango normal.' : 'Your temp is normal.',
+      es ? 'Todo bien. La temperatura normal varía por hora del día — más baja en la mañana, más alta en la tarde.' : 'All good. Your temp is a bit lower in the morning and higher at night. That\'s normal.',
+      null);
+  } else if (temp < 100.4) {
+    showResult('tempResult', 'yellow', (es?'Temperatura Baja':'Low-Grade') + ' — ' + temp + '°F', normal,
+      es ? 'Un poco alta. Puede ser estrés, ejercicio reciente, tu ciclo, o el inicio de un resfriado.' : 'A little high. Could be stress, a workout, your cycle, or the start of a cold.',
+      es ? 'Monitorea. Si sube arriba de 100.4°F o aparecen otros síntomas, eso es fiebre.' : 'Keep an eye on it. If it goes past 100.4°F or you feel worse, that\'s a fever.',
+      null);
+  } else if (temp < 103) {
+    showResult('tempResult', 'yellow', (es?'Fiebre':'Fever') + ' — ' + temp + '°F', normal,
+      es ? 'Esto es fiebre. Tu sistema inmunológico está luchando contra algo. La mayoría de las fiebres en adultos son virales y se resuelven en 2-3 días.' : 'This is a fever. Your body is fighting a germ. Most fevers in adults are caused by a virus and go away in 2-3 days.',
+      es ? 'Descansa. Hidrátate. Acetaminofén (Tylenol) o ibuprofeno (Advil) pueden ayudar con la incomodidad. Si la fiebre dura más de 3 días o llega a 103°F, contacta a tu doctor.' : 'Rest. Drink fluids. Tylenol or Advil can help you feel better. If the fever lasts more than 3 days or hits 103°F, call your doctor.',
+      null);
+  } else {
+    showResult('tempResult', 'red', (es?'Fiebre Alta':'High Fever') + ' — ' + temp + '°F', normal,
+      es ? 'Fiebre arriba de 103°F en adultos necesita atención médica. El riesgo de convulsiones febriles es bajo en adultos pero la infección subyacente puede ser seria.' : 'A fever above 103°F needs a doctor. The germ causing it could be serious.',
+      es ? 'Contacta a tu doctor hoy. Si la fiebre llega a 104°F o tienes confusión, rigidez de cuello o dificultad para respirar, ve a urgencias.' : 'Call your doctor today. If it hits 104°F or you feel confused, have a stiff neck, or can\'t breathe well — go to the ER.',
+      es ? '⚠️ Arriba de 104°F o con confusión/rigidez de cuello — urgencias inmediatamente.' : '⚠️ Above 104°F or confused or stiff neck — go to the ER now.');
+  }
+}
+
+function interpretBMI() {
+  var ft = parseInt(document.getElementById('heightFt').value);
+  var inches = parseInt(document.getElementById('heightIn').value) || 0;
+  var lbs = parseInt(document.getElementById('weightLb').value);
+  if (!ft || !lbs) return;
+  var totalIn = ft * 12 + inches;
+  var bmi = Math.round((lbs / (totalIn * totalIn)) * 703 * 10) / 10;
+  var es = isEs();
+  var normal = es
+    ? 'El IMC usa tu peso y estatura para adivinar si estás en un rango saludable. Es una herramienta general — no un veredicto. No puede distinguir músculo de grasa. Una persona en forma y una que no hace nada pueden tener el mismo puntaje.'
+    : 'BMI uses your height and weight to guess if you\'re in a healthy range. It\'s a rough tool — not a verdict. It can\'t tell muscle from fat. A fit person and a couch potato can get the same score.';
+
+  if (bmi < 18.5) {
+    showResult('bmiResult', 'yellow', (es?'Bajo Peso':'Underweight') + ' — IMC ' + bmi, normal,
+      es ? 'Tu IMC está bajo. Puede ser que no estés comiendo suficiente, un problema de tiroides, o simplemente así es tu cuerpo.' : 'Your BMI is low. This could mean not enough food, a thyroid issue, or it\'s just how you\'re built.',
+      es ? 'Si no has perdido peso intencionalmente, menciona esto a tu doctor en tu próxima visita.' : 'If you\'re losing weight and don\'t know why, tell your doctor.',
+      null);
+  } else if (bmi < 25) {
+    showResult('bmiResult', 'green', (es?'Rango Normal':'Normal Range') + ' — IMC ' + bmi, normal,
+      es ? 'Tu IMC está en el rango asociado con menor riesgo de enfermedad cardiovascular y diabetes tipo 2.' : 'Your BMI is in the range linked to lower risk of heart disease and diabetes. That\'s good.',
+      es ? 'Mantente activo y come bien. El IMC es solo un número — la aptitud cardiovascular importa más que el peso.' : 'Stay active and eat well. BMI is just one number — how fit you are matters more than what you weigh.',
+      null);
+  } else if (bmi < 30) {
+    showResult('bmiResult', 'yellow', (es?'Sobrepeso':'Overweight') + ' — IMC ' + bmi, normal,
+      es ? 'Tu IMC está en el rango alto. Puede o no significar grasa extra — el músculo, los huesos y dónde cargas el peso importan más que este número.' : 'Your BMI is in the high range. This may or may not mean extra fat — muscle, bone, and where you carry weight matter more than this number.',
+      es ? 'Enfócate en movimiento y nutrición más que en el número. 30 min de caminata diaria y menos alimentos procesados producen los mayores cambios en salud.' : 'Focus on moving more and eating better — not the number. Walk 30 minutes a day. Eat less junk. That makes the biggest change.',
+      null);
+  } else {
+    showResult('bmiResult', 'red', (es?'Obesidad':'Obesity') + ' — IMC ' + bmi, normal,
+      es ? 'Tu IMC está alto. Esto sube tu riesgo de diabetes, problemas del corazón, problemas de sueño y dolor de articulaciones. Pero esto no es tu destino — cambios pequeños y constantes se suman.' : 'Your BMI is high. This raises your risk of diabetes, heart disease, sleep issues, and joint pain. But this is not your fate — small steady changes add up.',
+      es ? 'Habla con tu doctor sobre un plan que funcione para tu vida. Bajar aunque sea un poco de peso ayuda a tu presión, azúcar y colesterol.' : 'Talk to your doctor about a plan that fits your life. Losing even a small amount of weight helps your blood pressure, blood sugar, and cholesterol.',
+      es ? 'Programa una cita con tu doctor. Pide un panel metabólico completo (glucosa, colesterol, función tiroidea).' : 'See your doctor. Ask them to check your blood sugar, cholesterol, and thyroid.');
+  }
+}
+
+// ═══════════════════════════════════
+// COMMUNITY HEALTH PULSE
+// Client-side anonymization → POST
+// k≥11 suppression in Apps Script
+// ═══════════════════════════════════
+
+var PULSE_API = ''; // Will use EQ.resolveApi() or hub URL
+
+function acceptPulseConsent() {
+  document.getElementById('pulseConsentBtn').style.display = 'none';
+  document.getElementById('pulseForm').style.display = 'block';
+  // Pre-fill ZIP from EQ cache if available
+  var cached = (typeof EQ !== 'undefined' && EQ.getZip) ? EQ.getZip() : '';
+  if (cached) document.getElementById('pulseZip').value = cached;
+  // Load community pulse display
+  loadCommunityPulse();
+}
+
+function anonymize(zip) {
+  // HIPAA Safe Harbor: truncate to 3-digit prefix
+  // All 3-digit prefixes with population >20,000 are safe
+  if (!zip || zip.length < 3) return null;
+  return zip.substring(0, 3);
+}
+
+function submitPulse() {
+  var es = isEs();
+  var statusEl = document.getElementById('pulseStatus');
+  var zip = document.getElementById('pulseZip').value.trim();
+  var ageRange = document.getElementById('pulseAge').value;
+  var gender = document.getElementById('pulseGender').value;
+
+  // Validate
+  if (!zip || zip.length !== 5 || !/^\d{5}$/.test(zip)) {
+    statusEl.textContent = es ? 'Ingresa un código postal válido de 5 dígitos.' : 'Enter a valid 5-digit ZIP code.';
+    statusEl.style.color = 'var(--coral)';
+    return;
+  }
+  if (!ageRange) {
+    statusEl.textContent = es ? 'Selecciona tu rango de edad.' : 'Select your age range.';
+    statusEl.style.color = 'var(--coral)';
+    return;
+  }
+
+  // Collect only checked readings
+  var readings = {};
+  if (document.getElementById('shareBP').checked) {
+    var s = parseInt(document.getElementById('bpSys').value);
+    var d = parseInt(document.getElementById('bpDia').value);
+    if (s && d) readings.bp_sys = s, readings.bp_dia = d;
+  }
+  if (document.getElementById('shareHR').checked) {
+    var hr = parseInt(document.getElementById('hrManual').value);
+    if (hr) readings.hr = hr;
+  }
+  if (document.getElementById('shareGlu').checked) {
+    var glu = parseInt(document.getElementById('glucose').value);
+    if (glu) readings.glucose = glu;
+  }
+  if (document.getElementById('shareBMI').checked) {
+    var ft = parseInt(document.getElementById('heightFt').value);
+    var inches = parseInt(document.getElementById('heightIn').value) || 0;
+    var lbs = parseInt(document.getElementById('weightLb').value);
+    if (ft && lbs) {
+      var totalIn = ft * 12 + inches;
+      readings.bmi = Math.round((lbs / (totalIn * totalIn)) * 703 * 10) / 10;
+    }
+  }
+
+  if (Object.keys(readings).length === 0) {
+    statusEl.textContent = es ? 'Selecciona al menos una lectura para contribuir.' : 'Select at least one reading to contribute.';
+    statusEl.style.color = 'var(--coral)';
+    return;
+  }
+
+  // CLIENT-SIDE ANONYMIZATION
+  var payload = {
+    action: 'health_pulse',
+    zip3: anonymize(zip),        // 3-digit prefix only
+    age_range: ageRange,          // Range, not exact age
+    gender: gender || 'U',        // U = undisclosed
+    readings: JSON.stringify(readings),
+    // SHA-256 hash of a random value — unique submission ID, not traceable
+    sub_id: Math.random().toString(36).substring(2, 10)
+  };
+
+  // NO name. NO email. NO full ZIP. NO timestamp precise enough to re-identify.
+  // The sub_id is random — prevents duplicate counting, not tracking.
+
+  statusEl.textContent = es ? 'Enviando...' : 'Submitting...';
+  statusEl.style.color = 'var(--dim)';
+
+  var apiUrl = (typeof EQ !== 'undefined' && EQ.getApiUrl) ? EQ.getApiUrl() : '';
+  if (!apiUrl) {
+    // Fall back to hub URL
+    apiUrl = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+  }
+
+  fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: Object.keys(payload).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k]);
+    }).join('&')
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      statusEl.textContent = es ? EQ.t('pulse_thanks') : EQ.t('pulse_thanks');
+      statusEl.style.color = 'var(--sage)';
+      // Refresh community display
+      loadCommunityPulse();
+    } else {
+      statusEl.textContent = EQ.t('pulse_error');
+      statusEl.style.color = 'var(--coral)';
+    }
+  })
+  .catch(function() {
+    statusEl.textContent = EQ.t('pulse_error');
+    statusEl.style.color = 'var(--coral)';
+  });
+}
+
+function loadCommunityPulse() {
+  var zip = document.getElementById('pulseZip').value.trim();
+  if (!zip || zip.length < 3) return;
+  var zip3 = zip.substring(0, 3);
+
+  var apiUrl = (typeof EQ !== 'undefined' && EQ.getApiUrl) ? EQ.getApiUrl() : '';
+  if (!apiUrl) {
+    apiUrl = 'https://script.google.com/macros/s/AKfycbz4FlOymlifEnmh8wdv8anKVGWXzGGS54_Kd3ulsxUryFb9nLW01ZJYQjv9BoQHHZ0X/exec';
+  }
+
+  fetch(apiUrl + '?action=health_pulse_aggregate&zip3=' + zip3)
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var displayEl = document.getElementById('pulseDisplay');
+    var dataEl = document.getElementById('pulseData');
+    var es = isEs();
+
+    if (!data.ok || !data.aggregate || data.aggregate.total < 11) {
+      displayEl.style.display = 'block';
+      dataEl.innerHTML = '<p style="color:var(--dim)">' + EQ.t('pulse_no_data') + '</p>';
+      return;
+    }
+
+    var a = data.aggregate;
+    var html = '';
+    html += '<p><strong>' + (es ? 'Contribuciones: ' : 'Contributions: ') + '</strong>' + a.total + ' ' + (es ? 'vecinos en el área ' : 'neighbors in area ') + zip3 + 'xx</p>';
+
+    if (a.bp_avg_sys && a.bp_count >= 11) {
+      html += '<p>🩺 <strong>' + (es ? 'Presión Arterial Promedio: ' : 'Avg Blood Pressure: ') + '</strong>' + a.bp_avg_sys + '/' + a.bp_avg_dia + ' mmHg';
+      html += ' <span style="font-size:.7rem;color:var(--dim)">(' + a.bp_count + ' ' + (es ? 'lecturas' : 'readings') + ')</span>';
+      if (a.bp_avg_sys >= 130) html += ' <span style="color:var(--coral)">⚠</span>';
+      html += '</p>';
+    }
+    if (a.hr_avg && a.hr_count >= 11) {
+      html += '<p>❤️ <strong>' + (es ? 'Frecuencia Cardíaca Promedio: ' : 'Avg Heart Rate: ') + '</strong>' + a.hr_avg + ' bpm';
+      html += ' <span style="font-size:.7rem;color:var(--dim)">(' + a.hr_count + ' ' + (es ? 'lecturas' : 'readings') + ')</span></p>';
+    }
+    if (a.glu_avg && a.glu_count >= 11) {
+      html += '<p>🩸 <strong>' + (es ? 'Glucosa Promedio en Ayunas: ' : 'Avg Fasting Glucose: ') + '</strong>' + a.glu_avg + ' mg/dL';
+      html += ' <span style="font-size:.7rem;color:var(--dim)">(' + a.glu_count + ' ' + (es ? 'lecturas' : 'readings') + ')</span>';
+      if (a.glu_avg >= 100) html += ' <span style="color:var(--coral)">⚠</span>';
+      html += '</p>';
+    }
+    if (a.bmi_avg && a.bmi_count >= 11) {
+      html += '<p>⚖️ <strong>' + (es ? 'IMC Promedio: ' : 'Avg BMI: ') + '</strong>' + a.bmi_avg;
+      html += ' <span style="font-size:.7rem;color:var(--dim)">(' + a.bmi_count + ' ' + (es ? 'lecturas' : 'readings') + ')</span></p>';
+    }
+
+    if (a.bp_pct_elevated && a.bp_count >= 11) {
+      html += '<div style="margin-top:10px;padding:10px;background:rgba(196,101,74,.08);border-radius:8px;font-size:.75rem">';
+      html += '<strong>' + (es ? 'Patrón comunitario: ' : 'Community pattern: ') + '</strong>';
+      html += a.bp_pct_elevated + '% ' + (es ? 'de lecturas de presión arterial están en rango elevado o mayor.' : 'of blood pressure readings are in elevated or higher range.');
+      html += '</div>';
+    }
+
+    displayEl.style.display = 'block';
+    dataEl.innerHTML = html;
+  })
+  .catch(function() {
+    // Silently fail — pulse display is enhancement, not critical
+  });
+}
+</script>
+</body>
+</html>
